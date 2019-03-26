@@ -3,7 +3,7 @@ import cobra
 import pandas as pd
 
 
-def generate_fake_data(model, solution, data_type='all'):
+def generate_fake_data(model, condition):
     """
 
     :param model: cobra model object
@@ -12,15 +12,53 @@ def generate_fake_data(model, solution, data_type='all'):
     :return:
     """
 
+    # reaction_id of choice passed to the function# hardcoded here for this particular file (Need to convert this to an interactive cli program)
+    reaction_id = 'BIOMASS_Ec_iJO1366_core_53p95M'
+    # solution = None
+    solution = get_optimized_solution(model, reaction_id)
+
+    get_protemics_transcriptomics_data(model, solution)
+
+    get_metabolomics_data(model, solution, condition)
+
+
+
+
+def get_metabolomics_data(model, solution, condition):
+    metabolomics = {}
+    # get metabolites
+    for met in model.metabolites:
+        # get associated reactions
+        for reaction in list(met.reactions):
+            # get dictionary of associated metaboolites and their concentrations
+            for metabolite, conc in reaction._metabolites.items():
+                if metabolite.id == met.id:
+                    if met.id not in metabolomics.keys():
+                        metabolomics[met.id] = abs(conc)
+                    else:
+                        metabolomics[met.id] += abs(conc)
+        # getting number of associated reactions and averaging the metabolic concentration value
+        num_reactions = len(list(met.reactions))
+        metabolomics[met.id]/=num_reactions
+
+    metabolomics_dataframe = pd.DataFrame.from_dict(metabolomics, orient='index', columns=['metabolomics_value'])
+    # Write the dataframe into a csv file
+    file_name = 'metabolomics_fakedata.csv'
+    metabolomics_dataframe.to_csv(file_name, sep=',', encoding='utf-8')
+
+
+
+def get_protemics_transcriptomics_data(model, solution):
 
     # pre-determined linear constant (NOTE: Allow user to set this via parameter)
     # DISCUSS!!
     k = 0.8
     q = 0.6
-    rxnIDs = solution.fluxes.keys()
+
     proteomics = {}
     transcriptomics = {}
 
+    rxnIDs = solution.fluxes.keys()
     for rxnId in rxnIDs:
         reaction = model.reactions.get_by_id(rxnId)
         for gene in list(reaction.genes):
@@ -40,17 +78,17 @@ def generate_fake_data(model, solution, data_type='all'):
             transcriptomics[gene.id] = proteomics[protein_id]/q
 
 
-    if data_type in ['proteomics', 'all']:
-        fake_file_name = 'proteomics_fakedata.csv'
-        proteomics_dataframe = pd.DataFrame.from_dict(proteomics, orient='index', columns=['proteomics_value'])
-        # Write the dataframe into a csv file
-        proteomics_dataframe.to_csv(fake_file_name, sep=',', encoding='utf-8')
+    fake_file_name = 'proteomics_fakedata.csv'
+    proteomics_dataframe = pd.DataFrame.from_dict(proteomics, orient='index', columns=['proteomics_value'])
+    # Write the dataframe into a csv file
+    proteomics_dataframe.to_csv(fake_file_name, sep=',', encoding='utf-8')
 
-    if data_type in ['transcriptomics', 'all']:
-        fake_file_name = 'transcriptomics_fakedata.csv'
-        transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics, orient='index', columns=['transcriptomics_value'])
-        # Write the dataframe into a csv file
-        transcriptomics_dataframe.to_csv(fake_file_name, sep=',', encoding='utf-8')
+    fake_file_name = 'transcriptomics_fakedata.csv'
+    transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics, orient='index', columns=['transcriptomics_value'])
+    # Write the dataframe into a csv file
+    transcriptomics_dataframe.to_csv(fake_file_name, sep=',', encoding='utf-8')
+
+
 
 
 
@@ -124,14 +162,9 @@ if __name__ == "__main__":
     # read model
     model = read_model(file_name)
 
-    # reaction_id of choice passed to the function# hardcoded here for this particular file (Need to convert this to an interactive cli program)
-    reaction_id = 'BIOMASS_Ec_iJO1366_core_53p95M'
-    solution = get_optimized_solution(model, reaction_id)
-
     # get fake proteomics data and write it to file
     # NOTE: (need to add type of file, only CSV for now)
-    generate_fake_data(model, solution)
+    condition = 1
+    generate_fake_data(model, condition)
 
-    # # get fake transcriptomics data and write it to file
-    #get_fake_data(model, solution, 'transcriptomics')
 
