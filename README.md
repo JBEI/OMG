@@ -38,7 +38,7 @@ The fake data gets written in the data directory. The condition parameter is res
 
 ### Jupyter notebook
 - You can serve a local Jupyter server and run it locally
-- Or you can copy the Jpyter notebook to Jupyter hub and run them there
+- Or you can copy the Jupyter notebook to Jupyter hub and run them there
 
 
 ### Contact
