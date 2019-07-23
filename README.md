@@ -32,7 +32,7 @@ BIOMASS_Ec_iJO1366_WT_53p95M: E. coli biomass objective function (iJO1366) - WT 
 BIOMASS_Ec_iJO1366_core_53p95M: E. coli biomass objective function (iJO1366) - core - with 53.95 GAM estimate
 Condition parameter:  1
 Displaying the reaction bounds after constraining them:
-(-15, -15)$ pipenv run python generate_test_omics_data.py
+(-15, -15) 
 ```
 
 ### Jupyter notebook
