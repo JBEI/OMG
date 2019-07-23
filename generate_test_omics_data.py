@@ -115,8 +115,6 @@ def write_data_files(dataframe, data_type=None, condition=1):
     :param condition:
     :return:
     """
-    # print(dataframe)
-    # print("\n")
 
     # create the filenames
     sample_file_name = f'{data_file_path}/sample_{condition}.csv'
@@ -201,14 +199,13 @@ def get_optimized_solution(model, reaction_id):
     :return solution:
     """
 
-    # check to see if the reaction is bound (need to add a check here)
-    # DISCUSS!!
-    print(model.reactions.get_by_id(reaction_id).bounds)
-
     # fix the flux value to -15 as we have data for this constraint
     model.reactions.get_by_id(reaction_id).lower_bound = -15
     model.reactions.get_by_id(reaction_id).upper_bound = -15
-    model.reactions.get_by_id(reaction_id)
+    # print(model.reactions.get_by_id(reaction_id))
+
+    print("Displaying the reaction bounds afterG constraining them:")
+    print(model.reactions.get_by_id(reaction_id).bounds)
 
     solution = model.optimize()
 
@@ -237,8 +234,19 @@ def read_model(file_name):
 
 if __name__ == "__main__":
     # file_name = 'iJR904.json'
+
+    # if data folder doesn't exist create it
+    if not os.path.isdir(data_file_path):
+        os.mkdir(data_file_path)
+
+
     file_name = f"{data_file_path}/iECIAI39_1322.xml"
     # reaction_id = 'EX_glc__D_e'
+
+    # if file name doesn't exist throw error
+    if not os.path.isfile(file_name):
+        raise Exception("File not present in the data directory!")
+
 
     # spits out the list of reaction names related to BIOMASS production
     get_list_of_reactions(file_name)

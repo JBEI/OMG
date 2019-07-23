@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 venv
-*.csv
 data
+*.csv
+*.xlsx
 Pipfile.lock
