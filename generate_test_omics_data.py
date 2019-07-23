@@ -20,19 +20,26 @@ def generate_fake_data(model, condition):
     # solution = None
 
     while condition:
-        print(condition)
+        print("Condition parameter: ", condition)
         condition-=1
         solution = get_optimized_solution(model, reaction_id)
 
-        # get_proteomics_transcriptomics_data(model, solution, condition)
+        get_proteomics_transcriptomics_data(model, solution, condition)
 
         get_metabolomics_data(model, condition)
 
 
 
 def get_metabolomics_data(model, condition):
+    """
+
+    :param model:
+    :param condition:
+    :return:
+    """
     metabolomics = {}
     # get metabolites
+    # NOTE: Need to find a better algorithm. This is O(n^3)
     for met in model.metabolites:
         # get associated reactions
         for reaction in list(met.reactions):
@@ -55,6 +62,13 @@ def get_metabolomics_data(model, condition):
 
 
 def get_proteomics_transcriptomics_data(model, solution, condition):
+    """
+
+    :param model:
+    :param solution:
+    :param condition:
+    :return:
+    """
 
     # pre-determined linear constant (NOTE: Allow user to set this via parameter)
     # DISCUSS!!
@@ -94,6 +108,13 @@ def get_proteomics_transcriptomics_data(model, solution, condition):
 
 
 def write_data_files(dataframe, data_type=None, condition=1):
+    """
+
+    :param dataframe:
+    :param data_type:
+    :param condition:
+    :return:
+    """
     # print(dataframe)
     # print("\n")
 
@@ -115,10 +136,11 @@ def write_data_files(dataframe, data_type=None, condition=1):
             print(ex)
 
     # create file number two: omics file
+    # TODO: Need to change the units to actual relevant units
     unit_dict = { "proteomics": 'g/L',\
-                  "transcriptomics": "g/L",\
-                  "metabolomics": "g/L"
-    }
+            "transcriptomics": "g/L",\
+            "metabolomics": "g/L"
+            }
 
     try:
         with open(omics_file_name, 'w') as fh:
@@ -135,32 +157,20 @@ def write_data_files(dataframe, data_type=None, condition=1):
         print(ex)
 
 
-    # for row in dataframe.iteritems():
-    #     # print(row)
-    #     # print("\n")
-    #     # print(row[0])
-    #     # print("===============")
-    #     # print(row[1])
-    #     # print("\n")
-    #     # print(type(row[0]))
-    #     # print("===============")
-    #     # print(type(row[1]))
-    #     # print("\n")
-    #     for id, value in row[1].iteritems():
-    #         pass
-    #
-    #     import sys
-    #     sys.exit()
-
-
-
-
 
 def get_random_number():
+    """
+
+    :return:
+    """
     random.seed(12312)
     return random.random()
 
 def add_random_noise():
+    """
+
+    :return:
+    """
     pass
 
 
@@ -176,6 +186,7 @@ def get_list_of_reactions(file_name):
         model = cobra.io.read_sbml_model(file_name)
 
     # Print out the reaction name and reaction id for all reactions related to BIOMASS production:
+    print("List of reactions related to BIOMASS production:")
     for rxn in model.reactions:
         if rxn.name is not None and 'BIOMASS' in rxn.id:
             print("{}: {}".format(rxn.id, rxn.name))
@@ -187,7 +198,7 @@ def get_optimized_solution(model, reaction_id):
 
     :param model:
     :param reaction_id:
-    :return:
+    :return solution:
     """
 
     # check to see if the reaction is bound (need to add a check here)
@@ -208,8 +219,7 @@ def read_model(file_name):
     """
 
     :param file_name:
-    :param reaction_id:
-    :return:
+    :return model:
     """
 
     # Load model¶depending on the kind of file
@@ -222,6 +232,8 @@ def read_model(file_name):
 
 
 
+# TODO: Need to create a cli program that can be supplied with fielname and it will ask for reaction name
+#  and run the code to genarate the test data
 
 if __name__ == "__main__":
     # file_name = 'iJR904.json'
