@@ -34,7 +34,12 @@ Condition parameter:  1
 Displaying the reaction bounds after constraining them:
 (-15, -15) 
 ```
+The fake data gets written in the data directory. The condition parameter is responsible for controlling how many sets of fake or synthesized data you want to generate. Play with it to see multiple sets of data.
 
 ### Jupyter notebook
 - You can serve a local Jupyter server and run it locally
 - Or you can copy the Jpyter notebook to Jupyter hub and run them there
+
+
+### Contact
+- For questions contact Somtirtha Roy at [somtirtharoy@lbl.gov](somtirtharoy@lbl.gov)
