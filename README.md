@@ -1,27 +1,38 @@
 ### Dependencies
 - pip
-- Python 3.x
+- Python 3.6
 
 
 ### Installation
 
+Please follow the next steps after cloning the repository:
 ```bash
 $ pip install pipenv
 $ pipenv install
 ```
+You may want to use the `--user` flag in `pip` and prepend `~/.local/bin` to your path.
 
 ### Running locally
 
 Before you run you need to have a model file in the data directory.
-There is a sample file "iECIAI39_1322.xml" in the test directory for you to get started with that you can copy ito the data directory.
+There is a sample file "iECIAI39_1322.xml" in the test directory for you to get started with that you can copy to the data directory.
 
 You can provide your own file in the data directory and modify the code to hange the file_name. Same edit is required for the reaction name that you want to generate the data from.
 The default reaction name used from the test model file is "BIOMASS_Ec_iJO1366_core_53p95M"
 
 ```bash
-$ cp test/iECIAI39.xml data/ 
-$ pipenv shell
+$ mkdir data
+$ cp test/iECIAI39_1322.xml data/
+```
+and
+```bash
 $ pipenv run python generate_test_omics_data.py
+```
+or
+```bash
+$ pipenv shell
+(generate_test_omics_data)$ python generate_test_omics_data.py
+
 ```
 
 ### Output
