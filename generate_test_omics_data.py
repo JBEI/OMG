@@ -117,8 +117,9 @@ def write_data_files(dataframe, data_type=None, condition=1):
     """
 
     # create the filenames
-    sample_file_name = f'{data_file_path}/sample_{condition}.csv'
-    omics_file_name = f'{data_file_path}/{data_type}_fakedata_sample_{condition}.csv'
+    sample_name = f'sample_{condition}'
+    sample_file_name = f'{data_file_path}/{sample_name}.csv'
+    omics_file_name = f'{data_file_path}/{data_type}_fakedata_{sample_name}.csv'
 
     # Write the dataframe into a csv file
     # dataframe.to_csv(file_name, sep=',', encoding='utf-8')
@@ -130,7 +131,7 @@ def write_data_files(dataframe, data_type=None, condition=1):
                 fh.write("Line Name,\n")
                 fh.write(f"Sample {condition}")
         except Exception as ex:
-            print("Error in writing file!")
+            print("Error writing file!")
             print(ex)
 
     # create file number two: omics file
@@ -142,16 +143,14 @@ def write_data_files(dataframe, data_type=None, condition=1):
 
     try:
         with open(omics_file_name, 'w') as fh:
-            fh.write("Line Name, Measurement Type, Value, Units\n")
-            sample_name = f"Sample {condition}\n"
-            spaces = ' '*len(sample_name)
-            fh.write(sample_name)
+            # Generate a csv file compliant with IETF RCF4180
+            fh.write("Measurement, Value, Units\n")
             for index, series in dataframe.iteritems():
                 for id, value in series.iteritems():
-                    fh.write((f"{spaces}{id}, {value}, {unit_dict[data_type]}\n"))
+                    fh.write((f'{id}, {value}, {unit_dict[data_type]}\n'))
 
     except Exception as ex:
-        print("Error in writing file!")
+        print("Error writing file!")
         print(ex)
 
 
