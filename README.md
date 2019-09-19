@@ -1,3 +1,7 @@
+# OMG: Omics Mock Generator
+
+Generates a mock dataset of _omics_ data (importable in EDD using the new import format): transcriptomics, proteomics, and metabolomics.
+
 ### Dependencies
 - pip
 - Python 3.6
@@ -17,7 +21,7 @@ You may want to use the `--user` flag in `pip` and prepend `~/.local/bin` to you
 Before you run you need to have a model file in the data directory.
 There is a sample file "iECIAI39_1322.xml" in the test directory for you to get started with that you can copy to the data directory.
 
-You can provide your own file in the data directory and modify the code to hange the file_name. Same edit is required for the reaction name that you want to generate the data from.
+You can provide your own file in the data directory and modify the code to change the file_name. Same edit is required for the reaction name that you want to generate the data from.
 The default reaction name used from the test model file is "BIOMASS_Ec_iJO1366_core_53p95M"
 
 ```bash
