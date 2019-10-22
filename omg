@@ -6,264 +6,396 @@ Generates a mock dataset of omics data (importable in EDD):
 transcriptomics, proteomics, and metabolomics
 """
 
-import cobra
-import pandas as pd
-import random
+__author__ = 'QMM'
+__copyright__ = 'Copyright (C) 2019 Berkeley Lab'
+__license__ = 'GNU Affero General Public License Version 3'
+__status__ = 'Alpha'
+__date__ = 'Oct 2019'
+__version__ = '0.0.1'
+
+import argparse
 import os
+import random
+import sys
+from typing import NewType, Dict, Any
+import warnings
 
-data_file_path = 'data'
-
-def generate_fake_data(model, condition):
-    """
-
-    :param model: cobra model object
-    :param solution: solution for the model optimization using cobra
-    :param data_type: defines the type of -omics data to generate (all by default)
-    :return:
-    """
-
-    # reaction_id of choice passed to the function# hardcoded here for this particular file (Need to convert this to an interactive cli program)
-    reaction_id = 'BIOMASS_Ec_iJO1366_core_53p95M'
-    # solution = None
-
-    while condition:
-        print("Condition parameter: ", condition)
-        condition-=1
-        solution = get_optimized_solution(model, reaction_id)
-
-        get_proteomics_transcriptomics_data(model, solution, condition)
-
-        get_metabolomics_data(model, condition)
+import cobra
+from cobra.exceptions import OptimizationError
+import pandas as pd
 
 
+# Type annotations
+Filename = NewType('Filename', str)
+Reaction = NewType('Reaction', str)
 
-def get_metabolomics_data(model, condition):
-    """
-
-    :param model:
-    :param condition:
-    :return:
-    """
-    metabolomics = {}
-    # get metabolites
-    # NOTE: Need to find a better algorithm. This is O(n^3)
-    for met in model.metabolites:
-        # get associated reactions
-        for reaction in list(met.reactions):
-            # get dictionary of associated metabolites and their concentrations
-            for metabolite, conc in reaction._metabolites.items():
-                if metabolite.id == met.id:
-                    if met.id not in metabolomics.keys():
-                        metabolomics[met.id] = abs(conc)
-                    else:
-                        metabolomics[met.id] += abs(conc)
-        # getting number of associated reactions and averaging the metabolic concentration value
-        num_reactions = len(list(met.reactions))
-        metabolomics[met.id]/=num_reactions
-
-    metabolomics_dataframe = pd.DataFrame.from_dict(metabolomics, orient='index', columns=['metabolomics_value'])
-    # Write the dataframe into a csv file
-    file_name = f'{data_file_path}/metabolomics_fakedata_condition_{condition}.csv'
-    write_data_files(metabolomics_dataframe, "metabolomics")
+# Constants
+# TODO: Move some constants to variables by program arguments
+DATA_FILE_PATH: Filename = Filename('data')
+MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')
+REACTION_ID: Reaction = Reaction('BIOMASS_Ec_iJO1366_core_53p95M')
+UNITS: Dict[str, str] = {
+    "proteomics": 'proteins/cell',
+    "transcriptomics": "FPKM",
+    "metabolomics": "g/L"
+}
+LOWER_BOUND: int = -15
+UPPER_BOUND: int = -15
 
 
-
-def get_proteomics_transcriptomics_data(model, solution, condition):
-    """
-
-    :param model:
-    :param solution:
-    :param condition:
-    :return:
-    """
-
-    # pre-determined linear constant (NOTE: Allow user to set this via parameter)
-    # DISCUSS!!
-    k = 0.8
-    q = 0.6
-
-    proteomics = {}
-    transcriptomics = {}
-
-    rxnIDs = solution.fluxes.keys()
-    for rxnId in rxnIDs:
-        reaction = model.reactions.get_by_id(rxnId)
-        for gene in list(reaction.genes):
-
-            # this will ignore all the reactions that does not have the gene.annotation property
-            # DISCUSS!!
-            if gene.annotation:
-                if 'uniprot' not in gene.annotation:
-                    protein_id = gene.annotation['goa']
-                else:
-                    protein_id = gene.annotation['uniprot']
-
-                # create proteomics dict
-                proteomics[protein_id] = solution.fluxes[rxnId]/k
-
-            # create transcriptomics dict
-            transcriptomics[gene.id] = proteomics[protein_id]/q
+def ansi(num: int):
+    """Return function that escapes text with ANSI color n."""
+    return lambda txt: f'\033[{num}m{txt}\033[0m'
 
 
-    file_name = f'{data_file_path}/proteomics_fakedata_condition_{condition}.csv'
-    proteomics_dataframe = pd.DataFrame.from_dict(proteomics, orient='index', columns=['proteomics_value'])
-    write_data_files(proteomics_dataframe, "proteomics")
-
-    file_name = f'{data_file_path}/transcriptomics_fakedata_condition_{condition}.csv'
-    transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics, orient='index', columns=['transcriptomics_value'])
-    write_data_files(transcriptomics_dataframe, "transcriptomics")
+# pylint: disable=invalid-name
+gray, red, green, yellow, blue, magenta, cyan, white = map(ansi,
+                                                           range(90, 98))
+# pylint: enable=invalid-name
 
 
-def write_data_files(dataframe, data_type=None, condition=1):
-    """
+def main():
+    """Main entry point to the script."""
 
-    :param dataframe:
-    :param data_type:
-    :param condition:
-    :return:
-    """
+    def add_random_noise():
+        # TODO
+        """
 
-    # create the filenames
-    sample_file_name = f'{data_file_path}/sample_{condition}.csv'
-    omics_file_name = f'{data_file_path}/{data_type}_fakedata_sample_{condition}.csv'
+        :return:
+        """
+        pass
 
-    # Write the dataframe into a csv file
-    # dataframe.to_csv(file_name, sep=',', encoding='utf-8')
+    def check_debug():
+        """Check debugging mode"""
+        if args.debug:
+            print(blue('INFO:'), gray('Debugging mode activated'))
+            print(blue('INFO:'), gray('Active parameters:'))
+            for key, val in vars(args).items():
+                if val is not None and val is not False and val != []:
+                    print(gray(f'\t{key} ='), f'{val}')
+        elif not sys.warnoptions:
+            warnings.simplefilter("ignore")
 
-    # create file number one: sample file
-    if not os.path.isfile(sample_file_name):
+    def generate_mock_data(model, condition):
+        """
+
+        :param model: cobra model object
+        :param solution: solution for the model optimization using cobra
+        :param data_type: defines the type of -omics data to generate (all by default)
+        :return:
+        """
+
+        while condition:
+            print(gray('Condition parameter:'), magenta(condition))
+            condition -= 1
+            solution = get_optimized_solution(model, REACTION_ID)
+
+            write_experiment_description(condition)
+
+            # TODO: Uncomment next lines once methods adapted
+            # get_proteomics_transcriptomics_data(model, solution, condition)
+            # get_metabolomics_data(model, condition)
+
+    def get_metabolomics_data(model, condition):
+        """
+
+        :param model:
+        :param condition:
+        :return:
+        """
+        # TODO: ADAPT!
+        metabolomics = {}
+        # get metabolites
+        # NOTE: Need to find a better algorithm. This is O(n^3)
+        for met in model.metabolites:
+            # get associated reactions
+            for reaction in list(met.reactions):
+                # get dictionary of associated metabolites and their concentrations
+                for metabolite, conc in reaction._metabolites.items():
+                    if metabolite.id == met.id:
+                        if met.id not in metabolomics.keys():
+                            metabolomics[met.id] = abs(conc)
+                        else:
+                            metabolomics[met.id] += abs(conc)
+            # getting number of associated reactions and averaging the metabolic concentration value
+            num_reactions = len(list(met.reactions))
+            metabolomics[met.id] /= num_reactions
+
+        metabolomics_dataframe = pd.DataFrame.from_dict(metabolomics,
+                                                        orient='index',
+                                                        columns=[
+                                                            'metabolomics_value'])
+        # Write the dataframe into a csv file
+        file_name = f'{DATA_FILE_PATH}/metabolomics_fakedata_condition_{condition}.csv'
+        write_data_files(metabolomics_dataframe, "metabolomics")
+
+    def get_optimized_solution(model, reaction_id):
+        """
+
+        :param model:
+        :param reaction_id:
+        :return solution:
+        """
+
+        # fix the flux value to -15 as we have data for this constraint
+        model.reactions.get_by_id(reaction_id).lower_bound = LOWER_BOUND
+        model.reactions.get_by_id(reaction_id).upper_bound = UPPER_BOUND
+        # print(model.reactions.get_by_id(reaction_id))
+
+        vprint(gray('Displaying the reaction bounds after constraining them:'),
+               blue(model.reactions.get_by_id(reaction_id).bounds))
+        # Optimize the model using FBA
+        print(gray('Optimizing the model using FBA... '), end='')
+        model.slim_optimize()
+        solution: cobra.Solution = cobra.core.solution.get_solution(
+            model, raise_error=False)
         try:
-            with open(sample_file_name, 'w') as fh:
-                fh.write("Line Name,\n")
-                fh.write(f"Sample {condition}")
+            cobra.util.assert_optimal(model)
+        except OptimizationError as error:
+            print(yellow(f'PROBLEM: {error}'))
+        else:
+            print(green('OK!'))
+
+        return solution
+
+    def get_proteomics_transcriptomics_data(model, solution, condition):
+        """
+
+        :param model:
+        :param solution:
+        :param condition:
+        :return:
+        """
+        # TODO: ADAPT!
+        # pre-determined linear constant (NOTE: Allow user to set this via parameter)
+        # DISCUSS!!
+        k = 0.8
+        q = 0.6
+
+        proteomics = {}
+        transcriptomics = {}
+
+        rxnIDs = solution.fluxes.keys()
+        for rxnId in rxnIDs:
+            reaction = model.reactions.get_by_id(rxnId)
+            for gene in list(reaction.genes):
+
+                # this will ignore all the reactions that does not have the gene.annotation property
+                # DISCUSS!!
+                if gene.annotation:
+                    if 'uniprot' not in gene.annotation:
+                        protein_id = gene.annotation['goa']
+                    else:
+                        protein_id = gene.annotation['uniprot']
+
+                    # create proteomics dict
+                    proteomics[protein_id] = solution.fluxes[rxnId] / k
+
+                # create transcriptomics dict
+                transcriptomics[gene.id] = proteomics[protein_id] / q
+
+        file_name = f'{DATA_FILE_PATH}/proteomics_fakedata_condition_{condition}.csv'
+        proteomics_dataframe = pd.DataFrame.from_dict(proteomics,
+                                                      orient='index', columns=[
+                'proteomics_value'])
+        write_data_files(proteomics_dataframe, "proteomics")
+
+        file_name = f'{DATA_FILE_PATH}/transcriptomics_fakedata_condition_{condition}.csv'
+        transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics,
+                                                           orient='index',
+                                                           columns=[
+                                                               'transcriptomics_value'])
+        write_data_files(transcriptomics_dataframe, "transcriptomics")
+
+    def get_random_number():
+        """
+
+        :return:
+        """
+        random.seed(12312)
+        return random.random()
+
+    def print_reactions(model):
+        """
+
+        :param model:
+        :return: None (prints the list of reactions that have BIOMASS in them)
+        """
+
+        # Print out the reaction name and reaction id for all reactions
+        #   related to BIOMASS production:
+        vprint(gray('List of reactions related to BIOMASS production:'))
+        for rxn in model.reactions:
+            if rxn.name is not None and 'BIOMASS' in rxn.id:
+                vprint(f"{rxn.id} : {rxn.name}")
+
+    def read_model(file_name):
+        """
+
+        :param file_name:
+        :return model:
+        """
+
+        # Check presence of model file
+        if not os.path.isfile(file_name):
+            raise Exception(red('ERROR!'),
+                            f'File {file_name} missing from the data dir!')
+
+        # Load model depending on the kind of file
+        vprint(gray(f'Loading model in {file_name}... '), end='')
+        if file_name.endswith(".xml"):
+            model = cobra.io.read_sbml_model(file_name)
+        elif file_name.endswith(".json"):
+            model = cobra.io.load_json_model(file_name)
+        else:
+            raise Exception(red('ERROR!'),
+                            f'File {file_name} type not supported!')
+        vprint(green('OK!'))
+
+        return model
+
+    def vprint(*a, **k):
+        """Print only if verbose mode is enabled"""
+        if args.verbose:
+            print(*a, **k)
+
+    def write_data_files(dataframe, omics=None, condition=1):
+        """
+
+        :param dataframe:
+        :param omics:
+        :param condition:
+        :return:
+        """
+        # TODO: ADAPT!
+        # Define the filenames and xlsxwriter objects
+        exp_desc_fname: Filename = Filename(
+            os.path.join(DATA_FILE_PATH,
+                         f'EDD_Omics_Experiment_Description_mock{condition}.xlsx'))
+        exp_desc_xlsxwriter = pd.ExcelWriter(exp_desc_fname)
+        omics_fname: Filename = Filename(
+            os.path.join(DATA_FILE_PATH,
+                         f'{omics}_mock{condition}.xlsx'))
+        omics_xlsxwriter = pd.ExcelWriter(omics_fname)
+
+        # Write the dataframe into a xlsx file
+
+        # dataframe.to_csv(file_name, sep=',', encoding='utf-8')
+
+        # create file number one: sample file
+        if not os.path.isfile(sample_file_name):
+            try:
+                with open(sample_file_name, 'w') as fh:
+                    fh.write("Line Name,\n")
+                    fh.write(f"Sample {condition}")
+            except Exception as ex:
+                print("Error in writing file!")
+                print(ex)
+
+        # create file number two: omics file
+        try:
+            with open(omics_fname, 'w') as fh:
+                fh.write("Line Name, Measurement Type, Value, Units\n")
+                sample_name = f"Sample {condition}\n"
+                spaces = ' ' * len(sample_name)
+                fh.write(sample_name)
+                for index, series in dataframe.iteritems():
+                    for id, value in series.iteritems():
+                        fh.write(
+                            (f"{spaces}{id}, {value}, {unit_dict[omics]}\n"))
+
         except Exception as ex:
             print("Error in writing file!")
             print(ex)
 
-    # create file number two: omics file
-    # TODO: Need to change the units to actual relevant units
-    unit_dict = { "proteomics": 'g/L',\
-            "transcriptomics": "g/L",\
-            "metabolomics": "g/L"
-            }
+    def write_experiment_description(condition=1):
+        """
 
-    try:
-        with open(omics_file_name, 'w') as fh:
-            fh.write("Line Name, Measurement Type, Value, Units\n")
-            sample_name = f"Sample {condition}\n"
-            spaces = ' '*len(sample_name)
-            fh.write(sample_name)
-            for index, series in dataframe.iteritems():
-                for id, value in series.iteritems():
-                    fh.write((f"{spaces}{id}, {value}, {unit_dict[data_type]}\n"))
+        :param condition:
+        :return:
+        """
 
-    except Exception as ex:
-        print("Error in writing file!")
-        print(ex)
-
-
-
-def get_random_number():
-    """
-
-    :return:
-    """
-    random.seed(12312)
-    return random.random()
-
-def add_random_noise():
-    """
-
-    :return:
-    """
-    pass
-
-
-def get_list_of_reactions(file_name):
-    """
-
-    :param file_name: Name of the model file (has to be xml for now)
-    :return: None (prints the list of reactions that has mass in them)
-    """
-
-    # Load model¶depending on the kind of file (the file has to be xml)
-    if file_name.endswith(".xml"):
-        model = cobra.io.read_sbml_model(file_name)
-
-    # Print out the reaction name and reaction id for all reactions related to BIOMASS production:
-    print("List of reactions related to BIOMASS production:")
-    for rxn in model.reactions:
-        if rxn.name is not None and 'BIOMASS' in rxn.id:
-            print("{}: {}".format(rxn.id, rxn.name))
+        exp_desc_fname: Filename = Filename(
+            os.path.join(DATA_FILE_PATH,
+                         f'EDD_Omics_Experiment_Description_mock{condition}.xlsx'))
+        index_label = 'Line Name'
+        exp_desc_cols = pd.Index([
+            'Line Description',
+            'Media',
+            'Shaking speed',
+            'Starting OD',
+            'Culture Volume',
+            'Flask Volume',
+            'Growth Temperature',
+            'Replicate Count',
+        ], name=index_label)
+        metadata_wt: Dict[str, Dict[str, Any]] = {'WT': {
+            'Line Description': 'R. Opacus wild type (mock)',
+            'Media': 'M9+glucose',
+            'Shaking speed': 1.0,
+            'Starting OD': 0.1,
+            'Culture Volume': 50.0,
+            'Flask Volume': 200.0,
+            'Growth Temperature': 30.0,
+            'Replicate Count': 1,
+        }}
+        exp_desc_df = pd.DataFrame.from_dict(metadata_wt,
+                                             orient='index',
+                                             columns=exp_desc_cols)
+        exp_desc_df.to_excel(exp_desc_fname,
+                             sheet_name='EXP_DESC',
+                             index_label=index_label)
 
 
+    # Argument Parser Configuration
+    parser = argparse.ArgumentParser(
+        description='Omics Mock Generator',
+        epilog='%(prog)s -- {}'.format(__date__),
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument(
+        '-d', '--debug',
+        action='store_true',
+        help='enable debug mode (implies verbose mode)'
+    )
+    parser.add_argument(
+        '-v', '--verbose',
+        action='store_true',
+        help='enable verbose mode'
+    )
+    parser.add_argument(
+        '-V', '--version',
+        action='version',
+        version='%(prog)s release {} ({})'.format(__version__, __date__)
+    )
 
-def get_optimized_solution(model, reaction_id):
-    """
+    # Parse arguments
+    args = parser.parse_args()
 
-    :param model:
-    :param reaction_id:
-    :return solution:
-    """
+    # Program header
+    print('\n=-= {} =-= v{} - {} =-= by {} =-=\n'.format(
+        sys.argv[0], __version__, __date__, __author__))
 
-    # fix the flux value to -15 as we have data for this constraint
-    model.reactions.get_by_id(reaction_id).lower_bound = -15
-    model.reactions.get_by_id(reaction_id).upper_bound = -15
-    # print(model.reactions.get_by_id(reaction_id))
-
-    print("Displaying the reaction bounds afterG constraining them:")
-    print(model.reactions.get_by_id(reaction_id).bounds)
-
-    solution = model.optimize()
-
-    return solution
-
-
-def read_model(file_name):
-    """
-
-    :param file_name:
-    :return model:
-    """
-
-    # Load model¶depending on the kind of file
-    if file_name.endswith(".xml"):
-        model = cobra.io.read_sbml_model(file_name)
-    elif file_name.endswith(".json"):
-        model = cobra.io.load_json_model(file_name)
-
-    return model
-
-
-
-# TODO: Need to create a cli program that can be supplied with fielname and it will ask for reaction name
-#  and run the code to genarate the test data
-
-if __name__ == "__main__":
-    # file_name = 'iJR904.json'
+    # Select cases depending on the debug flag
+    check_debug()
 
     # if data folder doesn't exist create it
-    if not os.path.isdir(data_file_path):
-        os.mkdir(data_file_path)
+    if not os.path.isdir(DATA_FILE_PATH):
+        os.mkdir(DATA_FILE_PATH)
 
-
-    file_name = f"{data_file_path}/iECIAI39_1322.xml"
+    filename: Filename = Filename(os.path.join(DATA_FILE_PATH, MODEL_FILENAME))
     # reaction_id = 'EX_glc__D_e'
 
-    # if file name doesn't exist throw error
-    if not os.path.isfile(file_name):
-        raise Exception("File not present in the data directory!")
-
-
-    # spits out the list of reaction names related to BIOMASS production
-    get_list_of_reactions(file_name)
-
     # read model
-    model = read_model(file_name)
+    model = read_model(filename)
 
-    # get fake proteomics data and write it to file
-    # NOTE: (need to add type of file, only CSV for now)
+    # Print the list of reaction names related to BIOMASS production
+    print_reactions(model)
+
+    # get fake proteomics data and write it to XLSX file
     condition = 1
-    generate_fake_data(model, condition)
+    generate_mock_data(model, condition)
 
 
+if __name__ == "__main__":
+    # TODO: Ask for filename and reaction name and then generate the mock data
+    main()

@@ -30,12 +30,12 @@ $ cp test/iECIAI39_1322.xml data/
 ```
 and
 ```bash
-$ pipenv run python generate_test_omics_data.py
+$ pipenv run python omg
 ```
 or
 ```bash
 $ pipenv shell
-(generate_test_omics_data)$ python generate_test_omics_data.py
+(omg)$ ./omg
 
 ```
 
