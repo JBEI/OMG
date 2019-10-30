@@ -17,13 +17,12 @@ import argparse
 import os
 import random
 import sys
-from typing import NewType, Dict, Any
 import warnings
+from typing import NewType, Dict, Any
 
 import cobra
-from cobra.exceptions import OptimizationError
 import pandas as pd
-
+from cobra.exceptions import OptimizationError
 
 # Type annotations
 Filename = NewType('Filename', str)
@@ -39,6 +38,7 @@ UNITS: Dict[str, str] = {
     "transcriptomics": "FPKM",
     "metabolomics": "g/L"
 }
+# Fix the flux value to -15 as we have data for this constraint
 LOWER_BOUND: int = -15
 UPPER_BOUND: int = -15
 
@@ -88,12 +88,14 @@ def main():
         while condition:
             print(gray('Condition parameter:'), magenta(condition))
             condition -= 1
-            solution = get_optimized_solution(model, REACTION_ID)
+            optimize_solution(model, REACTION_ID)
+            solution: cobra.Solution = cobra.core.solution.get_solution(
+                model, raise_error=False)
 
             write_experiment_description(condition)
 
             # TODO: Uncomment next lines once methods adapted
-            # get_proteomics_transcriptomics_data(model, solution, condition)
+            get_proteomics_transcriptomics_data(model, solution, condition)
             # get_metabolomics_data(model, condition)
 
     def get_metabolomics_data(model, condition):
@@ -129,35 +131,6 @@ def main():
         file_name = f'{DATA_FILE_PATH}/metabolomics_fakedata_condition_{condition}.csv'
         write_data_files(metabolomics_dataframe, "metabolomics")
 
-    def get_optimized_solution(model, reaction_id):
-        """
-
-        :param model:
-        :param reaction_id:
-        :return solution:
-        """
-
-        # fix the flux value to -15 as we have data for this constraint
-        model.reactions.get_by_id(reaction_id).lower_bound = LOWER_BOUND
-        model.reactions.get_by_id(reaction_id).upper_bound = UPPER_BOUND
-        # print(model.reactions.get_by_id(reaction_id))
-
-        vprint(gray('Displaying the reaction bounds after constraining them:'),
-               blue(model.reactions.get_by_id(reaction_id).bounds))
-        # Optimize the model using FBA
-        print(gray('Optimizing the model using FBA... '), end='')
-        model.slim_optimize()
-        solution: cobra.Solution = cobra.core.solution.get_solution(
-            model, raise_error=False)
-        try:
-            cobra.util.assert_optimal(model)
-        except OptimizationError as error:
-            print(yellow(f'PROBLEM: {error}'))
-        else:
-            print(green('OK!'))
-
-        return solution
-
     def get_proteomics_transcriptomics_data(model, solution, condition):
         """
 
@@ -166,46 +139,57 @@ def main():
         :param condition:
         :return:
         """
-        # TODO: ADAPT!
-        # pre-determined linear constant (NOTE: Allow user to set this via parameter)
-        # DISCUSS!!
-        k = 0.8
-        q = 0.6
+        # Pre-determined linear constants
+        prote_scaling = 0.8  # Scaling factor for fluxes to proteomics
+        trans_scaling = 0.6  # Scaling factor for proteomics to transcriptomics
+        # TODO: Allow user to set those via parameters
 
-        proteomics = {}
-        transcriptomics = {}
+        proteomics: Dict[str, float] = {}
+        transcriptomics: Dict[str, float] = {}
 
-        rxnIDs = solution.fluxes.keys()
+        rxnIDs: pd.Index = solution.fluxes.index
         for rxnId in rxnIDs:
-            reaction = model.reactions.get_by_id(rxnId)
-            for gene in list(reaction.genes):
-
-                # this will ignore all the reactions that does not have the gene.annotation property
-                # DISCUSS!!
-                if gene.annotation:
-                    if 'uniprot' not in gene.annotation:
-                        protein_id = gene.annotation['goa']
+            reaction: cobra.Reaction = model.reactions.get_by_id(rxnId)
+            for gene in reaction.genes:
+                protein_id: str = None
+                # WARNING! Based on gene.annotation property populated
+                protein_db: str = None
+                for protein_db in ['ncbigi', 'uniprot', 'goa']:
+                    try:
+                        protein_id = gene.annotation[protein_db]
+                    except KeyError:
+                        pass
                     else:
-                        protein_id = gene.annotation['uniprot']
+                        # Populates proteomics and transcriptomics dicts
+                        proteomics[protein_id] = (
+                                solution.fluxes[rxnId] / prote_scaling)
+                        transcriptomics[gene.id] = (
+                                    proteomics[protein_id] / trans_scaling)
+                        break
+                else:
+                    vprint(yellow('Warning! Gene'), magenta(gene.id),
+                           yellow('in reaction'), blue(rxnId),
+                           yellow('has no useful annotation.'), 'Skipping...')
 
-                    # create proteomics dict
-                    proteomics[protein_id] = solution.fluxes[rxnId] / k
+        # Write proteomics and transcriptomics files
+        file_name: Filename
+        file_name = Filename(
+            os.path.join(DATA_FILE_PATH,
+                         f'proteomics_mockdata_cond_{condition}.xlsx'))
+        proteomics_dataframe = pd.DataFrame.from_dict(
+            proteomics, orient='index', columns=['proteomics_value'])
+        print(proteomics_dataframe[
+                  abs(proteomics_dataframe) > 0].dropna())
+#        write_data_files(proteomics_dataframe, 'proteomics')
 
-                # create transcriptomics dict
-                transcriptomics[gene.id] = proteomics[protein_id] / q
-
-        file_name = f'{DATA_FILE_PATH}/proteomics_fakedata_condition_{condition}.csv'
-        proteomics_dataframe = pd.DataFrame.from_dict(proteomics,
-                                                      orient='index', columns=[
-                'proteomics_value'])
-        write_data_files(proteomics_dataframe, "proteomics")
-
-        file_name = f'{DATA_FILE_PATH}/transcriptomics_fakedata_condition_{condition}.csv'
-        transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics,
-                                                           orient='index',
-                                                           columns=[
-                                                               'transcriptomics_value'])
-        write_data_files(transcriptomics_dataframe, "transcriptomics")
+        file_name = Filename(
+            os.path.join(DATA_FILE_PATH,
+                         f'transcriptomics_mockdata_cond_{condition}.xlsx'))
+        transcriptomics_dataframe = pd.DataFrame.from_dict(
+            transcriptomics, orient='index', columns=['transcriptomics_value'])
+        print(transcriptomics_dataframe[
+                  abs(transcriptomics_dataframe) > 0].dropna())
+#        write_data_files(transcriptomics_dataframe, 'transcriptomics')
 
     def get_random_number():
         """
@@ -214,6 +198,31 @@ def main():
         """
         random.seed(12312)
         return random.random()
+
+    def optimize_solution(model: cobra.Model, reaction_id: str) -> None:
+        """
+
+        :param model:
+        :param reaction_id:
+        :return solution:
+        """
+
+        vprint(gray('Reaction:'),
+               model.reactions.get_by_id(reaction_id))
+        # Set local reaction bounds
+        model.reactions.get_by_id(reaction_id).lower_bound = LOWER_BOUND
+        model.reactions.get_by_id(reaction_id).upper_bound = UPPER_BOUND
+        vprint(gray('Displaying the reaction bounds after constraining them:'),
+               blue(model.reactions.get_by_id(reaction_id).bounds))
+        # Optimize the model using FBA
+        print(gray('Optimizing the model using FBA... '), end='')
+        model.slim_optimize()
+        try:
+            cobra.util.assert_optimal(model)
+        except OptimizationError as error:
+            print(yellow(f'PROBLEM: {error}'))
+        else:
+            print(green('OK!'))
 
     def print_reactions(model):
         """
@@ -387,6 +396,10 @@ def main():
 
     # read model
     model = read_model(filename)
+
+    # Set global reactions bounds (in addition to local)
+    cobra_config = cobra.Configuration()
+    cobra_config.bounds = LOWER_BOUND, UPPER_BOUND
 
     # Print the list of reaction names related to BIOMASS production
     print_reactions(model)
