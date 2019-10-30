@@ -6,7 +6,7 @@ Generates a mock dataset of omics data (importable in EDD):
 transcriptomics, proteomics, and metabolomics
 """
 
-__author__ = 'QMM'
+__author__ = 'LBL-QMM'
 __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
 __license__ = 'GNU Affero General Public License Version 3'
 __status__ = 'Alpha'
@@ -18,7 +18,9 @@ import os
 import random
 import sys
 import warnings
-from typing import NewType, Dict, Any
+from collections import OrderedDict
+from enum import Enum
+from typing import NewType, Dict, List, Any
 
 import cobra
 import pandas as pd
@@ -26,17 +28,28 @@ from cobra.exceptions import OptimizationError
 
 # Type annotations
 Filename = NewType('Filename', str)
-Reaction = NewType('Reaction', str)
+
+
+# Enumerations
+class Omics(Enum):
+    """Enumeration with supported omics data types."""
+    PROTEOMICS = 0
+    TRANSCRIPTOMICS = 1
+    METABOLOMICS = 2
+
+    def __str__(self):
+        return f'{str(self.name).lower()}'
+
 
 # Constants
 # TODO: Move some constants to variables by program arguments
 DATA_FILE_PATH: Filename = Filename('data')
 MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')
-REACTION_ID: Reaction = Reaction('BIOMASS_Ec_iJO1366_core_53p95M')
-UNITS: Dict[str, str] = {
-    "proteomics": 'proteins/cell',
-    "transcriptomics": "FPKM",
-    "metabolomics": "g/L"
+REACTION_ID: str = 'BIOMASS_Ec_iJO1366_core_53p95M'
+UNITS: Dict[Omics, str] = {
+    Omics.PROTEOMICS: 'proteins/cell',
+    Omics.TRANSCRIPTOMICS: "FPKM",
+    Omics.METABOLOMICS: "g/L"
 }
 # Fix the flux value to -15 as we have data for this constraint
 LOWER_BOUND: int = -15
@@ -51,6 +64,8 @@ def ansi(num: int):
 # pylint: disable=invalid-name
 gray, red, green, yellow, blue, magenta, cyan, white = map(ansi,
                                                            range(90, 98))
+
+
 # pylint: enable=invalid-name
 
 
@@ -76,7 +91,25 @@ def main():
         elif not sys.warnoptions:
             warnings.simplefilter("ignore")
 
-    def generate_mock_data(model, condition):
+    def dict_to_edd(omics_dict: Dict[str, float],
+                    omics: Omics) -> pd.DataFrame:
+        """Get dataframe with EDD format from dictionary with omics values"""
+
+        edd: List[OrderedDict[str, Any]] = []
+        sample: OrderedDict[str, Any]
+
+        for measurement, value in omics_dict.items():
+            sample = OrderedDict([
+                ('Line Name', 'WT'),
+                ('Measurement Type', measurement),
+                ('Value', value),
+                ('Units', UNITS[omics])
+            ])
+            edd.append(sample)
+
+        return pd.DataFrame(edd)
+
+    def generate_mock_data(model, cond):
         """
 
         :param model: cobra model object
@@ -85,65 +118,65 @@ def main():
         :return:
         """
 
-        while condition:
-            print(gray('Condition parameter:'), magenta(condition))
-            condition -= 1
+        while cond:
+            print(gray('Condition parameter:'), magenta(cond))
+            cond -= 1
             optimize_solution(model, REACTION_ID)
             solution: cobra.Solution = cobra.core.solution.get_solution(
                 model, raise_error=False)
 
-            write_experiment_description(condition)
+            write_experiment_description(cond)
 
             # TODO: Uncomment next lines once methods adapted
-            get_proteomics_transcriptomics_data(model, solution, condition)
-            # get_metabolomics_data(model, condition)
+            get_proteomics_transcriptomics_data(model, solution, cond)
+            get_metabolomics_data(model, cond)
 
-    def get_metabolomics_data(model, condition):
+    def get_metabolomics_data(model: cobra.Model, cond: int):
         """
 
         :param model:
-        :param condition:
+        :param cond:
         :return:
         """
-        # TODO: ADAPT!
-        metabolomics = {}
-        # get metabolites
-        # NOTE: Need to find a better algorithm. This is O(n^3)
+
+        metabolomics: Dict[str, float] = {}  # metabolites and concentrations
+
+        # TODO: Need to find a better algorithm. This is O(n^3)
         for met in model.metabolites:
             # get associated reactions
             for reaction in list(met.reactions):
-                # get dictionary of associated metabolites and their concentrations
-                for metabolite, conc in reaction._metabolites.items():
+                for metabolite, coefficient in reaction.metabolites.items():
                     if metabolite.id == met.id:
                         if met.id not in metabolomics.keys():
-                            metabolomics[met.id] = abs(conc)
+                            metabolomics[met.id] = abs(coefficient)
                         else:
-                            metabolomics[met.id] += abs(conc)
-            # getting number of associated reactions and averaging the metabolic concentration value
+                            metabolomics[met.id] += abs(coefficient)
+            # TODO: Check this -> getting number of associated reactions and averaging the metabolic ??concentration?? value
             num_reactions = len(list(met.reactions))
             metabolomics[met.id] /= num_reactions
 
-        metabolomics_dataframe = pd.DataFrame.from_dict(metabolomics,
-                                                        orient='index',
-                                                        columns=[
-                                                            'metabolomics_value'])
-        # Write the dataframe into a csv file
-        file_name = f'{DATA_FILE_PATH}/metabolomics_fakedata_condition_{condition}.csv'
-        write_data_files(metabolomics_dataframe, "metabolomics")
+        metabolomics_df: pd.DataFrame = dict_to_edd(
+            metabolomics, Omics.METABOLOMICS)
 
-    def get_proteomics_transcriptomics_data(model, solution, condition):
+        # Write metabolomics file
+        write_data_files(metabolomics_df, Omics.METABOLOMICS, cond)
+
+    def get_proteomics_transcriptomics_data(model: cobra.Model,
+                                            solution: cobra.Solution,
+                                            cond: int):
         """
 
         :param model:
         :param solution:
-        :param condition:
+        :param cond:
         :return:
         """
         # Pre-determined linear constants
         prote_scaling = 0.8  # Scaling factor for fluxes to proteomics
         trans_scaling = 0.6  # Scaling factor for proteomics to transcriptomics
-        # TODO: Allow user to set those via parameters
+        # TODO: Allow user to set those constants via parameters
 
+        # Get values for proteomics and transcriptomics
         proteomics: Dict[str, float] = {}
         transcriptomics: Dict[str, float] = {}
 
@@ -151,10 +184,10 @@ def main():
         for rxnId in rxnIDs:
             reaction: cobra.Reaction = model.reactions.get_by_id(rxnId)
             for gene in reaction.genes:
-                protein_id: str = None
+                protein_id: str = ''
                 # WARNING! Based on gene.annotation property populated
-                protein_db: str = None
-                for protein_db in ['ncbigi', 'uniprot', 'goa']:
+                protein_db: str = ''
+                for protein_db in ['uniprot', 'goa', 'ncbigi']:
                     try:
                         protein_id = gene.annotation[protein_db]
                     except KeyError:
@@ -164,32 +197,21 @@ def main():
                         proteomics[protein_id] = (
                                 solution.fluxes[rxnId] / prote_scaling)
                         transcriptomics[gene.id] = (
-                                    proteomics[protein_id] / trans_scaling)
+                                proteomics[protein_id] / trans_scaling)
                         break
                 else:
-                    vprint(yellow('Warning! Gene'), magenta(gene.id),
-                           yellow('in reaction'), blue(rxnId),
-                           yellow('has no useful annotation.'), 'Skipping...')
+                    vprint(yellow('WARNING!'), gray('Gene'), gene.id,
+                           gray('in reaction'), rxnId,
+                           gray('has no useful annotation. Skipping...'))
+
+        proteomics_df: pd.DataFrame = dict_to_edd(
+            proteomics, Omics.PROTEOMICS)
+        transcriptomics_df: pd.DataFrame = dict_to_edd(
+            transcriptomics, Omics.TRANSCRIPTOMICS)
 
         # Write proteomics and transcriptomics files
-        file_name: Filename
-        file_name = Filename(
-            os.path.join(DATA_FILE_PATH,
-                         f'proteomics_mockdata_cond_{condition}.xlsx'))
-        proteomics_dataframe = pd.DataFrame.from_dict(
-            proteomics, orient='index', columns=['proteomics_value'])
-        print(proteomics_dataframe[
-                  abs(proteomics_dataframe) > 0].dropna())
-#        write_data_files(proteomics_dataframe, 'proteomics')
-
-        file_name = Filename(
-            os.path.join(DATA_FILE_PATH,
-                         f'transcriptomics_mockdata_cond_{condition}.xlsx'))
-        transcriptomics_dataframe = pd.DataFrame.from_dict(
-            transcriptomics, orient='index', columns=['transcriptomics_value'])
-        print(transcriptomics_dataframe[
-                  abs(transcriptomics_dataframe) > 0].dropna())
-#        write_data_files(transcriptomics_dataframe, 'transcriptomics')
+        write_data_files(proteomics_df, Omics.PROTEOMICS, cond)
+        write_data_files(transcriptomics_df, Omics.TRANSCRIPTOMICS, cond)
 
     def get_random_number():
         """
@@ -220,7 +242,7 @@ def main():
         try:
             cobra.util.assert_optimal(model)
         except OptimizationError as error:
-            print(yellow(f'PROBLEM: {error}'))
+            print(yellow('PROBLEM!'), error)
         else:
             print(green('OK!'))
 
@@ -247,8 +269,9 @@ def main():
 
         # Check presence of model file
         if not os.path.isfile(file_name):
-            raise Exception(red('ERROR!'),
-                            f'File {file_name} missing from the data dir!')
+            print(red('ERROR!'),
+                  f'File {file_name} missing from the data dir!')
+            raise IOError('Missing file')
 
         # Load model depending on the kind of file
         vprint(gray(f'Loading model in {file_name}... '), end='')
@@ -257,8 +280,9 @@ def main():
         elif file_name.endswith(".json"):
             model = cobra.io.load_json_model(file_name)
         else:
-            raise Exception(red('ERROR!'),
-                            f'File {file_name} type not supported!')
+            print(red('ERROR!'),
+                  f'File {file_name} type not supported!')
+            raise TypeError('Unsupported file format')
         vprint(green('OK!'))
 
         return model
@@ -268,65 +292,41 @@ def main():
         if args.verbose:
             print(*a, **k)
 
-    def write_data_files(dataframe, omics=None, condition=1):
+    def write_data_files(edd: pd.DataFrame, omics: Omics = None,
+                         cond: int = 1) -> None:
         """
+        Write the EDD dataframe into a xlsx file
 
-        :param dataframe:
+        :param edd:
         :param omics:
-        :param condition:
+        :param cond:
         :return:
         """
-        # TODO: ADAPT!
-        # Define the filenames and xlsxwriter objects
-        exp_desc_fname: Filename = Filename(
-            os.path.join(DATA_FILE_PATH,
-                         f'EDD_Omics_Experiment_Description_mock{condition}.xlsx'))
-        exp_desc_xlsxwriter = pd.ExcelWriter(exp_desc_fname)
         omics_fname: Filename = Filename(
             os.path.join(DATA_FILE_PATH,
-                         f'{omics}_mock{condition}.xlsx'))
-        omics_xlsxwriter = pd.ExcelWriter(omics_fname)
-
-        # Write the dataframe into a xlsx file
-
-        # dataframe.to_csv(file_name, sep=',', encoding='utf-8')
-
-        # create file number one: sample file
-        if not os.path.isfile(sample_file_name):
-            try:
-                with open(sample_file_name, 'w') as fh:
-                    fh.write("Line Name,\n")
-                    fh.write(f"Sample {condition}")
-            except Exception as ex:
-                print("Error in writing file!")
-                print(ex)
-
-        # create file number two: omics file
+                         f'{omics}_mock{cond}.xlsx'))
+        print(gray('Saving file'), magenta(omics_fname), gray('... '), end='')
         try:
-            with open(omics_fname, 'w') as fh:
-                fh.write("Line Name, Measurement Type, Value, Units\n")
-                sample_name = f"Sample {condition}\n"
-                spaces = ' ' * len(sample_name)
-                fh.write(sample_name)
-                for index, series in dataframe.iteritems():
-                    for id, value in series.iteritems():
-                        fh.write(
-                            (f"{spaces}{id}, {value}, {unit_dict[omics]}\n"))
+            edd.to_excel(omics_fname,
+                         sheet_name=f'{omics}',
+                         index=False)
+        except IOError as ex:
+            print(red('ERROR!'))
+            vprint(ex)
+        else:
+            print(green('OK!'))
 
-        except Exception as ex:
-            print("Error in writing file!")
-            print(ex)
-
-    def write_experiment_description(condition=1):
+    def write_experiment_description(cond=1):
         """
 
-        :param condition:
+        :param cond:
         :return:
         """
 
         exp_desc_fname: Filename = Filename(
-            os.path.join(DATA_FILE_PATH,
-                         f'EDD_Omics_Experiment_Description_mock{condition}.xlsx'))
+            os.path.join(
+                DATA_FILE_PATH,
+                f'EDD_Omics_Experiment_Description_mock{cond}.xlsx'))
         index_label = 'Line Name'
         exp_desc_cols = pd.Index([
             'Line Description',
@@ -354,7 +354,6 @@ def main():
         exp_desc_df.to_excel(exp_desc_fname,
                              sheet_name='EXP_DESC',
                              index_label=index_label)
-
 
     # Argument Parser Configuration
     parser = argparse.ArgumentParser(
