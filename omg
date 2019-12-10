@@ -4,25 +4,28 @@ omg: Omics Mock Generator
 
 Generates a mock dataset of omics data (importable in EDD):
 transcriptomics, proteomics, and metabolomics
+
+Requirements: Python 3.7.2, cobra, numpy, pandas.
 """
 
 __author__ = 'LBL-QMM'
 __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
 __license__ = 'GNU Affero General Public License Version 3'
 __status__ = 'Alpha'
-__date__ = 'Oct 2019'
-__version__ = '0.0.1'
+__date__ = 'Dec 2019'
+__version__ = '0.0.1-dev'
 
 import argparse
+import collections as col
 import os
 import random
 import sys
 import warnings
-from collections import OrderedDict
 from enum import Enum
-from typing import NewType, Dict, List, Any
+from typing import NewType, Dict, List, Any, OrderedDict, Counter
 
 import cobra
+import numpy as np
 import pandas as pd
 from cobra.exceptions import OptimizationError
 
@@ -45,15 +48,19 @@ class Omics(Enum):
 # TODO: Move some constants to variables by program arguments
 DATA_FILE_PATH: Filename = Filename('data')
 MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')
+# MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')
 REACTION_ID: str = 'BIOMASS_Ec_iJO1366_core_53p95M'
 UNITS: Dict[Omics, str] = {
     Omics.PROTEOMICS: 'proteins/cell',
     Omics.TRANSCRIPTOMICS: "FPKM",
     Omics.METABOLOMICS: "g/L"
 }
+GENE_IDS_DBS: List[str] = ['uniprot', 'goa', 'ncbigi']
 # Fix the flux value to -15 as we have data for this constraint
 LOWER_BOUND: int = -15
 UPPER_BOUND: int = -15
+# Internals
+_EPS = np.finfo(np.double).eps
 
 
 def ansi(num: int):
@@ -88,6 +95,7 @@ def main():
             for key, val in vars(args).items():
                 if val is not None and val is not False and val != []:
                     print(gray(f'\t{key} ='), f'{val}')
+            args.verbose = True  # Unconditional verbose mode activation
         elif not sys.warnoptions:
             warnings.simplefilter("ignore")
 
@@ -99,15 +107,21 @@ def main():
         sample: OrderedDict[str, Any]
 
         for measurement, value in omics_dict.items():
-            sample = OrderedDict([
+            sample = col.OrderedDict([
                 ('Line Name', 'WT'),
                 ('Measurement Type', measurement),
+                ('Time', 0),  # TODO: Generalize for time-series
                 ('Value', value),
                 ('Units', UNITS[omics])
             ])
             edd.append(sample)
 
         return pd.DataFrame(edd)
+
+    def dprint(*a, **k):
+        """Print only if debug mode is enabled"""
+        if args.debug:
+            print(*a, **k)
 
     def generate_mock_data(model, cond):
         """
@@ -172,37 +186,58 @@ def main():
         :return:
         """
         # Pre-determined linear constants
-        prote_scaling = 0.8  # Scaling factor for fluxes to proteomics
-        trans_scaling = 0.6  # Scaling factor for proteomics to transcriptomics
+        PROTE_SCALING: float = 10  # Scaling factor for fluxes to proteomics
+        TRANS_SCALING: float = 1.2  # S.F. for proteomics to transcriptomics
         # TODO: Allow user to set those constants via parameters
 
-        # Get values for proteomics and transcriptomics
+        # Get values and statistics for proteomics and transcriptomics
         proteomics: Dict[str, float] = {}
+        proteo_stats: Dict[str, Counter[str]] = {
+            db + status: col.Counter() for db in GENE_IDS_DBS
+            for status in ['_missing', '_success', '_failure']}
         transcriptomics: Dict[str, float] = {}
 
-        rxnIDs: pd.Index = solution.fluxes.index
-        for rxnId in rxnIDs:
-            reaction: cobra.Reaction = model.reactions.get_by_id(rxnId)
+        rxn_ids: pd.Index = solution.fluxes.index
+        # Cobra docs: Accessing reaction fluxes through a Solution object
+        #  is the safer, preferred, and only guaranteed to be correct way.
+        for rxn_id in rxn_ids:
+            reaction: cobra.Reaction = model.reactions.get_by_id(rxn_id)
+            gene: cobra.Gene
             for gene in reaction.genes:
                 protein_id: str = ''
                 # WARNING! Based on gene.annotation property populated
-                protein_db: str = ''
-                for protein_db in ['uniprot', 'goa', 'ncbigi']:
+                gene_id_db: str = ''
+                for gene_id_db in ['uniprot']:  # GENE_IDS_DBS:
+                    # TODO: Expand to all protein DBs once EDD supports them
                     try:
-                        protein_id = gene.annotation[protein_db]
+                        protein_id = gene.annotation[gene_id_db]
                     except KeyError:
-                        pass
+                        proteo_stats[gene_id_db + '_missing'][protein_id] += 1
                     else:
-                        # Populates proteomics and transcriptomics dicts
-                        proteomics[protein_id] = (
-                                solution.fluxes[rxnId] / prote_scaling)
-                        transcriptomics[gene.id] = (
-                                proteomics[protein_id] / trans_scaling)
+                        # Populates proteomics and transcriptomics dicts if
+                        #  passes some filters. TODO: Review filters!
+                        proteo: int = np.ceil(solution.fluxes[rxn_id] *
+                                              PROTE_SCALING)
+                        if proteo > 0:
+                            proteomics[protein_id] = proteo
+                            proteo_stats[gene_id_db + '_success'][
+                                protein_id] += 1
+                        else:
+                            proteo_stats[gene_id_db + '_failure'][
+                                protein_id] += 1
+                        transc: float = proteo * TRANS_SCALING
+                        if transc > _EPS * 1e+3:
+                            transcriptomics[gene.id] = transc
                         break
                 else:
-                    vprint(yellow('WARNING!'), gray('Gene'), gene.id,
-                           gray('in reaction'), rxnId,
+                    dprint(yellow('WARNING!'), gray('Gene'), gene.id,
+                           gray('in reaction'), rxn_id,
                            gray('has no useful annotation. Skipping...'))
+
+        vprint('Number of fluxes retrieved for each protein')
+        # TODO: Expand to all protein DBs once EDD supports them
+        for status in ['_missing', '_success', '_failure']:
+            vprint('uniprot' + status, proteo_stats['uniprot' + status].most_common(5))
 
         proteomics_df: pd.DataFrame = dict_to_edd(
             proteomics, Omics.PROTEOMICS)
@@ -245,6 +280,8 @@ def main():
             print(yellow('PROBLEM!'), error)
         else:
             print(green('OK!'))
+#        model.summary()
+#        model.metabolites.nadh_c.summary()
 
     def print_reactions(model):
         """
@@ -275,9 +312,9 @@ def main():
 
         # Load model depending on the kind of file
         vprint(gray(f'Loading model in {file_name}... '), end='')
-        if file_name.endswith(".xml"):
+        if file_name.endswith('.xml') or file_name.endswith('.sbml'):
             model = cobra.io.read_sbml_model(file_name)
-        elif file_name.endswith(".json"):
+        elif file_name.endswith('.json'):
             model = cobra.io.load_json_model(file_name)
         else:
             print(red('ERROR!'),
