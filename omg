@@ -13,13 +13,15 @@ __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
 __license__ = 'GNU Affero General Public License Version 3'
 __status__ = 'Alpha'
 __date__ = 'Dec 2019'
-__version__ = '0.0.1-dev'
+__version__ = '0.0.1-dev2'
 
 import argparse
 import collections as col
 import os
 import random
 import sys
+import urllib.parse
+import urllib.request
 import warnings
 from enum import Enum
 from typing import NewType, Dict, List, Any, OrderedDict, Counter
@@ -27,7 +29,7 @@ from typing import NewType, Dict, List, Any, OrderedDict, Counter
 import cobra
 import numpy as np
 import pandas as pd
-from cobra.exceptions import OptimizationError
+from cobra.exceptions import OptimizationError, Infeasible
 
 # Type annotations
 Filename = NewType('Filename', str)
@@ -45,20 +47,25 @@ class Omics(Enum):
 
 
 # Constants
+UNIPROT_URL = '''https://www.uniprot.org/uploadlists/'''
 # TODO: Move some constants to variables by program arguments
 DATA_FILE_PATH: Filename = Filename('data')
-MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')
-# MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')
-REACTION_ID: str = 'BIOMASS_Ec_iJO1366_core_53p95M'
+# MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
+MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
+# REACTION_ID: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
+REACTION_ID: str = 'biomass_target'  # R. opacus
+# REACTION_ID: str = 'SRC_C00185_e'  # R. opacus
+GENE_IDS_DBS: List[str] = ['kegg.genes']  # R. opacus
+# GENE_IDS_DBS: List[str] = ['uniprot', 'goa', 'ncbigi']  # E. coli
 UNITS: Dict[Omics, str] = {
     Omics.PROTEOMICS: 'proteins/cell',
     Omics.TRANSCRIPTOMICS: "FPKM",
     Omics.METABOLOMICS: "g/L"
 }
-GENE_IDS_DBS: List[str] = ['uniprot', 'goa', 'ncbigi']
 # Fix the flux value to -15 as we have data for this constraint
 LOWER_BOUND: int = -15
 UPPER_BOUND: int = -15
+
 # Internals
 _EPS = np.finfo(np.double).eps
 
@@ -138,12 +145,20 @@ def main():
             optimize_solution(model, REACTION_ID)
             solution: cobra.Solution = cobra.core.solution.get_solution(
                 model, raise_error=False)
+            vprint(gray('Solution objective value:'), solution.objective_value)
+            vprint(gray('Model summary after optimization:'))
+            try:
+                vprint(model.summary())
+#                vprint(model.metabolites.C00185_e.summary())
+            except Infeasible:
+                vprint(yellow(
+                    'Model summary unavailable as solution was unfeasible!'))
 
             write_experiment_description(cond)
 
             # TODO: Uncomment next lines once methods adapted
             get_proteomics_transcriptomics_data(model, solution, cond)
-            get_metabolomics_data(model, cond)
+#           get_metabolomics_data(model, cond)
 
     def get_metabolomics_data(model: cobra.Model, cond: int):
         """
@@ -175,6 +190,43 @@ def main():
         # Write metabolomics file
         write_data_files(metabolomics_df, Omics.METABOLOMICS, cond)
 
+    def gene_to_protein(dict_in: Dict[str, float],
+                        fmt_gene: str = 'KEGG_ID',
+                        fmt_prot: str = 'ID') -> Dict[str, float]:
+        """
+        From any dict whose keys are gene IDs, map them to protein IDs
+
+        Default behaviour: map KEGG IDs into UNIPROT IDs
+
+        For details, see https://www.uniprot.org/help/api_idmapping
+        """
+
+        dict_out: Dict[str, float] = {}
+        print(gray('Mapping genes into proteins using UNIPROT... '), end='')
+        gene_ids: List[str] = list(dict_in.keys())
+        mapping_params: Dict[str, str] = {
+            'from': fmt_gene,
+            'to': fmt_prot,
+            'format': 'tab',
+            'query': '\t'.join(gene_ids)
+        }
+        mapping_data = urllib.parse.urlencode(mapping_params)
+        mapping_data = mapping_data.encode('utf-8')
+        mapping_req = urllib.request.Request(UNIPROT_URL, mapping_data)
+        with urllib.request.urlopen(mapping_req) as map_file:
+            mapping = map_file.read().strip().decode('utf-8').split('\n')
+        for gene2prot in mapping[1:]:
+            gene, prot = gene2prot.split('\t', 1)
+            dict_out[prot] = dict_in[gene]
+            dprint('Gene', gene, 'mapped to protein', prot)
+        if dict_out:
+            print(green('OK!'))
+            vprint(gray('Number of unmapped genes from'), fmt_gene, gray('to'),
+                   fmt_prot, gray(':'), yellow(len(dict_in) - len(dict_out)))
+        else:
+            print(yellow('PROBLEM!'))
+        return dict_out
+
     def get_proteomics_transcriptomics_data(model: cobra.Model,
                                             solution: cobra.Solution,
                                             cond: int):
@@ -190,11 +242,12 @@ def main():
         TRANS_SCALING: float = 1.2  # S.F. for proteomics to transcriptomics
         # TODO: Allow user to set those constants via parameters
 
+        # Get DBs used for gene annotation
         # Get values and statistics for proteomics and transcriptomics
         proteomics: Dict[str, float] = {}
         proteo_stats: Dict[str, Counter[str]] = {
             db + status: col.Counter() for db in GENE_IDS_DBS
-            for status in ['_missing', '_success', '_failure']}
+            for status in ['_missing', '_success', '_zero']}
         transcriptomics: Dict[str, float] = {}
 
         rxn_ids: pd.Index = solution.fluxes.index
@@ -204,27 +257,28 @@ def main():
             reaction: cobra.Reaction = model.reactions.get_by_id(rxn_id)
             gene: cobra.Gene
             for gene in reaction.genes:
-                protein_id: str = ''
+                gene_id: str = ''
                 # WARNING! Based on gene.annotation property populated
                 gene_id_db: str = ''
-                for gene_id_db in ['uniprot']:  # GENE_IDS_DBS:
-                    # TODO: Expand to all protein DBs once EDD supports them
+                for gene_id_db in GENE_IDS_DBS:
                     try:
-                        protein_id = gene.annotation[gene_id_db]
+                        gene_id = gene.annotation[gene_id_db]
                     except KeyError:
-                        proteo_stats[gene_id_db + '_missing'][protein_id] += 1
+                        proteo_stats[gene_id_db + '_missing'][gene_id] += 1
                     else:
                         # Populates proteomics and transcriptomics dicts if
-                        #  passes some filters. TODO: Review filters!
+                        #  related flux has a positive value
                         proteo: int = np.ceil(solution.fluxes[rxn_id] *
                                               PROTE_SCALING)
-                        if proteo > 0:
-                            proteomics[protein_id] = proteo
-                            proteo_stats[gene_id_db + '_success'][
-                                protein_id] += 1
+                        if proteo > _EPS:
+                            # Accumulate in case of multiple genes
+                            try:
+                                proteomics[gene_id] += proteo
+                            except KeyError:
+                                proteomics[gene_id] = proteo
+                            proteo_stats[gene_id_db + '_success'][gene_id] += 1
                         else:
-                            proteo_stats[gene_id_db + '_failure'][
-                                protein_id] += 1
+                            proteo_stats[gene_id_db + '_zero'][gene_id] += 1
                         transc: float = proteo * TRANS_SCALING
                         if transc > _EPS * 1e+3:
                             transcriptomics[gene.id] = transc
@@ -234,10 +288,14 @@ def main():
                            gray('in reaction'), rxn_id,
                            gray('has no useful annotation. Skipping...'))
 
-        vprint('Number of fluxes retrieved for each protein')
-        # TODO: Expand to all protein DBs once EDD supports them
-        for status in ['_missing', '_success', '_failure']:
-            vprint('uniprot' + status, proteo_stats['uniprot' + status].most_common(5))
+        dprint(gray('Number of fluxes related to each gene (top 10)'))
+        for gene_id_db in GENE_IDS_DBS:
+            for status in ['_missing', '_success', '_zero']:
+                dprint(gene_id_db + status, proteo_stats[
+                    gene_id_db + status].most_common(10))
+
+        # Map genes ids into protein ids accepted by EDD
+        proteomics = gene_to_protein(proteomics)
 
         proteomics_df: pd.DataFrame = dict_to_edd(
             proteomics, Omics.PROTEOMICS)
@@ -264,8 +322,17 @@ def main():
         :return solution:
         """
 
-        vprint(gray('Reaction:'),
-               model.reactions.get_by_id(reaction_id))
+        reaction: cobra.Reaction = model.reactions.get_by_id(reaction_id)
+        vprint(gray('Reaction:'), reaction)
+        if args.debug:
+            print(blue('List of reactants:'))
+            for reactant in reaction.reactants:
+                print(reactant, reactant.name)
+            print(blue('List of products:'))
+            for product in reaction.products:
+                print(product, product.name)
+
+
         # Set local reaction bounds
         model.reactions.get_by_id(reaction_id).lower_bound = LOWER_BOUND
         model.reactions.get_by_id(reaction_id).upper_bound = UPPER_BOUND
@@ -280,8 +347,6 @@ def main():
             print(yellow('PROBLEM!'), error)
         else:
             print(green('OK!'))
-#        model.summary()
-#        model.metabolites.nadh_c.summary()
 
     def print_reactions(model):
         """
@@ -294,7 +359,7 @@ def main():
         #   related to BIOMASS production:
         vprint(gray('List of reactions related to BIOMASS production:'))
         for rxn in model.reactions:
-            if rxn.name is not None and 'BIOMASS' in rxn.id:
+            if rxn.name is not None and 'biomass' in rxn.id.lower():
                 vprint(f"{rxn.id} : {rxn.name}")
 
     def read_model(file_name):
@@ -376,8 +441,8 @@ def main():
             'Replicate Count',
         ], name=index_label)
         metadata_wt: Dict[str, Dict[str, Any]] = {'WT': {
-            'Line Description': 'R. Opacus wild type (mock)',
-            'Media': 'M9+glucose',
+            'Line Description': 'R. Opacus PD630 wild type (mock)',
+            'Media': 'Mock media',
             'Shaking speed': 1.0,
             'Starting OD': 0.1,
             'Culture Volume': 50.0,
@@ -388,9 +453,17 @@ def main():
         exp_desc_df = pd.DataFrame.from_dict(metadata_wt,
                                              orient='index',
                                              columns=exp_desc_cols)
-        exp_desc_df.to_excel(exp_desc_fname,
-                             sheet_name='EXP_DESC',
-                             index_label=index_label)
+        print(gray('Saving file'), magenta(exp_desc_fname),
+              gray('... '), end='')
+        try:
+            exp_desc_df.to_excel(exp_desc_fname,
+                                 sheet_name='EXP_DESC',
+                                 index_label=index_label)
+        except IOError as ex:
+            print(red('ERROR!'))
+            vprint(ex)
+        else:
+            print(green('OK!'))
 
     # Argument Parser Configuration
     parser = argparse.ArgumentParser(
