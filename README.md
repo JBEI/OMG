@@ -19,14 +19,18 @@ You may want to use the `--user` flag in `pip` and prepend `~/.local/bin` to you
 ### Running locally
 
 Before you run you need to have a model file in the data directory.
-There is a sample file "iECIAI39_1322.xml" in the test directory for you to get started with that you can copy to the data directory.
 
-You can provide your own file in the data directory and modify the code to change the file_name. Same edit is required for the reaction name that you want to generate the data from.
-The default reaction name used from the test model file is "BIOMASS_Ec_iJO1366_core_53p95M"
+ * _R. opacus_ (**default**): There is a sample model file "reannotated_base_v3.sbml" in the test directory for you to get started with, that you can copy to the data directory. The only biomass reaction in this model is the default used for optimization.
+
+ * _E. Coli_: There is a sample file "iECIAI39_1322.xml" in the test directory for this model organism. The default reaction name used from this test model file is "BIOMASS_Ec_iJO1366_core_53p95M"
+
+ * Other: You can provide your own file in the data directory and modify the code to change the filename. Same edit is required for the reaction name that you want to generate the data from.
+
+So, you can copy the desired model to the data directory
 
 ```bash
 $ mkdir data
-$ cp test/iECIAI39_1322.xml data/
+$ cp test/<selected.model> data/
 ```
 and
 ```bash
@@ -41,6 +45,8 @@ $ pipenv shell
 
 ### Output
 
+Example for _E. Coli_:
+
 ```sh
 List of reactions related to BIOMASS production:
 BIOMASS_Ec_iJO1366_WT_53p95M: E. coli biomass objective function (iJO1366) - WT - with 53.95 GAM estimate
@@ -54,7 +60,6 @@ The fake data gets written in the data directory. The condition parameter is res
 ### Jupyter notebook
 - You can serve a local Jupyter server and run it locally
 - Or you can copy the Jupyter notebook to Jupyter hub and run them there
-
 
 ### Contact
 - For questions contact Somtirtha Roy at [somtirtharoy@lbl.gov](somtirtharoy@lbl.gov)
