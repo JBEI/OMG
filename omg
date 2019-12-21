@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 omg: Omics Mock Generator
 
@@ -13,12 +14,14 @@ __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
 __license__ = 'GNU Affero General Public License Version 3'
 __status__ = 'Alpha'
 __date__ = 'Dec 2019'
-__version__ = '0.0.1-dev2'
+__version__ = '0.0.1'
 
 import argparse
 import collections as col
 import os
 import random
+import re
+import statistics
 import sys
 import urllib.parse
 import urllib.request
@@ -48,6 +51,7 @@ class Omics(Enum):
 
 # Constants
 UNIPROT_URL = '''https://www.uniprot.org/uploadlists/'''
+CTS_URL = '''https://cts.fiehnlab.ucdavis.edu/rest/convert/'''
 # TODO: Move some constants to variables by program arguments
 DATA_FILE_PATH: Filename = Filename('data')
 # MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
@@ -60,7 +64,7 @@ GENE_IDS_DBS: List[str] = ['kegg.genes']  # R. opacus
 UNITS: Dict[Omics, str] = {
     Omics.PROTEOMICS: 'proteins/cell',
     Omics.TRANSCRIPTOMICS: "FPKM",
-    Omics.METABOLOMICS: "g/L"
+    Omics.METABOLOMICS: "mg/L"
 }
 # Fix the flux value to -15 as we have data for this constraint
 LOWER_BOUND: int = -15
@@ -105,6 +109,46 @@ def main():
             args.verbose = True  # Unconditional verbose mode activation
         elif not sys.warnoptions:
             warnings.simplefilter("ignore")
+
+    def chemical_translation(dict_in: Dict[str, Any],
+                             fmt_from: str = 'KEGG',
+                             fmt_to: str = 'PubChem CID') -> Dict[str, Any]:
+        """
+        Proxy to UCDavis Chemical Translation Service (CTS). Maps the keys of
+        the input dictionary keeping intact the values.
+
+        Default behaviour: map KEGG Compounds into PubChem CIDs
+
+        For details, see https://cts.fiehnlab.ucdavis.edu/services
+        """
+
+        dict_out: Dict[str, float] = {}
+        print(gray('Mapping metabolites ids using CTS'), end='', flush=True)
+        ids_in: List[str] = list(dict_in.keys())
+        pattern = re.compile(
+            r"""(?:"searchTerm":")(\w+)(?:","results":\[")(\w+)(?:"])""")
+        for id_in in ids_in:
+            mapping_str: str = f'{fmt_from}/{fmt_to}/{id_in}'
+            mapping_data = urllib.parse.quote(mapping_str)
+            mapping_req = urllib.request.Request(CTS_URL + mapping_data)
+            with urllib.request.urlopen(mapping_req) as map_file:
+                mapping = map_file.read().strip().decode('utf-8')
+            match: re.Match = pattern.search(mapping)
+            if match:
+                assert match.group(1) == id_in
+                id_out: str = match.group(2)
+                if fmt_to == 'PubChem CID':
+                    id_out = 'CID:' + id_out
+                dict_out[id_out] = dict_in[id_in]
+                print(green('.'), end='', flush=True)
+                dprint(f'Metabolite {id_in} mapped to {id_out}')
+            else:
+                print(red('.'), end='', flush=True)
+                dprint(yellow(f'Metabolite {id_in} mapping failed!'))
+        print(green('OK!'))
+        vprint(gray('Number of unmapped genes from'), fmt_from, gray('to'),
+               fmt_to, gray(':'), yellow(len(dict_in) - len(dict_out)))
+        return dict_out
 
     def dict_to_edd(omics_dict: Dict[str, float],
                     omics: Omics) -> pd.DataFrame:
@@ -155,46 +199,15 @@ def main():
                     'Model summary unavailable as solution was unfeasible!'))
 
             write_experiment_description(cond)
+            get_omics_data(model, solution, cond)
 
-            # TODO: Uncomment next lines once methods adapted
-            get_proteomics_transcriptomics_data(model, solution, cond)
-#           get_metabolomics_data(model, cond)
-
-    def get_metabolomics_data(model: cobra.Model, cond: int):
-        """
-
-        :param model:
-        :param cond:
-        :return:
-        """
-
-        metabolomics: Dict[str, float] = {}  # metabolites and concentrations
-
-        # TODO: Need to find a better algorithm. This is O(n^3)
-        for met in model.metabolites:
-            # get associated reactions
-            for reaction in list(met.reactions):
-                for metabolite, coefficient in reaction.metabolites.items():
-                    if metabolite.id == met.id:
-                        if met.id not in metabolomics.keys():
-                            metabolomics[met.id] = abs(coefficient)
-                        else:
-                            metabolomics[met.id] += abs(coefficient)
-            # TODO: Check this -> getting number of associated reactions and averaging the metabolic ??concentration?? value
-            num_reactions = len(list(met.reactions))
-            metabolomics[met.id] /= num_reactions
-
-        metabolomics_df: pd.DataFrame = dict_to_edd(
-            metabolomics, Omics.METABOLOMICS)
-
-        # Write metabolomics file
-        write_data_files(metabolomics_df, Omics.METABOLOMICS, cond)
-
-    def gene_to_protein(dict_in: Dict[str, float],
+    def gene_to_protein(dict_in: Dict[str, Any],
                         fmt_gene: str = 'KEGG_ID',
-                        fmt_prot: str = 'ID') -> Dict[str, float]:
+                        fmt_prot: str = 'ID') -> Dict[str, Any]:
         """
-        From any dict whose keys are gene IDs, map them to protein IDs
+        From any dict whose keys are gene IDs, maps them to protein IDs and
+        keeps the value intact
+
 
         Default behaviour: map KEGG IDs into UNIPROT IDs
 
@@ -227,10 +240,11 @@ def main():
             print(yellow('PROBLEM!'))
         return dict_out
 
-    def get_proteomics_transcriptomics_data(model: cobra.Model,
-                                            solution: cobra.Solution,
-                                            cond: int):
+    def get_omics_data(model: cobra.Model,
+                       solution: cobra.Solution,
+                       cond: int):
         """
+        Core method that generates all omics data.
 
         :param model:
         :param solution:
@@ -242,20 +256,26 @@ def main():
         TRANS_SCALING: float = 1.2  # S.F. for proteomics to transcriptomics
         # TODO: Allow user to set those constants via parameters
 
-        # Get DBs used for gene annotation
-        # Get values and statistics for proteomics and transcriptomics
+        # The omics variable name should coincide with those elements of Omics
         proteomics: Dict[str, float] = {}
+        transcriptomics: Dict[str, float] = {}
+        metabolomics: Dict[str, float] = {}
+
+        # Get values and statistics for proteomics and transcriptomics
         proteo_stats: Dict[str, Counter[str]] = {
             db + status: col.Counter() for db in GENE_IDS_DBS
             for status in ['_missing', '_success', '_zero']}
-        transcriptomics: Dict[str, float] = {}
+        metabolite_awflux: Dict[str, List[float]] = {}  # abs weighted fluxes
 
         rxn_ids: pd.Index = solution.fluxes.index
         # Cobra docs: Accessing reaction fluxes through a Solution object
         #  is the safer, preferred, and only guaranteed to be correct way.
         for rxn_id in rxn_ids:
             reaction: cobra.Reaction = model.reactions.get_by_id(rxn_id)
+            flux: float = solution.fluxes[rxn_id]
             gene: cobra.Gene
+
+            # Subloop 1/2: proteomics and transcriptomics
             for gene in reaction.genes:
                 gene_id: str = ''
                 # WARNING! Based on gene.annotation property populated
@@ -268,8 +288,7 @@ def main():
                     else:
                         # Populates proteomics and transcriptomics dicts if
                         #  related flux has a positive value
-                        proteo: int = np.ceil(solution.fluxes[rxn_id] *
-                                              PROTE_SCALING)
+                        proteo: int = np.ceil(flux * PROTE_SCALING)
                         if proteo > _EPS:
                             # Accumulate in case of multiple genes
                             try:
@@ -288,6 +307,24 @@ def main():
                            gray('in reaction'), rxn_id,
                            gray('has no useful annotation. Skipping...'))
 
+            # Subloop 2/2: metabolomics (partial)
+            for metabolite, coeff in reaction.metabolites.items():
+                awflux: float = abs(coeff * flux)  # absolute weighted flux
+                if awflux < _EPS:
+                    continue
+                metabolite_id: str = metabolite.id.rsplit(
+                    sep='_', maxsplit=1)[0]  # Remove suffixes _c, _e, etc
+                try:
+                    metabolite_awflux[metabolite_id].append(awflux)
+                except KeyError:
+                    metabolite_awflux[metabolite_id] = [awflux]
+
+        # Metabolomics (final)
+        # Alt: to avoid this loop use a moving average in the subloop above
+        for metabolite, awfluxes in metabolite_awflux.items():
+            metabolomics[metabolite] = statistics.mean(awfluxes)
+        vprint(gray('Number of active metabolites:'), len(metabolomics))
+
         dprint(gray('Number of fluxes related to each gene (top 10)'))
         for gene_id_db in GENE_IDS_DBS:
             for status in ['_missing', '_success', '_zero']:
@@ -297,14 +334,13 @@ def main():
         # Map genes ids into protein ids accepted by EDD
         proteomics = gene_to_protein(proteomics)
 
-        proteomics_df: pd.DataFrame = dict_to_edd(
-            proteomics, Omics.PROTEOMICS)
-        transcriptomics_df: pd.DataFrame = dict_to_edd(
-            transcriptomics, Omics.TRANSCRIPTOMICS)
+        # Map metabolites ids into those accepted by EDD
+        metabolomics = chemical_translation(metabolomics)
 
-        # Write proteomics and transcriptomics files
-        write_data_files(proteomics_df, Omics.PROTEOMICS, cond)
-        write_data_files(transcriptomics_df, Omics.TRANSCRIPTOMICS, cond)
+        # Write omics files
+        for omic in Omics:  # NOTE: omics variable names are elements of Omics
+            omics_df: pd.DataFrame = dict_to_edd(eval(str(omic)), omic)
+            write_data_files(omics_df, omic, cond)
 
     def get_random_number():
         """
