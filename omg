@@ -37,7 +37,6 @@ from cobra.exceptions import OptimizationError, Infeasible
 # Type annotations
 Filename = NewType('Filename', str)
 
-
 # Enumerations
 class Omics(Enum):
     """Enumeration with supported omics data types."""
@@ -98,8 +97,11 @@ class Ecoli():
         self.transcriptomics = {}
         self.fluxomics = {}
         self.metabolomics = {}
+        self.LOWER_BOUND = -15
+        self.UPPER_BOUND = -15
 
-    def generate_time_series_data(self, model):
+
+    def generate_time_series_data(self, model, condition):
 
         # intiializing omics dictionaries to contain data across timepoints
         proteomics_list: List = []
@@ -112,30 +114,28 @@ class Ecoli():
         time_series_omics_data = {}
         experiment_timepoints = [0, 3, 6, 9]
         flux_constraints = [6, 9, 12, 15]
-        for i in range( len(flux_constraints)+1 ):
+        for i in range(len(flux_constraints)):
             # Set global reactions bounds (in addition to local)
-            LOWER_BOUND = flux_constraints[i]
-            UPPER_BOUND = flux_constraints[i]
+            self.LOWER_BOUND = -flux_constraints[i]
+            self.UPPER_BOUND = -flux_constraints[i]
             cobra_config = cobra.Configuration()
-            cobra_config.bounds = LOWER_BOUND, UPPER_BOUND
+            cobra_config.bounds = self.LOWER_BOUND, self.UPPER_BOUND
 
             # Print the list of reaction names related to BIOMASS production
             # print_reactions(model)
 
             # get fake proteomics data and write it to XLSX file
             condition = 1
-            # proteomics, transcriptomics, fluxomics, metabolomics = self.generate_fake_data(model, condition)
-            self.generate_fake_data(model, condition)
-            # print(proteomics)
-            print("Here3")
+            proteomics, transcriptomics, fluxomics, metabolomics = self.generate_fake_data(model, condition)
+
             # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
-            proteomics_list.append(self.proteomics, experiment_timepoints[i])
-            transcriptomics_list.append(self.transcriptomics, experiment_timepoints[i])
-            fluxomics_list.append(self.fluxomics, experiment_timepoints[i])
-            metabolomics_list.append(self.metabolomics, experiment_timepoints[i])
+            proteomics_list.append((proteomics, experiment_timepoints[i]))
+            transcriptomics_list.append((transcriptomics, experiment_timepoints[i]))
+            fluxomics_list.append((fluxomics, experiment_timepoints[i]))
+            metabolomics_list.append((metabolomics, experiment_timepoints[i]))
         
         time_series_omics_data = {'proteomics': proteomics_list, 'transcriptomics': transcriptomics_list, 'fluxomics': fluxomics_list, 'metabolomics': metabolomics_list}
-
+        
         self.write_experiment_description_file(condition)
         self.write_omics_files(time_series_omics_data)
 
@@ -156,7 +156,6 @@ class Ecoli():
 
         # reaction_id of choice passed to the function# hardcoded here for this particular file (Need to convert this to an interactive cli program)
         reaction_id = REACTION_ID_ECOLI
-        # solution = None
 
         # while condition:
             # print("Condition parameter: ", condition)
@@ -165,13 +164,11 @@ class Ecoli():
         # solution: cobra.Solution = cobra.core.solution.get_solution(
         #     model, raise_error=False)
 
-        self.proteomics, self.transcriptomics, self.fluxomics = self.get_proteomics_transcriptomics_fluxomics_data(model, solution, condition)
+        proteomics, transcriptomics, fluxomics = self.get_proteomics_transcriptomics_fluxomics_data(model, solution, condition)
         
-        self.metabolomics = self.get_metabolomics_data(model, condition)
-        print('Before returning')
-        # print(self.metabolomics)
-        # return (proteomics, transcriptomics, fluxomics, metabolomics)
-
+        metabolomics = self.get_metabolomics_data(model, condition)
+        
+        return (proteomics, transcriptomics, fluxomics, metabolomics)
 
 
     def get_metabolomics_data(self, model, condition):
@@ -201,11 +198,6 @@ class Ecoli():
             # getting number of associated reactions and averaging the metabolic concentration value
             num_reactions = len(list(met.reactions))
             metabolomics[met.id]/=num_reactions
-
-        # Write the dataframe into a csv file
-        # file_name = f'{DATA_FILE_PATH}/metabolomics_fakedata_condition_{condition}.csv'
-        # metabolomics_dataframe = pd.DataFrame.from_dict(metabolomics, orient='index', columns=['metabolomics_value'])
-        # self.write_data_files(metabolomics_dataframe, "metabolomics")
 
         return metabolomics
 
@@ -261,18 +253,6 @@ class Ecoli():
                 # create transcriptomics dict
                 transcriptomics[gene.id] = (proteomics[protein_id]/q)*1.05
 
-        # file_name = f'{DATA_FILE_PATH}/proteomics_fakedata_condition_{condition}.csv'
-        # proteomics_dataframe = pd.DataFrame.from_dict(proteomics, orient='index', columns=['proteomics_value'])
-        # self.write_data_files(proteomics_dataframe, "proteomics")
-
-        # file_name = f'{DATA_FILE_PATH}/transcriptomics_fakedata_condition_{condition}.csv'
-        # transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics, orient='index', columns=['transcriptomics_value'])
-        # self.write_data_files(transcriptomics_dataframe, "transcriptomics")
-
-        # file_name = f'{DATA_FILE_PATH}/fluxomics_fakedata_condition_{condition}.csv'
-        # fluxomics_dataframe = pd.DataFrame.from_dict(fluxomics, orient='index', columns=['fluxomics_value'])
-        # self.write_data_files(fluxomics_dataframe, "fluxomics")
-
         return proteomics, transcriptomics, fluxomics
 
     def write_experiment_description_file(self, condition=1, line_name='WT'):
@@ -308,23 +288,24 @@ class Ecoli():
                 "metabolomics": "mg/L"
                 }
 
+        # for each omics type data
         for omics_type, omics_list in time_series_omics_data.items():
             # create the filenames
             omics_file_name: str = f'{DATA_FILE_PATH}/{omics_type}_fakedata_sample_{condition}.csv'
-
-            for omics_dict, timepoint in omics_list:
-                try:
-                    with open(omics_file_name, 'w') as fh:
-                        fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
-
+            
+            # open a file to write omics data for each type and for all timepoints and constraints
+            try:
+                with open(omics_file_name, 'w') as fh:
+                    fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
+                    for omics_dict, timepoint in omics_list:
                         dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
                         for index, series in dataframe.iteritems():
                             for id, value in series.iteritems():
                                 fh.write((f'{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n'))
 
-                except Exception as ex:
-                    print("Error in writing file!")
-                    print(ex)
+            except Exception as ex:
+                print("Error in writing file!")
+                print(ex)
         
             fh.close()
 
@@ -374,11 +355,11 @@ class Ecoli():
         """
 
         # fix the flux value to -15 as we have data for this constraint
-        model.reactions.get_by_id(reaction_id).lower_bound = -15
-        model.reactions.get_by_id(reaction_id).upper_bound = -15
+        model.reactions.get_by_id(reaction_id).lower_bound = self.LOWER_BOUND
+        model.reactions.get_by_id(reaction_id).upper_bound = self.UPPER_BOUND
         # print(model.reactions.get_by_id(reaction_id))
 
-        print("Displaying the reaction bounds afterG constraining them:")
+        print("Displaying the reaction bounds after constraining them:")
         print(model.reactions.get_by_id(reaction_id).bounds)
 
         # optimizing the model for only the selected reaction   
@@ -861,7 +842,7 @@ def main():
 
             # generate ecoli synthetic data for model and condition
             condition = 1
-            ecoli.generate_fake_data(model, condition)
+            ecoli.generate_time_series_data(model, condition)
 
         elif HOST_NAME == 'ropacus':
             # create instance of the E. Coli class
