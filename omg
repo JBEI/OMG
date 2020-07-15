@@ -52,11 +52,13 @@ class Omics(Enum):
 # Constants
 UNIPROT_URL = '''https://www.uniprot.org/uploadlists/'''
 CTS_URL = '''https://cts.fiehnlab.ucdavis.edu/rest/convert/'''
+# HOST NAME
+HOST_NAME: str = 'ropacus' 
 # TODO: Move some constants to variables by program arguments
 DATA_FILE_PATH: Filename = Filename('data')
 # MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
 MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
-# REACTION_ID: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
+REACTION_ID_ECOLI: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
 REACTION_ID: str = 'biomass_target'  # R. opacus
 # REACTION_ID: str = 'SRC_C00185_e'  # R. opacus
 GENE_IDS_DBS: List[str] = ['kegg.genes']  # R. opacus
@@ -86,11 +88,330 @@ gray, red, green, yellow, blue, magenta, cyan, white = map(ansi,
 
 # pylint: enable=invalid-name
 
+#==============================================================================
 
-def main():
-    """Main entry point to the script."""
+class Ecoli():
 
-    def add_random_noise():
+    def __init__(self):
+        self.time_series_omics_data = {}
+        self.proteomics = {}
+        self.transcriptomics = {}
+        self.fluxomics = {}
+        self.metabolomics = {}
+
+    def generate_time_series_data(self, model):
+
+        # intiializing omics dictionaries to contain data across timepoints
+        proteomics_list: List = []
+        transcriptomics_list: List = []
+        fluxomics_list: List = []
+        metabolomics_list: List = []
+
+        # generating time series data for the following flux constraints
+        # 6, 9, 12, 15 corresponding to the times 0, 3, 6, 9 hours
+        time_series_omics_data = {}
+        experiment_timepoints = [0, 3, 6, 9]
+        flux_constraints = [6, 9, 12, 15]
+        for i in range( len(flux_constraints)+1 ):
+            # Set global reactions bounds (in addition to local)
+            LOWER_BOUND = flux_constraints[i]
+            UPPER_BOUND = flux_constraints[i]
+            cobra_config = cobra.Configuration()
+            cobra_config.bounds = LOWER_BOUND, UPPER_BOUND
+
+            # Print the list of reaction names related to BIOMASS production
+            # print_reactions(model)
+
+            # get fake proteomics data and write it to XLSX file
+            condition = 1
+            # proteomics, transcriptomics, fluxomics, metabolomics = self.generate_fake_data(model, condition)
+            self.generate_fake_data(model, condition)
+            # print(proteomics)
+            print("Here3")
+            # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
+            proteomics_list.append(self.proteomics, experiment_timepoints[i])
+            transcriptomics_list.append(self.transcriptomics, experiment_timepoints[i])
+            fluxomics_list.append(self.fluxomics, experiment_timepoints[i])
+            metabolomics_list.append(self.metabolomics, experiment_timepoints[i])
+        
+        time_series_omics_data = {'proteomics': proteomics_list, 'transcriptomics': transcriptomics_list, 'fluxomics': fluxomics_list, 'metabolomics': metabolomics_list}
+
+        self.write_experiment_description_file(condition)
+        self.write_omics_files(time_series_omics_data)
+
+
+    def generate_fake_data(self, model, condition):
+        """
+
+        :param model: cobra model object
+        :param solution: solution for the model optimization using cobra
+        :param data_type: defines the type of -omics data to generate (all by default)
+        :return:
+        """
+
+        self.proteomics = {}
+        self.transcriptomics = {}
+        self.fluxomics = {}
+        self.metabolomics = {}
+
+        # reaction_id of choice passed to the function# hardcoded here for this particular file (Need to convert this to an interactive cli program)
+        reaction_id = REACTION_ID_ECOLI
+        # solution = None
+
+        # while condition:
+            # print("Condition parameter: ", condition)
+        condition-=1
+        solution = self.get_optimized_solution(model, reaction_id)
+        # solution: cobra.Solution = cobra.core.solution.get_solution(
+        #     model, raise_error=False)
+
+        self.proteomics, self.transcriptomics, self.fluxomics = self.get_proteomics_transcriptomics_fluxomics_data(model, solution, condition)
+        
+        self.metabolomics = self.get_metabolomics_data(model, condition)
+        print('Before returning')
+        # print(self.metabolomics)
+        # return (proteomics, transcriptomics, fluxomics, metabolomics)
+
+
+
+    def get_metabolomics_data(self, model, condition):
+        """
+
+        :param model:
+        :param condition:
+        :return:
+        """
+        metabolomics = {}
+        # get metabolites
+        # NOTE: Need to find a better algorithm. This is O(n^3)
+        for met in model.metabolites:
+            # get associated reactions
+            for reaction in list(met.reactions):
+                # get dictionary of associated metabolites and their concentrations
+                for metabolite, conc in reaction._metabolites.items():
+                    if metabolite.id == met.id:
+                        # map the BIGG ids to CIDs using the inchikeys in the metabolites and the ampping file
+                        # that we have generated from Pubchem
+                        # remember that not all Inchikeys dont have a mappping to a CIDs and there are
+                        # multiple mappings for some Inchikeys
+                        if met.id not in metabolomics.keys():
+                            metabolomics[met.id] = abs(conc)
+                        else:
+                            metabolomics[met.id] += abs(conc)
+            # getting number of associated reactions and averaging the metabolic concentration value
+            num_reactions = len(list(met.reactions))
+            metabolomics[met.id]/=num_reactions
+
+        # Write the dataframe into a csv file
+        # file_name = f'{DATA_FILE_PATH}/metabolomics_fakedata_condition_{condition}.csv'
+        # metabolomics_dataframe = pd.DataFrame.from_dict(metabolomics, orient='index', columns=['metabolomics_value'])
+        # self.write_data_files(metabolomics_dataframe, "metabolomics")
+
+        return metabolomics
+
+
+    def get_proteomics_transcriptomics_fluxomics_data(self, model, solution, condition):
+        """
+
+        :param model:
+        :param solution:
+        :param condition:
+        :return:
+        """
+
+        # pre-determined linear constant (NOTE: Allow user to set this via parameter)
+        # DISCUSS!!
+        k = 0.8
+        q = 0.06
+
+        proteomics = {}
+        transcriptomics = {}
+        fluxomics = {}
+
+        # print(solution.fluxes['EX_cm_e'])
+        rxnIDs = solution.fluxes.keys()
+        for rxnId in rxnIDs:
+            reaction = model.reactions.get_by_id(rxnId)
+            for gene in list(reaction.genes):
+
+                # this will ignore all the reactions that does not have the gene.annotation property
+                # DISCUSS!!
+                if gene.annotation:
+                    if 'uniprot' not in gene.annotation:
+                        if 'goa' in gene.annotation:
+                            protein_id = gene.annotation['goa']
+                            # print("HERE")
+                        else:
+                            break
+                    else:
+                        protein_id = gene.annotation['uniprot'][0]
+                        # print("HERERERERERERERER")
+
+                    # create proteomics dict
+                    # Adding noise which is 5% of the signal data. signal + signal*0.05 = signal*1.05
+                    # print(rxnId)
+                    # print(solution.fluxes)
+                    # print(type(solution.fluxes))
+                    # print(solution.fluxes[rxnId])
+                    # print(protein_id)
+
+                    proteomics[protein_id] = (solution.fluxes[rxnId]/k)*1.05
+                    fluxomics[rxnId] = solution.fluxes[rxnId]
+
+                # create transcriptomics dict
+                transcriptomics[gene.id] = (proteomics[protein_id]/q)*1.05
+
+        # file_name = f'{DATA_FILE_PATH}/proteomics_fakedata_condition_{condition}.csv'
+        # proteomics_dataframe = pd.DataFrame.from_dict(proteomics, orient='index', columns=['proteomics_value'])
+        # self.write_data_files(proteomics_dataframe, "proteomics")
+
+        # file_name = f'{DATA_FILE_PATH}/transcriptomics_fakedata_condition_{condition}.csv'
+        # transcriptomics_dataframe = pd.DataFrame.from_dict(transcriptomics, orient='index', columns=['transcriptomics_value'])
+        # self.write_data_files(transcriptomics_dataframe, "transcriptomics")
+
+        # file_name = f'{DATA_FILE_PATH}/fluxomics_fakedata_condition_{condition}.csv'
+        # fluxomics_dataframe = pd.DataFrame.from_dict(fluxomics, orient='index', columns=['fluxomics_value'])
+        # self.write_data_files(fluxomics_dataframe, "fluxomics")
+
+        return proteomics, transcriptomics, fluxomics
+
+    def write_experiment_description_file(self, condition=1, line_name='WT'):
+        # create the filename
+        experiment_description_file_name = f'{DATA_FILE_PATH}/experiment_description_file.csv'
+
+        #write experiment description file
+        try:
+            with open(experiment_description_file_name, 'w') as fh:
+                fh.write(f'Line Name, Line Description, Part ID, Media, Shaking Speed, Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n')
+                fh.write(f"{line_name}, KEIO wild type, ABF_001327, M9, 1, 0.1, 50, 200, 30, 1\n")
+        except Exception as ex:
+            print("Error in writing file!")
+            print(ex)
+
+        fh.close()
+
+
+    def write_omics_files(self, time_series_omics_data, condition=1, line_name='WT'):
+        """
+
+        :param dataframe:
+        :param data_type:
+        :param condition:
+        :return:
+        """
+
+        # create file number two: omics file
+        # TODO: Need to change the units to actual relevant units
+        unit_dict = { "fluxomics": 'g/L',\
+                "proteomics": 'proteins/cell',\
+                "transcriptomics": "FPKM",\
+                "metabolomics": "mg/L"
+                }
+
+        for omics_type, omics_list in time_series_omics_data.items():
+            # create the filenames
+            omics_file_name: str = f'{DATA_FILE_PATH}/{omics_type}_fakedata_sample_{condition}.csv'
+
+            for omics_dict, timepoint in omics_list:
+                try:
+                    with open(omics_file_name, 'w') as fh:
+                        fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
+
+                        dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
+                        for index, series in dataframe.iteritems():
+                            for id, value in series.iteritems():
+                                fh.write((f'{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n'))
+
+                except Exception as ex:
+                    print("Error in writing file!")
+                    print(ex)
+        
+            fh.close()
+
+
+
+    def get_random_number(self):
+        """
+
+        :return:
+        """
+        random.seed(12312)
+        return random.random()
+
+    def add_random_noise(self):
+        """
+
+        :return:
+        """
+        pass
+
+
+    def get_list_of_reactions(self, file_name):
+        """
+
+        :param file_name: Name of the model file (has to be xml for now)
+        :return: None (prints the list of reactions that has mass in them)
+        """
+
+        # Load model¶depending on the kind of file (the file has to be xml)
+        if file_name.endswith(".xml"):
+            model = cobra.io.read_sbml_model(file_name)
+
+        # Print out the reaction name and reaction id for all reactions related to BIOMASS production:
+        print("List of reactions related to BIOMASS production:")
+        for rxn in model.reactions:
+            if rxn.name is not None and 'BIOMASS' in rxn.id:
+                print("{}: {}".format(rxn.id, rxn.name))
+
+
+
+    def get_optimized_solution(self, model, reaction_id):
+        """
+
+        :param model:
+        :param reaction_id:
+        :return solution:
+        """
+
+        # fix the flux value to -15 as we have data for this constraint
+        model.reactions.get_by_id(reaction_id).lower_bound = -15
+        model.reactions.get_by_id(reaction_id).upper_bound = -15
+        # print(model.reactions.get_by_id(reaction_id))
+
+        print("Displaying the reaction bounds afterG constraining them:")
+        print(model.reactions.get_by_id(reaction_id).bounds)
+
+        # optimizing the model for only the selected reaction   
+        # model.slim_optimize()
+
+        # optimizing model
+        solution = model.optimize()
+
+        return solution
+
+
+    def read_model(self, file_name):
+        """
+
+        :param file_name:
+        :return model:
+        """
+
+        # Load model¶depending on the kind of file
+        if file_name.endswith(".xml"):
+            model = cobra.io.read_sbml_model(file_name)
+        elif file_name.endswith(".json"):
+            model = cobra.io.load_json_model(file_name)
+
+        return model
+#==============================================================================
+
+class Ropacus():
+
+    def __init__(self):
+        pass
+
+    def add_random_noise(self):
         # TODO
         """
 
@@ -98,19 +419,7 @@ def main():
         """
         pass
 
-    def check_debug():
-        """Check debugging mode"""
-        if args.debug:
-            print(blue('INFO:'), gray('Debugging mode activated'))
-            print(blue('INFO:'), gray('Active parameters:'))
-            for key, val in vars(args).items():
-                if val is not None and val is not False and val != []:
-                    print(gray(f'\t{key} ='), f'{val}')
-            args.verbose = True  # Unconditional verbose mode activation
-        elif not sys.warnoptions:
-            warnings.simplefilter("ignore")
-
-    def chemical_translation(dict_in: Dict[str, Any],
+    def chemical_translation(self, dict_in: Dict[str, Any],
                              fmt_from: str = 'KEGG',
                              fmt_to: str = 'PubChem CID') -> Dict[str, Any]:
         """
@@ -150,7 +459,7 @@ def main():
                fmt_to, gray(':'), yellow(len(dict_in) - len(dict_out)))
         return dict_out
 
-    def dict_to_edd(omics_dict: Dict[str, float],
+    def dict_to_edd(self, omics_dict: Dict[str, float],
                     omics: Omics) -> pd.DataFrame:
         """Get dataframe with EDD format from dictionary with omics values"""
 
@@ -169,12 +478,12 @@ def main():
 
         return pd.DataFrame(edd)
 
-    def dprint(*a, **k):
+    def dprint(self, *a, **k):
         """Print only if debug mode is enabled"""
         if args.debug:
             print(*a, **k)
 
-    def generate_mock_data(model, cond):
+    def generate_mock_data(self, model, cond):
         """
 
         :param model: cobra model object
@@ -186,22 +495,22 @@ def main():
         while cond:
             print(gray('Condition parameter:'), magenta(cond))
             cond -= 1
-            optimize_solution(model, REACTION_ID)
+            self.optimize_solution(model, REACTION_ID)
             solution: cobra.Solution = cobra.core.solution.get_solution(
                 model, raise_error=False)
             vprint(gray('Solution objective value:'), solution.objective_value)
             vprint(gray('Model summary after optimization:'))
             try:
                 vprint(model.summary())
-#                vprint(model.metabolites.C00185_e.summary())
+            #   vprint(model.metabolites.C00185_e.summary())
             except Infeasible:
                 vprint(yellow(
                     'Model summary unavailable as solution was unfeasible!'))
 
-            write_experiment_description(cond)
-            get_omics_data(model, solution, cond)
+            self.write_experiment_description(cond)
+            self.get_omics_data(model, solution, cond)
 
-    def gene_to_protein(dict_in: Dict[str, Any],
+    def gene_to_protein(self, dict_in: Dict[str, Any],
                         fmt_gene: str = 'KEGG_ID',
                         fmt_prot: str = 'ID') -> Dict[str, Any]:
         """
@@ -240,7 +549,7 @@ def main():
             print(yellow('PROBLEM!'))
         return dict_out
 
-    def get_omics_data(model: cobra.Model,
+    def get_omics_data(self, model: cobra.Model,
                        solution: cobra.Solution,
                        cond: int):
         """
@@ -250,6 +559,7 @@ def main():
         :param solution:
         :param cond:
         :return:
+
         """
         # Pre-determined linear constants
         PROTE_SCALING: float = 10  # Scaling factor for fluxes to proteomics
@@ -342,7 +652,7 @@ def main():
             omics_df: pd.DataFrame = dict_to_edd(eval(str(omic)), omic)
             write_data_files(omics_df, omic, cond)
 
-    def get_random_number():
+    def get_random_number(self):
         """
 
         :return:
@@ -350,7 +660,7 @@ def main():
         random.seed(12312)
         return random.random()
 
-    def optimize_solution(model: cobra.Model, reaction_id: str) -> None:
+    def optimize_solution(self, model: cobra.Model, reaction_id: str) -> None:
         """
 
         :param model:
@@ -384,21 +694,7 @@ def main():
         else:
             print(green('OK!'))
 
-    def print_reactions(model):
-        """
-
-        :param model:
-        :return: None (prints the list of reactions that have BIOMASS in them)
-        """
-
-        # Print out the reaction name and reaction id for all reactions
-        #   related to BIOMASS production:
-        vprint(gray('List of reactions related to BIOMASS production:'))
-        for rxn in model.reactions:
-            if rxn.name is not None and 'biomass' in rxn.id.lower():
-                vprint(f"{rxn.id} : {rxn.name}")
-
-    def read_model(file_name):
+    def read_model(self, file_name):
         """
 
         :param file_name:
@@ -425,12 +721,12 @@ def main():
 
         return model
 
-    def vprint(*a, **k):
+    def vprint(self, *a, **k):
         """Print only if verbose mode is enabled"""
         if args.verbose:
             print(*a, **k)
 
-    def write_data_files(edd: pd.DataFrame, omics: Omics = None,
+    def write_data_files(self, edd: pd.DataFrame, omics: Omics = None,
                          cond: int = 1) -> None:
         """
         Write the EDD dataframe into a xlsx file
@@ -454,7 +750,7 @@ def main():
         else:
             print(green('OK!'))
 
-    def write_experiment_description(cond=1):
+    def write_experiment_description(self, cond=1):
         """
 
         :param cond:
@@ -501,6 +797,83 @@ def main():
         else:
             print(green('OK!'))
 
+#======================================
+
+def main():
+    """Main entry point to the script."""
+
+    def check_debug():
+        """Check debugging mode"""
+        if args.debug:
+            print(blue('INFO:'), gray('Debugging mode activated'))
+            print(blue('INFO:'), gray('Active parameters:'))
+            for key, val in vars(args).items():
+                if val is not None and val is not False and val != []:
+                    print(gray(f'\t{key} ='), f'{val}')
+            args.verbose = True  # Unconditional verbose mode activation
+        elif not sys.warnoptions:
+            warnings.simplefilter("ignore")
+
+    def print_reactions(model):
+        """
+
+        :param model:
+        :return: None (prints the list of reactions that have BIOMASS in them)
+        """
+
+        # Print out the reaction name and reaction id for all reactions
+        #   related to BIOMASS production:
+        vprint(gray('List of reactions related to BIOMASS production:'))
+        for rxn in model.reactions:
+            if rxn.name is not None and 'biomass' in rxn.id.lower():
+                vprint(f"{rxn.id} : {rxn.name}")
+
+    # def generate_time_series_data(model):
+
+    #     # generating time series data for the following flux constraints
+    #     # 3, 6, 9, 10, 15 corresponding to the times 0, 3, 6, 9 hours
+
+    #     for flux_constraint in range(6, 16, 3):
+    #         # Set global reactions bounds (in addition to local)
+    #         LOWER_BOUND = flux_constraint
+    #         UPPER_BOUND = flux_constraint
+    #         cobra_config = cobra.Configuration()
+    #         cobra_config.bounds = LOWER_BOUND, UPPER_BOUND
+
+    #         # Print the list of reaction names related to BIOMASS production
+    #         print_reactions(model)
+
+    #         # get fake proteomics data and write it to XLSX file
+    #         condition = 1
+    #         generate_mock_data(model, condition)
+
+
+    def generate_data_for_host(filename):
+        """
+            Generate omics data for host and model name
+        """
+        if HOST_NAME == 'ecoli':
+            # create instance of the E. Coli class
+            ecoli = Ecoli()
+
+            # read model file
+            model = ecoli.read_model(filename)
+
+            # generate ecoli synthetic data for model and condition
+            condition = 1
+            ecoli.generate_fake_data(model, condition)
+
+        elif HOST_NAME == 'ropacus':
+            # create instance of the E. Coli class
+            rop = Ropacus()
+
+            # read model file
+            model = rop.read_model(filename)
+
+            # generate time series mock data for host
+            generate_time_series_data(model)
+
+    
     # Argument Parser Configuration
     parser = argparse.ArgumentParser(
         description='Omics Mock Generator',
@@ -521,6 +894,16 @@ def main():
         action='version',
         version='%(prog)s release {} ({})'.format(__version__, __date__)
     )
+    parser.add_argument(
+        '-ho', '--host',
+        default='ecoli',
+        help='specify host organism'
+    )
+    parser.add_argument(
+        '-mf', '--modelfile',
+        default='iJO1366.json',
+        help='specify model file to use, should be in data folder'
+    )
 
     # Parse arguments
     args = parser.parse_args()
@@ -536,22 +919,15 @@ def main():
     if not os.path.isdir(DATA_FILE_PATH):
         os.mkdir(DATA_FILE_PATH)
 
+    # check if host and model file has been mentioned
+    HOST_NAME = args.host
+    MODEL_FILENAME = args.modelfile
+
     filename: Filename = Filename(os.path.join(DATA_FILE_PATH, MODEL_FILENAME))
     # reaction_id = 'EX_glc__D_e'
-
-    # read model
-    model = read_model(filename)
-
-    # Set global reactions bounds (in addition to local)
-    cobra_config = cobra.Configuration()
-    cobra_config.bounds = LOWER_BOUND, UPPER_BOUND
-
-    # Print the list of reaction names related to BIOMASS production
-    print_reactions(model)
-
-    # get fake proteomics data and write it to XLSX file
-    condition = 1
-    generate_mock_data(model, condition)
+    
+    # get time series omics data for specified host and model
+    generate_data_for_host(filename)
 
 
 if __name__ == "__main__":
