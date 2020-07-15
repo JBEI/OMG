@@ -55,6 +55,8 @@ CTS_URL = '''https://cts.fiehnlab.ucdavis.edu/rest/convert/'''
 HOST_NAME: str = 'ropacus' 
 # TODO: Move some constants to variables by program arguments
 DATA_FILE_PATH: Filename = Filename('data')
+# INCHIKEY_TO_CID_MAP_FILE_PATH: mapping file path to map inchikey to cids
+INCHIKEY_TO_CID_MAP_FILE_PATH: Filename = Filename('mapping') 
 # MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
 MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
 REACTION_ID_ECOLI: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
@@ -171,6 +173,28 @@ class Ecoli():
         return (proteomics, transcriptomics, fluxomics, metabolomics)
 
 
+    def read_pubchem_id_file(self):
+        inchikey_to_cid = {}
+        filename = f'{INCHIKEY_TO_CID_MAP_FILE_PATH}/inchikey_to_cid.txt'
+        with open(filename, 'r') as fh:
+                try:
+                    line = fh.readline()
+                    while line:
+                        # checking to ignore inchikey records with no cid mappings
+                        if (len(line.split()) > 1):
+                            inchikey_to_cid[line.split()[0]] = 'CID:'+line.split()[1]
+                        else:
+                            inchikey_to_cid[line.strip()] = None
+
+                        line = fh.readline()
+                except Exception as ex:
+                    print("Error in reading file!")
+                    print(ex)
+        fh.close()
+
+        return inchikey_to_cid
+
+
     def get_metabolomics_data(self, model, condition):
         """
 
@@ -181,6 +205,11 @@ class Ecoli():
         metabolomics = {}
         # get metabolites
         # NOTE: Need to find a better algorithm. This is O(n^3)
+
+        # read the inchikey to pubchem ids mapping file
+        inchikey_to_cid = {}
+        inchikey_to_cid = self.read_pubchem_id_file()
+
         for met in model.metabolites:
             # get associated reactions
             for reaction in list(met.reactions):
@@ -191,13 +220,24 @@ class Ecoli():
                         # that we have generated from Pubchem
                         # remember that not all Inchikeys dont have a mappping to a CIDs and there are
                         # multiple mappings for some Inchikeys
-                        if met.id not in metabolomics.keys():
-                            metabolomics[met.id] = abs(conc)
-                        else:
-                            metabolomics[met.id] += abs(conc)
+                        if 'inchi_key' in met.annotation:
+                            if type(met.annotation['inchi_key']) is list:
+                                inchi_key = met.annotation['inchi_key'][0]
+                            else:
+                                inchi_key = met.annotation['inchi_key']
+
+                            if inchikey_to_cid[inchi_key] not in metabolomics.keys():
+                                if inchikey_to_cid[inchi_key] is not None:
+                                    metabolomics[inchikey_to_cid[inchi_key]] = abs(conc)
+                            else:
+                                if inchikey_to_cid[inchi_key] is not None:
+                                    metabolomics[inchikey_to_cid[inchi_key]] += abs(conc)
             # getting number of associated reactions and averaging the metabolic concentration value
             num_reactions = len(list(met.reactions))
-            metabolomics[met.id]/=num_reactions
+
+            # check if inchi_key attribite present else ignore metabolite
+            if 'inchi_key' in met.annotation.keys() and inchikey_to_cid[inchi_key] is not None:
+                metabolomics[inchikey_to_cid[inchi_key]]/=num_reactions
 
         return metabolomics
 
