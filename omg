@@ -113,6 +113,26 @@ class Ecoli():
 
         # generating time series data for the following flux constraints
         # 6, 9, 12, 15 corresponding to the times 0, 3, 6, 9 hours
+       
+        # The whole idea of using "batch simulation concepts from Joonhoon" is to
+        # estimate glucose consumption values (written as flux constraints below)
+        # is a more realistic way
+        
+        # In order to update flux values and estimate concentration of glucose, we 
+        # assume concentrations at t = 0h to be "subs0" (refer to batch simulation notebook).
+        # We also assume "volume" = 1.0 and OD at t = 0h (cell0)
+        #Assume time points, you can keep this time points or change them to what Joonhoon has
+        # Step1: Evaluate flux of glucose at current time point by this equation:
+        # model.reactions.get_by_id(k).lower_bound = max(model.reactions.get_by_id(k).lower_bound,
+        #                                                  -subs.loc[t,v]*volume/cell[t]/delt)
+        # Step2: Solve the model using the function "get_optimized_solution" present below and generate
+        # data for that time point
+        # Step 3: Calculate mu where mu = solution(biomass)
+        # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
+        # Step 5: Calculate glucose for next time point t+deltat: 
+        # subs.loc[t+delt,v] = max(subs.loc[t,v]-sol[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
+        # Go back to step 1
+        
         time_series_omics_data = {}
         experiment_timepoints = [0, 3, 6, 9]
         flux_constraints = [6, 9, 12, 15]
