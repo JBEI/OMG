@@ -197,23 +197,22 @@ class Ecoli():
                 condition = 1
                 proteomics, transcriptomics, fluxomics, metabolomics, solution = self.generate_fake_data(model, condition)
 
-                # # Step 3: Calculate mu where mu = solution(biomass)
-                # mu = solution[REACTION_ID_ECOLI]
-                # # print("Hey", solution[REACTION_ID_ECOLI])
+                # Step 3: Calculate mu where mu = solution(biomass)
+                mu = solution[REACTION_ID_ECOLI]
+                # print("Hey", solution[REACTION_ID_ECOLI])
 
-                # # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
-                # cell[t+delt] = cell[t]*np.exp(mu*delt) 
+                # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
+                cell[t+delt] = cell[t]*np.exp(mu*delt) 
 
-                # # sys.exit()
-                # # Step 5: Calculate glucose for next time point t+deltat:
-                # # subs.loc[t+delt,v] = max(subs.loc[t,v]-sol[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
-                # subs.loc[t+delt,v] = max(subs.loc[t,v]-solution[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0) 
+                # Step 5: Calculate glucose for next time point t+deltat:
+                # subs.loc[t+delt,v] = max(subs.loc[t,v]-sol[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
+                subs.loc[t+delt,v] = max(subs.loc[t,v]-solution[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0) 
 
-                # # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
-                # proteomics_list.append((proteomics, t))
-                # transcriptomics_list.append((transcriptomics, t))
-                # fluxomics_list.append((fluxomics, t))
-                # metabolomics_list.append((metabolomics, t))
+                # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
+                proteomics_list.append((proteomics, t))
+                transcriptomics_list.append((transcriptomics, t))
+                fluxomics_list.append((fluxomics, t))
+                metabolomics_list.append((metabolomics, t))
 
                 # isopentenol calculation
                 # sol = moma_calculation()
@@ -307,19 +306,21 @@ class Ecoli():
                                 inchi_key = met.annotation['inchi_key'][0]
                             else:
                                 inchi_key = met.annotation['inchi_key']
-
-                            if inchikey_to_cid[inchi_key] not in metabolomics.keys():
-                                if inchikey_to_cid[inchi_key] is not None:
-                                    metabolomics[inchikey_to_cid[inchi_key]] = abs(conc)
-                            else:
-                                if inchikey_to_cid[inchi_key] is not None:
-                                    metabolomics[inchikey_to_cid[inchi_key]] += abs(conc)
+                            
+                            if inchi_key in inchikey_to_cid.keys():
+                                if inchikey_to_cid[inchi_key] not in metabolomics.keys():
+                                    if inchikey_to_cid[inchi_key] is not None:
+                                        metabolomics[inchikey_to_cid[inchi_key]] = abs(conc)
+                                else:
+                                    if inchikey_to_cid[inchi_key] is not None:
+                                        metabolomics[inchikey_to_cid[inchi_key]] += abs(conc)
             # getting number of associated reactions and averaging the metabolic concentration value
             num_reactions = len(list(met.reactions))
 
             # check if inchi_key attribite present else ignore metabolite
-            if 'inchi_key' in met.annotation.keys() and inchikey_to_cid[inchi_key] is not None:
-                metabolomics[inchikey_to_cid[inchi_key]]/=num_reactions
+            if inchi_key in inchikey_to_cid.keys():
+                if 'inchi_key' in met.annotation.keys() and inchikey_to_cid[inchi_key] is not None:
+                    metabolomics[inchikey_to_cid[inchi_key]]/=num_reactions
 
         return metabolomics
 
