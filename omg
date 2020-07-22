@@ -89,18 +89,25 @@ gray, red, green, yellow, blue, magenta, cyan, white = map(ansi,
 
 # pylint: enable=invalid-name
 
-#==============================================================================
+
+#=============================================================================
+# Host class: contaiing all core methods used for 
+# generating omics data for any host organism. All hosts should inherit from 
+# this class and add methods specific to them.
+
+class Host():
+
+    def __init__(self):
+        pass
+
+#=============================================================================
 
 class Ecoli():
 
     def __init__(self):
         self.time_series_omics_data = {}
-        self.proteomics = {}
-        self.transcriptomics = {}
-        self.fluxomics = {}
-        self.metabolomics = {}
         self.LOWER_BOUND = -15
-        self.UPPER_BOUND = -15
+        self.UPPER_BOUND = 1000
 
 
     def generate_time_series_data(self, model, condition):
@@ -134,27 +141,82 @@ class Ecoli():
         # Go back to step 1
         
         time_series_omics_data = {}
-        experiment_timepoints = [0, 3, 6, 9]
-        flux_constraints = [6, 9, 12, 15]
-        for i in range(len(flux_constraints)):
-            # Set global reactions bounds (in addition to local)
-            self.LOWER_BOUND = -flux_constraints[i]
-            self.UPPER_BOUND = -flux_constraints[i]
-            cobra_config = cobra.Configuration()
-            cobra_config.bounds = self.LOWER_BOUND, self.UPPER_BOUND
 
-            # Print the list of reaction names related to BIOMASS production
-            # print_reactions(model)
+        # time steps to calculate the biomass production for
+        t0 = 0.0
+        tf = 24.0
+        points = 13
+        tspan = np.linspace(t0, tf, points)
 
-            # get fake proteomics data and write it to XLSX file
-            condition = 1
-            proteomics, transcriptomics, fluxomics, metabolomics = self.generate_fake_data(model, condition)
+        # step interval
+        delt = tspan[1] - tspan[0]
 
-            # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
-            proteomics_list.append((proteomics, experiment_timepoints[i]))
-            transcriptomics_list.append((transcriptomics, experiment_timepoints[i]))
-            fluxomics_list.append((fluxomics, experiment_timepoints[i]))
-            metabolomics_list.append((metabolomics, experiment_timepoints[i]))
+        # panda series containing OD values for the timepionts
+        cell = pd.Series(index=tspan)
+        cell0 = 0.01 # in gDW/L
+        cell[t0] = cell0
+
+        # reactants
+        comp = ['glc__D_e', 'nh4_e', 'pi_e', 'so4_e', 'mg2_e', 'k_e', 'na1_e', 'cl_e']
+
+        # Dataframe containing substrate 
+        subs = pd.DataFrame(index=tspan, columns=comp)
+        # initial substrate vlaues
+        subs0 = [22.203, 18.695, 69.454, 2.0, 2.0, 21.883, 103.7, 27.25] # in mM
+        subs.loc[t0] = subs0
+
+        # exterior substrates
+        subs_ext = {r.id: r.reactants[0].id for r in model.exchanges if r.reactants[0].id in comp}
+
+        # experiment_timepoints = [0, 3, 6, 9]
+        # flux_constraints = [6, 9, 12, 15]
+
+        for t in tspan:
+            for k, v in subs_ext.items():
+                # Set global reactions bounds (in addition to local)
+
+                # model.reactions.get_by_id(k).lower_bound = max(model.reactions.get_by_id(k).lower_bound,
+                #                                           -subs.loc[t,v]*volume/cell[t]/delt)
+
+                volume = 1.0
+                # print(model.reactions.get_by_id(k).lower_bound)
+                # print(-subs.loc[t,v]*volume/cell[t]/delt)
+
+                # set the lower bound to the maximum of the lower bound in the model and the change of glucose 
+                model.reactions.get_by_id(k).lower_bound = max(model.reactions.get_by_id(k).lower_bound, -subs.loc[t,v]*volume/cell[t]/delt)
+                self.LOWER_BOUND = model.reactions.get_by_id(k).lower_bound
+                # print(self.LOWER_BOUND)
+                # self.UPPER_BOUND = -15
+                cobra_config = cobra.Configuration()
+                cobra_config.bounds = self.LOWER_BOUND, self.UPPER_BOUND
+
+                # Print the list of reaction names related to BIOMASS production
+                # print_reactions(model)
+
+                # get fake proteomics data and write it to XLSX file
+                condition = 1
+                proteomics, transcriptomics, fluxomics, metabolomics, solution = self.generate_fake_data(model, condition)
+
+                # # Step 3: Calculate mu where mu = solution(biomass)
+                # mu = solution[REACTION_ID_ECOLI]
+                # # print("Hey", solution[REACTION_ID_ECOLI])
+
+                # # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
+                # cell[t+delt] = cell[t]*np.exp(mu*delt) 
+
+                # # sys.exit()
+                # # Step 5: Calculate glucose for next time point t+deltat:
+                # # subs.loc[t+delt,v] = max(subs.loc[t,v]-sol[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
+                # subs.loc[t+delt,v] = max(subs.loc[t,v]-solution[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0) 
+
+                # # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
+                # proteomics_list.append((proteomics, t))
+                # transcriptomics_list.append((transcriptomics, t))
+                # fluxomics_list.append((fluxomics, t))
+                # metabolomics_list.append((metabolomics, t))
+
+                # isopentenol calculation
+                # sol = moma_calculation()
         
         time_series_omics_data = {'proteomics': proteomics_list, 'transcriptomics': transcriptomics_list, 'fluxomics': fluxomics_list, 'metabolomics': metabolomics_list}
         
@@ -190,7 +252,7 @@ class Ecoli():
         
         metabolomics = self.get_metabolomics_data(model, condition)
         
-        return (proteomics, transcriptomics, fluxomics, metabolomics)
+        return (proteomics, transcriptomics, fluxomics, metabolomics, solution)
 
 
     def read_pubchem_id_file(self):
@@ -445,12 +507,45 @@ class Ecoli():
             model = cobra.io.load_json_model(file_name)
 
         return model
-#==============================================================================
+
+#=============================================================================
 
 class Ropacus():
 
     def __init__(self):
-        pass
+        self.time_series_omics_data = {}
+        self.LOWER_BOUND = -15
+        self.UPPER_BOUND = -15
+
+    def generate_time_series_data(self, model):
+
+        # intiializing omics dictionaries to contain data across timepoints
+        proteomics_list: List = []
+        transcriptomics_list: List = []
+        fluxomics_list: List = []
+        metabolomics_list: List = []
+
+        # generating time series data for the following flux constraints
+        # 6, 9, 12, 15 corresponding to the times 0, 3, 6, 9 hours
+        # NOTE: The constraints and the timepoints should be supplied as command line inputs
+        
+        time_series_omics_data = {}
+        experiment_timepoints = [0, 3, 6, 9]
+        flux_constraints = [6, 9, 12, 15]
+        for i in range(len(flux_constraints)):
+            # Set global reactions bounds (in addition to local)
+            self.LOWER_BOUND = flux_constraints[i]
+            self.UPPER_BOUND = flux_constraints[i]
+            cobra_config = cobra.Configuration()
+            cobra_config.bounds = self.LOWER_BOUND, self.UPPER_BOUND
+
+            # Print the list of reaction names related to BIOMASS production
+            self.print_reactions(model)
+
+            # get fake proteomics data and write it to XLSX file
+            condition = 1
+            self.generate_mock_data(model, condition)
+
 
     def add_random_noise(self):
         # TODO
@@ -496,7 +591,7 @@ class Ropacus():
                 print(red('.'), end='', flush=True)
                 dprint(yellow(f'Metabolite {id_in} mapping failed!'))
         print(green('OK!'))
-        vprint(gray('Number of unmapped genes from'), fmt_from, gray('to'),
+        self.vprint(gray('Number of unmapped genes from'), fmt_from, gray('to'),
                fmt_to, gray(':'), yellow(len(dict_in) - len(dict_out)))
         return dict_out
 
@@ -539,13 +634,13 @@ class Ropacus():
             self.optimize_solution(model, REACTION_ID)
             solution: cobra.Solution = cobra.core.solution.get_solution(
                 model, raise_error=False)
-            vprint(gray('Solution objective value:'), solution.objective_value)
-            vprint(gray('Model summary after optimization:'))
+            self.vprint(gray('Solution objective value:'), solution.objective_value)
+            self.vprint(gray('Model summary after optimization:'))
             try:
-                vprint(model.summary())
-            #   vprint(model.metabolites.C00185_e.summary())
+                self.vprint(model.summary())
+            #   self.vprint(model.metabolites.C00185_e.summary())
             except Infeasible:
-                vprint(yellow(
+                self.vprint(yellow(
                     'Model summary unavailable as solution was unfeasible!'))
 
             self.write_experiment_description(cond)
@@ -584,7 +679,7 @@ class Ropacus():
             dprint('Gene', gene, 'mapped to protein', prot)
         if dict_out:
             print(green('OK!'))
-            vprint(gray('Number of unmapped genes from'), fmt_gene, gray('to'),
+            self.vprint(gray('Number of unmapped genes from'), fmt_gene, gray('to'),
                    fmt_prot, gray(':'), yellow(len(dict_in) - len(dict_out)))
         else:
             print(yellow('PROBLEM!'))
@@ -654,7 +749,7 @@ class Ropacus():
                             transcriptomics[gene.id] = transc
                         break
                 else:
-                    dprint(yellow('WARNING!'), gray('Gene'), gene.id,
+                    self.dprint(yellow('WARNING!'), gray('Gene'), gene.id,
                            gray('in reaction'), rxn_id,
                            gray('has no useful annotation. Skipping...'))
 
@@ -674,24 +769,24 @@ class Ropacus():
         # Alt: to avoid this loop use a moving average in the subloop above
         for metabolite, awfluxes in metabolite_awflux.items():
             metabolomics[metabolite] = statistics.mean(awfluxes)
-        vprint(gray('Number of active metabolites:'), len(metabolomics))
+        self.vprint(gray('Number of active metabolites:'), len(metabolomics))
 
         dprint(gray('Number of fluxes related to each gene (top 10)'))
         for gene_id_db in GENE_IDS_DBS:
             for status in ['_missing', '_success', '_zero']:
-                dprint(gene_id_db + status, proteo_stats[
+                self.dprint(gene_id_db + status, proteo_stats[
                     gene_id_db + status].most_common(10))
 
         # Map genes ids into protein ids accepted by EDD
-        proteomics = gene_to_protein(proteomics)
+        proteomics = self.gene_to_protein(proteomics)
 
         # Map metabolites ids into those accepted by EDD
-        metabolomics = chemical_translation(metabolomics)
+        metabolomics = self.chemical_translation(metabolomics)
 
         # Write omics files
         for omic in Omics:  # NOTE: omics variable names are elements of Omics
-            omics_df: pd.DataFrame = dict_to_edd(eval(str(omic)), omic)
-            write_data_files(omics_df, omic, cond)
+            omics_df: pd.DataFrame = self.dict_to_edd(eval(str(omic)), omic)
+            self.write_data_files(omics_df, omic, cond)
 
     def get_random_number(self):
         """
@@ -710,7 +805,7 @@ class Ropacus():
         """
 
         reaction: cobra.Reaction = model.reactions.get_by_id(reaction_id)
-        vprint(gray('Reaction:'), reaction)
+        self.vprint(gray('Reaction:'), reaction)
         if args.debug:
             print(blue('List of reactants:'))
             for reactant in reaction.reactants:
@@ -723,7 +818,7 @@ class Ropacus():
         # Set local reaction bounds
         model.reactions.get_by_id(reaction_id).lower_bound = LOWER_BOUND
         model.reactions.get_by_id(reaction_id).upper_bound = UPPER_BOUND
-        vprint(gray('Displaying the reaction bounds after constraining them:'),
+        self.vprint(gray('Displaying the reaction bounds after constraining them:'),
                blue(model.reactions.get_by_id(reaction_id).bounds))
         # Optimize the model using FBA
         print(gray('Optimizing the model using FBA... '), end='')
@@ -749,7 +844,7 @@ class Ropacus():
             raise IOError('Missing file')
 
         # Load model depending on the kind of file
-        vprint(gray(f'Loading model in {file_name}... '), end='')
+        self.vprint(gray(f'Loading model in {file_name}... '), end='')
         if file_name.endswith('.xml') or file_name.endswith('.sbml'):
             model = cobra.io.read_sbml_model(file_name)
         elif file_name.endswith('.json'):
@@ -758,9 +853,23 @@ class Ropacus():
             print(red('ERROR!'),
                   f'File {file_name} type not supported!')
             raise TypeError('Unsupported file format')
-        vprint(green('OK!'))
+        self.vprint(green('OK!'))
 
         return model
+
+    def print_reactions(self, model):
+        """
+
+        :param model:
+        :return: None (prints the list of reactions that have BIOMASS in them)
+        """
+
+        # Print out the reaction name and reaction id for all reactions
+        #   related to BIOMASS production:
+        self.vprint(gray('List of reactions related to BIOMASS production:'))
+        for rxn in model.reactions:
+            if rxn.name is not None and 'biomass' in rxn.id.lower():
+                self.vprint(f"{rxn.id} : {rxn.name}")
 
     def vprint(self, *a, **k):
         """Print only if verbose mode is enabled"""
@@ -787,7 +896,7 @@ class Ropacus():
                          index=False)
         except IOError as ex:
             print(red('ERROR!'))
-            vprint(ex)
+            self.vprint(ex)
         else:
             print(green('OK!'))
 
@@ -834,7 +943,7 @@ class Ropacus():
                                  index_label=index_label)
         except IOError as ex:
             print(red('ERROR!'))
-            vprint(ex)
+            self.vprint(ex)
         else:
             print(green('OK!'))
 
@@ -855,38 +964,6 @@ def main():
         elif not sys.warnoptions:
             warnings.simplefilter("ignore")
 
-    def print_reactions(model):
-        """
-
-        :param model:
-        :return: None (prints the list of reactions that have BIOMASS in them)
-        """
-
-        # Print out the reaction name and reaction id for all reactions
-        #   related to BIOMASS production:
-        vprint(gray('List of reactions related to BIOMASS production:'))
-        for rxn in model.reactions:
-            if rxn.name is not None and 'biomass' in rxn.id.lower():
-                vprint(f"{rxn.id} : {rxn.name}")
-
-    # def generate_time_series_data(model):
-
-    #     # generating time series data for the following flux constraints
-    #     # 3, 6, 9, 10, 15 corresponding to the times 0, 3, 6, 9 hours
-
-    #     for flux_constraint in range(6, 16, 3):
-    #         # Set global reactions bounds (in addition to local)
-    #         LOWER_BOUND = flux_constraint
-    #         UPPER_BOUND = flux_constraint
-    #         cobra_config = cobra.Configuration()
-    #         cobra_config.bounds = LOWER_BOUND, UPPER_BOUND
-
-    #         # Print the list of reaction names related to BIOMASS production
-    #         print_reactions(model)
-
-    #         # get fake proteomics data and write it to XLSX file
-    #         condition = 1
-    #         generate_mock_data(model, condition)
 
 
     def generate_data_for_host(filename):
@@ -912,7 +989,7 @@ def main():
             model = rop.read_model(filename)
 
             # generate time series mock data for host
-            generate_time_series_data(model)
+            rop.generate_time_series_data(model)
 
     
     # Argument Parser Configuration
@@ -935,6 +1012,17 @@ def main():
         action='version',
         version='%(prog)s release {} ({})'.format(__version__, __date__)
     )
+    
+    # parser.add_argument(
+    #     '-ho', '--host',
+    #     default='ropacus',
+    #     help='specify host organism'
+    # )
+    # parser.add_argument(
+    #     '-mf', '--modelfile',
+    #     default='reannotated_base_v3.sbml',
+    #     help='specify model file to use, should be in data folder'
+    # )
     parser.add_argument(
         '-ho', '--host',
         default='ecoli',
@@ -942,6 +1030,7 @@ def main():
     )
     parser.add_argument(
         '-mf', '--modelfile',
+        # default='iJO1366_MVA.json',
         default='iJO1366.json',
         help='specify model file to use, should be in data folder'
     )
