@@ -14,7 +14,7 @@ __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
 __license__ = 'GNU Affero General Public License Version 3'
 __status__ = 'Alpha'
 __date__ = 'Dec 2019'
-__version__ = '0.0.1'
+__version__ = '0.1.1'
 
 import argparse
 import collections as col
@@ -59,6 +59,8 @@ DATA_FILE_PATH: Filename = Filename('data')
 INCHIKEY_TO_CID_MAP_FILE_PATH: Filename = Filename('mapping') 
 # MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
 MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
+
+# NOTE: user input to the program
 REACTION_ID_ECOLI: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
 REACTION_ID: str = 'biomass_target'  # R. opacus
 # REACTION_ID: str = 'SRC_C00185_e'  # R. opacus
@@ -144,8 +146,8 @@ class Ecoli():
 
         # time steps to calculate the biomass production for
         t0 = 0.0
-        tf = 24.0
-        points = 13
+        tf = 10.0
+        points = 25
         tspan = np.linspace(t0, tf, points)
 
         # step interval
@@ -170,7 +172,7 @@ class Ecoli():
 
         # experiment_timepoints = [0, 3, 6, 9]
         # flux_constraints = [6, 9, 12, 15]
-
+        # NOTE: put the body of the for loop inside a function
         for t in tspan:
             for k, v in subs_ext.items():
                 # Set global reactions bounds (in addition to local)
@@ -221,6 +223,7 @@ class Ecoli():
         
         self.write_experiment_description_file(condition)
         self.write_omics_files(time_series_omics_data)
+        #self.write_OD_data(cell)
 
 
     def generate_fake_data(self, model, condition):
@@ -253,7 +256,7 @@ class Ecoli():
         
         return (proteomics, transcriptomics, fluxomics, metabolomics, solution)
 
-
+    # NOTE: 
     def read_pubchem_id_file(self):
         inchikey_to_cid = {}
         filename = f'{INCHIKEY_TO_CID_MAP_FILE_PATH}/inchikey_to_cid.txt'
@@ -268,10 +271,11 @@ class Ecoli():
                             inchikey_to_cid[line.strip()] = None
 
                         line = fh.readline()
+                # NOTE: propagated exception, raise
                 except Exception as ex:
                     print("Error in reading file!")
                     print(ex)
-        fh.close()
+        # fh.close()
 
         return inchikey_to_cid
 
@@ -318,8 +322,8 @@ class Ecoli():
             num_reactions = len(list(met.reactions))
 
             # check if inchi_key attribite present else ignore metabolite
-            if inchi_key in inchikey_to_cid.keys():
-                if 'inchi_key' in met.annotation.keys() and inchikey_to_cid[inchi_key] is not None:
+            if 'inchi_key' in met.annotation.keys() and inchi_key in inchikey_to_cid.keys():
+                if inchikey_to_cid[inchi_key] is not None:
                     metabolomics[inchikey_to_cid[inchi_key]]/=num_reactions
 
         return metabolomics
@@ -432,6 +436,23 @@ class Ecoli():
         
             fh.close()
 
+    def write_OD_data(self, cell, line_name='WT'):
+        # create the filename
+        OD_data_file: str = f'{DATA_FILE_PATH}/OD_fakedata_sample.csv'
+
+        # write experiment description file
+        # try:
+        #     with open(OD_data_file, 'w') as fh:
+        #         fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
+        #         for index, value in cell.items():
+        #             print()
+        #             fh.write((f'{line_name},OD,{timepoint},{value},NA\n'))
+
+        # except Exception as ex:
+        #     print("Error in writing OD file")
+        #     print(ex)
+        
+        # fh.close()
 
 
     def get_random_number(self):
@@ -533,6 +554,7 @@ class Ropacus():
         time_series_omics_data = {}
         experiment_timepoints = [0, 3, 6, 9]
         flux_constraints = [6, 9, 12, 15]
+        # NOTE; constraints in flux_constraints, think about it
         for i in range(len(flux_constraints)):
             # Set global reactions bounds (in addition to local)
             self.LOWER_BOUND = flux_constraints[i]
@@ -643,6 +665,7 @@ class Ropacus():
             except Infeasible:
                 self.vprint(yellow(
                     'Model summary unavailable as solution was unfeasible!'))
+                    # exit code here
 
             self.write_experiment_description(cond)
             self.get_omics_data(model, solution, cond)
@@ -686,6 +709,7 @@ class Ropacus():
             print(yellow('PROBLEM!'))
         return dict_out
 
+    # NOTE: Name it consistently , generate_omics_data
     def get_omics_data(self, model: cobra.Model,
                        solution: cobra.Solution,
                        cond: int):
@@ -717,6 +741,7 @@ class Ropacus():
         rxn_ids: pd.Index = solution.fluxes.index
         # Cobra docs: Accessing reaction fluxes through a Solution object
         #  is the safer, preferred, and only guaranteed to be correct way.
+        # NOTE: Put the operations in fucntions , more modular
         for rxn_id in rxn_ids:
             reaction: cobra.Reaction = model.reactions.get_by_id(rxn_id)
             flux: float = solution.fluxes[rxn_id]
@@ -748,11 +773,11 @@ class Ropacus():
                         transc: float = proteo * TRANS_SCALING
                         if transc > _EPS * 1e+3:
                             transcriptomics[gene.id] = transc
-                        break
-                else:
-                    self.dprint(yellow('WARNING!'), gray('Gene'), gene.id,
-                           gray('in reaction'), rxn_id,
-                           gray('has no useful annotation. Skipping...'))
+                            break
+                        else:
+                            self.dprint(yellow('WARNING!'), gray('Gene'), gene.id,
+                                gray('in reaction'), rxn_id,
+                                gray('has no useful annotation. Skipping...'))
 
             # Subloop 2/2: metabolomics (partial)
             for metabolite, coeff in reaction.metabolites.items():
@@ -840,6 +865,7 @@ class Ropacus():
 
         # Check presence of model file
         if not os.path.isfile(file_name):
+            # NOTE: The error handling not consistent and will be dominated by the stack trace
             print(red('ERROR!'),
                   f'File {file_name} missing from the data dir!')
             raise IOError('Missing file')
@@ -851,6 +877,7 @@ class Ropacus():
         elif file_name.endswith('.json'):
             model = cobra.io.load_json_model(file_name)
         else:
+            # NOTE: stacktrace issue
             print(red('ERROR!'),
                   f'File {file_name} type not supported!')
             raise TypeError('Unsupported file format')
@@ -872,6 +899,8 @@ class Ropacus():
             if rxn.name is not None and 'biomass' in rxn.id.lower():
                 self.vprint(f"{rxn.id} : {rxn.name}")
 
+
+    # NOTE: pass everything to asingle print function and add the verbosity arg layer there
     def vprint(self, *a, **k):
         """Print only if verbose mode is enabled"""
         if args.verbose:
@@ -892,9 +921,12 @@ class Ropacus():
                          f'{omics}_mock{cond}.xlsx'))
         print(gray('Saving file'), magenta(omics_fname), gray('... '), end='')
         try:
+            # NOTE: Both excel and CSV for both classes and make this method a part of the core class IMPORTANT!!!
             edd.to_excel(omics_fname,
                          sheet_name=f'{omics}',
                          index=False)
+        
+        # NOTE: Handle this error better. Handle errors so that you can make this into a library and propagate the errors for better handling
         except IOError as ex:
             print(red('ERROR!'))
             self.vprint(ex)
