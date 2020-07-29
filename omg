@@ -146,17 +146,35 @@ class Ecoli():
 
         # time steps to calculate the biomass production for
         t0 = 0.0
-        tf = 10.0
-        points = 25
-        tspan = np.linspace(t0, tf, points)
+        tf = 8.0
+        points = 9
+        tspan, delt= np.linspace(t0, tf, points, dtype='float64', retstep=True)
 
         # step interval
-        delt = tspan[1] - tspan[0]
+        # delt = tspan[1] - tspan[0]
 
         # panda series containing OD values for the timepionts
         cell = pd.Series(index=tspan)
         cell0 = 0.01 # in gDW/L
         cell[t0] = cell0
+        
+        #======
+        debug = False
+        if debug:
+            print(tspan)
+            print(cell)
+            print(type(tspan))
+            for t in tspan:
+                print(t, )
+            sys.exit()
+            for t in tspan:
+                print(f'{t} ---> {cell[t]}')
+                if t < 8.0:
+                    cell[t+delt] = cell[t]*np.random.random_sample()
+                
+            print(cell)
+            sys.exit()
+        #======
 
         # reactants
         comp = ['glc__D_e', 'nh4_e', 'pi_e', 'so4_e', 'mg2_e', 'k_e', 'na1_e', 'cl_e']
@@ -192,22 +210,26 @@ class Ecoli():
                 cobra_config = cobra.Configuration()
                 cobra_config.bounds = self.LOWER_BOUND, self.UPPER_BOUND
 
-                # Print the list of reaction names related to BIOMASS production
-                # print_reactions(model)
-
                 # get fake proteomics data and write it to XLSX file
                 condition = 1
                 proteomics, transcriptomics, fluxomics, metabolomics, solution = self.generate_fake_data(model, condition)
 
                 # Step 3: Calculate mu where mu = solution(biomass)
                 mu = solution[REACTION_ID_ECOLI]
-                # print("Hey", solution[REACTION_ID_ECOLI])
 
                 # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
-                cell[t+delt] = cell[t]*np.exp(mu*delt) 
+                # print("===================")
+                # print("t, t+delt, cell[t]: ", t, t+delt, cell[t])
+                # print("cell[t]*np.exp(mu*delt): ", cell[t]*np.exp(mu*delt) )
+                # print("cell[t], mu, delt: ", cell[t], mu, delt)
+                cell[t+delt] = cell[t]*np.exp(mu*delt)
+                # print("t+delt, cell[t+delt]: ", t+delt, cell[t+delt])
+                # if np.isnan(cell[t+delt]):
+                #     print("I am here")
+                #     print("cell: ", cell)
+                #     return
 
                 # Step 5: Calculate glucose for next time point t+deltat:
-                # subs.loc[t+delt,v] = max(subs.loc[t,v]-sol[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
                 subs.loc[t+delt,v] = max(subs.loc[t,v]-solution[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0) 
 
                 # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
@@ -216,14 +238,55 @@ class Ecoli():
                 fluxomics_list.append((fluxomics, t))
                 metabolomics_list.append((metabolomics, t))
 
-                # isopentenol calculation
-                # sol = moma_calculation()
+                # generate training data for reactions with isopentenol production
+                training_data_file = 'training_data_8genes.csv'
+                sol = self.generate_data_with_isopentenol_production(training_data_file)
         
         time_series_omics_data = {'proteomics': proteomics_list, 'transcriptomics': transcriptomics_list, 'fluxomics': fluxomics_list, 'metabolomics': metabolomics_list}
         
+        # write all the data generated
         self.write_experiment_description_file(condition)
         self.write_omics_files(time_series_omics_data)
-        #self.write_OD_data(cell)
+        self.write_OD_data(cell)
+
+
+    # This uses the modified E. Coli model that has the added isopentenol pathway
+    # QUESTION: DO we need to add the isopentenol pathway to it, if not provided?DO we need to check it?
+    def generate_data_with_isopentenol_production(self, training_data_file):
+        iso = 'EX_isoprenol_e'
+        df = pd.read_csv(training_data_file)
+
+        # Calculating the number of reactions that should be modified (n_genes) and 
+        # number of strains for which isoprenol concentration should be estimated 
+        n_reactions = df.shape[1] - 1
+        n_instances = df.shape[0] - 1
+        # print(n_reactions,n_instances)
+
+        # Inserting the isoprenol concentration as the last column in the dataframe
+        df.insert(loc=n_genes+1,column='Isoprenol Concentration (mM)',value=None)
+
+        # The original e.coli iJO1366 model does not have the isoprenol pathway. 
+        # Thus, performing simple flux balance analysis on the model will not allocate 
+        # any flux for isoprenol production reaction. So, we modify the model so that it 
+        # produces a small amount of isoprenol. In addition, we force a small amount of 
+        # formate production which forces the model to activate the 'PFL' reaction.
+
+        # with model:
+        #     display(model.summary())
+        #     # Constraint to force a small amount of isoprenol production
+        #     iso_cons = model.problem.Constraint(model.reactions.EX_isoprenol_e.flux_expression,
+        #                                 lb = 0.20)
+        #     # Adding the constraint to the model
+        #     model.add_cons_vars(iso_cons)
+        #     # Constraint to force a small amount of formate production which would activate the "PFL" reaction
+        #     for_cons = model.problem.Constraint(model.reactions.EX_for_e.flux_expression,
+        #                                 lb = 0.10)
+        #     # Adding the constraint to the model
+        #     model.add_cons_vars(for_cons)
+        #     WT_FBA_sol = cobra.flux_analysis.pfba(model)
+        #     print(WT_FBA_sol.status, WT_FBA_sol[biomass], WT_FBA_sol[iso])
+
+
 
 
     def generate_fake_data(self, model, condition):
@@ -441,19 +504,17 @@ class Ecoli():
         OD_data_file: str = f'{DATA_FILE_PATH}/OD_fakedata_sample.csv'
 
         # write experiment description file
-        # try:
-        #     with open(OD_data_file, 'w') as fh:
-        #         fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
-        #         for index, value in cell.items():
-        #             print()
-        #             fh.write((f'{line_name},OD,{timepoint},{value},NA\n'))
+        try:
+            with open(OD_data_file, 'w') as fh:
+                fh.write(f'Line Name,Measurement Type,Concentration,Units,Time,Value\n')
+                for index, value in cell.items():
+                    # print(index, value)
+                    fh.write((f'{line_name},Optical Density,0.75,g/L,{index},{value}\n'))
 
-        # except Exception as ex:
-        #     print("Error in writing OD file")
-        #     print(ex)
+        except Exception as ex:
+            print("Error in writing OD file")
+            print(ex)
         
-        # fh.close()
-
 
     def get_random_number(self):
         """
