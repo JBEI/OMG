@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 omg: Omics Mock Generator
 
@@ -61,6 +59,12 @@ OUTPUT_FILE_PATH: Filename = Filename('data/output')
 INCHIKEY_TO_CID_MAP_FILE_PATH: Filename = Filename('mapping') 
 # MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
 MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
+# Training file name
+TRAINING_FILE_NAME: Filename = Filename('')
+# Start time and stop time
+TIMESTART: float = 0.0
+TIMESTOP: float = 8.0
+NUMPOINTS: int = 9
 
 # NOTE: user input to the program
 REACTION_ID_ECOLI: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
@@ -113,8 +117,10 @@ class Ecoli(Host):
         self.LOWER_BOUND = -15
         self.UPPER_BOUND = 1000
 
-
     def generate_time_series_data(self, model, condition):
+        global TRAINING_FILE_NAME 
+        global REACTION_ID_ECOLI
+        global DATA_FILE_PATH 
 
         # intiializing omics dictionaries to contain data across timepoints
         proteomics_list: List = []
@@ -144,9 +150,9 @@ class Ecoli(Host):
         time_series_omics_data = {}
 
         # time steps to calculate the biomass production for
-        t0 = 0.0
-        tf = 8.0
-        points = 9
+        t0 = TIMESTART
+        tf = TIMESTOP
+        points = NUMPOINTS
         tspan, delt = np.linspace(t0, tf, points, dtype='float64', retstep=True)
 
         # step interval
@@ -239,16 +245,16 @@ class Ecoli(Host):
                     # Step 5: Calculate glucose for next time point t+deltat:
                     subs.loc[t+delt,v] = max(subs.loc[t,v]-solution[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0) 
 
-                    # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
-                    proteomics_list.append((proteomics, t))
-                    transcriptomics_list.append((transcriptomics, t))
-                    fluxomics_list.append((fluxomics, t))
-                    metabolomics_list.append((metabolomics, t))
+                # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
+                proteomics_list.append((proteomics, t))
+                transcriptomics_list.append((transcriptomics, t))
+                fluxomics_list.append((fluxomics, t))
+                metabolomics_list.append((metabolomics, t))
  
                 # optimize model using pFBA after inducing isopentenol and formate formation 
                 # and get isopentenol concentrations
                 # NOTE: pass the training file as an argument from the cli
-                training_data_file = f'{DATA_FILE_PATH}/training_data_8genes.csv'
+                training_data_file = f'{DATA_FILE_PATH}/{TRAINING_FILE_NAME}'
                 sol_time_wild = self.generate_isopentenol_concentrations(model, sol_time_wild, training_data_file, t, tspan, delt, cell, subs, subs_ext, conc_iso)
                 # print(sol_time_wild)
 
@@ -271,9 +277,8 @@ class Ecoli(Host):
         # write external metabolites in subs: Ammonia and glucose and isoprenol concentrations
         self.write_external_metabolite(subs, conc_iso)
 
-
     # This uses the modified E. Coli model that has the added isopentenol pathway
-    # QUESTION: DO we need to add the isopentenol pathway to it, if not provided?DO we need to check it?
+    # QUESTION: Do we need to add the isopentenol pathway to it, if not provided?DO we need to check it?
     def generate_isopentenol_concentrations(self, model, sol_time_wild, training_data_file, timepoint, tspan, delt, cell, subs, subs_ext, conc_iso):
         iso = 'EX_isoprenol_e'
         df = pd.read_csv(training_data_file)
@@ -414,8 +419,8 @@ class Ecoli(Host):
                     
                     # Reference solution calculated for each time point in above cell for wild type
                     sol1 = sol_time_wild[t]
-                    print(sol_time_wild)
-                    print(sol1)
+                    # print(sol_time_wild)
+                    # print(sol1)
 
                     # Moma solution for each time point
                     sol2 = cobra.flux_analysis.moma(model, solution=sol1, linear=False)
@@ -713,7 +718,6 @@ class Ecoli(Host):
         """
         pass
 
-
     def get_list_of_reactions(self, file_name):
         """
 
@@ -730,8 +734,6 @@ class Ecoli(Host):
         for rxn in model.reactions:
             if rxn.name is not None and 'BIOMASS' in rxn.id:
                 print("{}: {}".format(rxn.id, rxn.name))
-
-
 
     def get_optimized_solution(self, model, reaction_id):
         """
@@ -756,7 +758,6 @@ class Ecoli(Host):
         solution = model.optimize()
 
         return solution
-
 
     def read_model(self, file_name):
         """
@@ -1229,6 +1230,15 @@ class Ropacus():
 
 def main():
     """Main entry point to the script."""
+    global TRAINING_FILE_NAME 
+    global REACTION_ID_ECOLI
+    global DATA_FILE_PATH
+    global HOST_NAME 
+    global MODEL_FILENAME
+    global TIMESTART
+    global TIMESTOP
+    global NUMPOINTS
+    global TRAINING_FILE_NAME
 
     def check_debug():
         """Check debugging mode"""
@@ -1245,6 +1255,8 @@ def main():
 
 
     def generate_data_for_host(filename):
+        global HOST_NAME 
+
         """
             Generate omics data for host and model name
         """
@@ -1312,6 +1324,39 @@ def main():
         default='iJO1366_MVA.json',
         help='specify model file to use, should be in data folder'
     )
+    parser.add_argument(
+        '-tstart', '--timestart',
+        default=0.0,
+        help='specify the start time for generating the time series data'
+    )
+    parser.add_argument(
+        '-tstop', '--timestop',
+        default=9.0,
+        help='specify the stop time for generating the time series data'
+    )
+    parser.add_argument(
+        '-np', '--numpoints',
+        default=9,
+        help='specify the number of points between timestart and timestop for which to generate the time series data'
+    )
+    parser.add_argument(
+        '-tf', '--trainingfile',
+        default='training_data_8genes.csv',
+        help='specify the training file name placed in the data directory in the OMG library'
+    )
+
+
+
+    # user_params = {
+    # 'host': 'ecoli', # ecoli or ropacus
+    # 'modelfile': 'iJO1366_MVA.json',
+    # 'timestart': 0.0,
+    # 'timestop': 8.0,
+    # 'numpoints': 9,
+    # 'reactants': ['glc__D_e', 'nh4_e', 'pi_e', 'so4_e', 'mg2_e', 'k_e', 'na1_e', 'cl_e'],
+    # 'initial_substrates': [22.203, 18.695, 69.454, 2.0, 2.0, 21.883, 103.7, 27.25],
+    
+    # }
 
     # Parse arguments
     args = parser.parse_args()
@@ -1332,6 +1377,10 @@ def main():
     # check if host and model file has been mentioned
     HOST_NAME = args.host
     MODEL_FILENAME = args.modelfile
+    TIMESTART = args.timestart
+    TIMESTOP = args.timestop
+    NUMPOINTS = args.numpoints 
+    TRAINING_FILE_NAME = args.trainingfile
 
     filename: Filename = Filename(os.path.join(DATA_FILE_PATH, MODEL_FILENAME))
     # reaction_id = 'EX_glc__D_e'
