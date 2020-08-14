@@ -4,6 +4,7 @@
 venv
 data
 *.csv
+!sample_files/*.csv
 *.xlsx
 Pipfile.lock
 .ipynb_checkpoints/
