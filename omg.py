@@ -1228,6 +1228,45 @@ class Ropacus():
 # MAIN FUNCTION
 #======================================
 
+def check_debug(args):
+    """Check debugging mode"""
+    if args.debug:
+        print(blue('INFO:'), gray('Debugging mode activated'))
+        print(blue('INFO:'), gray('Active parameters:'))
+        for key, val in vars(args).items():
+            if val is not None and val is not False and val != []:
+                print(gray(f'\t{key} ='), f'{val}')
+        args.verbose = True  # Unconditional verbose mode activation
+    elif not sys.warnoptions:
+        warnings.simplefilter("ignore")
+
+def generate_data_for_host(filename):
+    global HOST_NAME 
+
+    """
+        Generate omics data for host and model name
+    """
+    if HOST_NAME == 'ecoli':
+        # create instance of the E. Coli class
+        ecoli = Ecoli()
+
+        # read model file
+        model = ecoli.read_model(filename)
+
+        # generate ecoli synthetic data for model and condition
+        condition = 1
+        ecoli.generate_time_series_data(model, condition)
+
+    elif HOST_NAME == 'ropacus':
+        # create instance of the E. Coli class
+        rop = Ropacus()
+
+        # read model file
+        model = rop.read_model(filename)
+
+        # generate time series mock data for host
+        rop.generate_time_series_data(model)
+
 def main():
     """Main entry point to the script."""
     global TRAINING_FILE_NAME 
@@ -1239,48 +1278,6 @@ def main():
     global TIMESTOP
     global NUMPOINTS
     global TRAINING_FILE_NAME
-
-    def check_debug():
-        """Check debugging mode"""
-        if args.debug:
-            print(blue('INFO:'), gray('Debugging mode activated'))
-            print(blue('INFO:'), gray('Active parameters:'))
-            for key, val in vars(args).items():
-                if val is not None and val is not False and val != []:
-                    print(gray(f'\t{key} ='), f'{val}')
-            args.verbose = True  # Unconditional verbose mode activation
-        elif not sys.warnoptions:
-            warnings.simplefilter("ignore")
-
-
-
-    def generate_data_for_host(filename):
-        global HOST_NAME 
-
-        """
-            Generate omics data for host and model name
-        """
-        if HOST_NAME == 'ecoli':
-            # create instance of the E. Coli class
-            ecoli = Ecoli()
-
-            # read model file
-            model = ecoli.read_model(filename)
-
-            # generate ecoli synthetic data for model and condition
-            condition = 1
-            ecoli.generate_time_series_data(model, condition)
-
-        elif HOST_NAME == 'ropacus':
-            # create instance of the E. Coli class
-            rop = Ropacus()
-
-            # read model file
-            model = rop.read_model(filename)
-
-            # generate time series mock data for host
-            rop.generate_time_series_data(model)
-
     
     # Argument Parser Configuration
     parser = argparse.ArgumentParser(
@@ -1345,8 +1342,6 @@ def main():
         help='specify the training file name placed in the data directory in the OMG library'
     )
 
-
-
     # user_params = {
     # 'host': 'ecoli', # ecoli or ropacus
     # 'modelfile': 'iJO1366_MVA.json',
@@ -1366,7 +1361,7 @@ def main():
         sys.argv[0], __version__, __date__, __author__))
 
     # Select cases depending on the debug flag
-    check_debug()
+    check_debug(args)
 
     # if data folder doesn't exist create it
     if not os.path.isdir(DATA_FILE_PATH):
