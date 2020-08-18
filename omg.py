@@ -420,7 +420,7 @@ class Ecoli(Host):
                     # Moma solution for each time point
                     sol2 = cobra.flux_analysis.moma(model, solution=sol1, linear=False)
                     mu = sol2[REACTION_ID_ECOLI]
-                    print(i,t, sol2.status, mu)
+                    # print(i,t, sol2.status, mu)
                     if sol2.status == 'optimal' and mu > 1e-6:
                         cell[t+delt] = cell[t]*np.exp(mu*delt)
                         for k, v in subs_ext.items():
@@ -443,7 +443,7 @@ class Ecoli(Host):
             print(i,sol2[iso],conc_iso.iloc[-1])
 
         # write out the training dataset with isopentenol production concentrations
-        filename = 'training_data_8genes_withiso.csv'
+        filename = f'{OUTPUT_FILE_PATH}/training_data_8genes_withiso.csv'
         self.write_training_data_with_isopentenol(df, filename)
 
     def generate_fake_data(self, model, condition):
