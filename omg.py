@@ -65,6 +65,9 @@ TRAINING_FILE_NAME: Filename = Filename('')
 TIMESTART: float = 0.0
 TIMESTOP: float = 8.0
 NUMPOINTS: int = 9
+# number of reactions and instances
+NUM_REACTIONS: int = None
+NUM_INSTANCES: int = None
 
 # NOTE: user input to the program
 REACTION_ID_ECOLI: str = 'BIOMASS_Ec_iJO1366_core_53p95M'  # E. coli
@@ -121,6 +124,8 @@ class Ecoli(Host):
         global TRAINING_FILE_NAME 
         global REACTION_ID_ECOLI
         global DATA_FILE_PATH 
+        global NUM_REACTIONS
+        global NUM_INSTANCES 
 
         # intiializing omics dictionaries to contain data across timepoints
         proteomics_list: List = []
@@ -255,15 +260,15 @@ class Ecoli(Host):
                 # and get isopentenol concentrations
                 # NOTE: pass the training file as an argument from the cli
                 training_data_file = f'{DATA_FILE_PATH}/{TRAINING_FILE_NAME}'
-                sol_time_wild = self.generate_isopentenol_concentrations(model, sol_time_wild, training_data_file, t, tspan, delt, cell, subs, subs_ext, conc_iso)
+                sol_time_wild = self.generate_isopentenol_concentrations(model, sol_time_wild, t, tspan, delt, cell, subs, subs_ext, conc_iso)
                 # print(sol_time_wild)
 
         # generate training data for reactions with isopentenol production after optimizing model using MOMA
         # NOTE: This is not working as I do not have the 'cplex' solver installed and it is looking for a 
         # qp-solver that is not there to solve the MOMA optimization
         # Have to run this in the jprime server
-        
-        # self.generate_isopentenol_and_solution_for_biomass_using_moma(model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext)
+        # NOTE: for only a few of them
+        self.generate_isopentenol_and_solution_for_biomass_using_moma(model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext, NUM_REACTIONS, NUM_INSTANCES)
         # print(type(subs))
         # print(subs)
         # sys.exit()
@@ -279,19 +284,10 @@ class Ecoli(Host):
 
     # This uses the modified E. Coli model that has the added isopentenol pathway
     # QUESTION: Do we need to add the isopentenol pathway to it, if not provided?DO we need to check it?
-    def generate_isopentenol_concentrations(self, model, sol_time_wild, training_data_file, timepoint, tspan, delt, cell, subs, subs_ext, conc_iso):
+    def generate_isopentenol_concentrations(self, model, sol_time_wild, timepoint, tspan, delt, cell, subs, subs_ext, conc_iso):
         iso = 'EX_isoprenol_e'
-        df = pd.read_csv(training_data_file)
 
-        # Calculating the number of reactions that should be modified (n_genes) and 
-        # number of strains for which isoprenol concentration should be estimated 
-        n_reactions = df.shape[1] - 1
-        n_instances = df.shape[0] - 1
-        # print(n_reactions,n_instances)
-
-        # Inserting the isoprenol concentration as the last column in the dataframe
-        df.insert(loc=n_reactions+1, column='Isoprenol Concentration (mM)', value=None)
-
+        # adding minimum flux constriants for isopentenol and formate
         iso_cons = model.problem.Constraint(model.reactions.EX_isoprenol_e.flux_expression,
                                 lb = 0.20)
         model.add_cons_vars(iso_cons)
@@ -324,7 +320,7 @@ class Ecoli(Host):
 
         return sol_time_wild
 
-    def generate_isopentenol_and_solution_for_biomass_using_moma(self, model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext):
+    def generate_isopentenol_and_solution_for_biomass_using_moma(self, model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext, n_reactions=None, n_instances=None):
         model.solver = 'cplex'
         iso = 'EX_isoprenol_e'
         df = pd.read_csv(training_data_file)
@@ -351,8 +347,10 @@ class Ecoli(Host):
 
         # Calculating the number of reactions that should be modified (n_genes) and 
         # number of strains for which isoprenol concentration should be estimated 
-        n_reactions = df.shape[1] - 1
-        n_instances = df.shape[0] - 1
+        if n_reactions is None:
+            n_reactions = df.shape[1] - 1
+        if n_instances is None:
+            n_instances = df.shape[0] - 1
 
         # Inserting the isoprenol concentration as the last column in the dataframe
         df.insert(loc=n_reactions+1, column='Isoprenol Concentration (mM)', value=None)
@@ -447,9 +445,9 @@ class Ecoli(Host):
             print(conc_iso)
             print(i,sol2[iso],conc_iso.iloc[-1])
 
-            # write out the training dataset with isopentenol production concentrations
-            # filename = 'training_data_8genes_withiso.csv'
-            # self.write_training_data_with_isopentenol(df, filename)
+        # write out the training dataset with isopentenol production concentrations
+        filename = 'training_data_8genes_withiso.csv'
+        self.write_training_data_with_isopentenol(df, filename)
 
     def generate_fake_data(self, model, condition):
         """
@@ -1341,6 +1339,16 @@ def main():
         default='training_data_8genes.csv',
         help='specify the training file name placed in the data directory in the OMG library'
     )
+    parser.add_argument(
+        '-nr', '--numreactions',
+        default=1,
+        help='specify the number of reactions in the training file'
+    )
+    parser.add_argument(
+        '-ni', '--numinstances',
+        default=1,
+        help='specify the number of instances/strains in the training file'
+    )
 
     # user_params = {
     # 'host': 'ecoli', # ecoli or ropacus
@@ -1376,6 +1384,8 @@ def main():
     TIMESTOP = args.timestop
     NUMPOINTS = args.numpoints 
     TRAINING_FILE_NAME = args.trainingfile
+    NUM_REACTIONS = args.numreactions
+    NUM_INSTANCES = args.numinstances
 
     filename: Filename = Filename(os.path.join(DATA_FILE_PATH, MODEL_FILENAME))
     # reaction_id = 'EX_glc__D_e'
