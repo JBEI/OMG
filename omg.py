@@ -269,9 +269,6 @@ class Ecoli(Host):
         # Have to run this in the jprime server
         # NOTE: for only a few of them
         self.generate_isopentenol_and_solution_for_biomass_using_moma(model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext, NUM_REACTIONS, NUM_INSTANCES)
-        # print(type(subs))
-        # print(subs)
-        # sys.exit()
 
         time_series_omics_data = {'proteomics': proteomics_list, 'transcriptomics': transcriptomics_list, 'fluxomics': fluxomics_list, 'metabolomics': metabolomics_list}
         
@@ -387,7 +384,7 @@ class Ecoli(Host):
                                                     lb = WT_FBA_sol['PTAr']*df.iloc[i,3],
                                                     ub = WT_FBA_sol['PTAr']*df.iloc[i,3])
                     model.add_cons_vars(cons3)
-                
+    
                     cons4 = model.problem.Constraint(model.reactions.CS.flux_expression,
                                                     lb = WT_FBA_sol['CS']*df.iloc[i,4],
                                                     ub = WT_FBA_sol['CS']*df.iloc[i,4])
