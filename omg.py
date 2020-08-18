@@ -24,6 +24,7 @@ import sys
 import urllib.parse
 import urllib.request
 import warnings
+from shutil import copyfile
 from enum import Enum
 from typing import NewType, Dict, List, Any, OrderedDict, Counter
 
@@ -61,6 +62,7 @@ INCHIKEY_TO_CID_MAP_FILE_PATH: Filename = Filename('mapping')
 MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
 # Training file name
 TRAINING_FILE_NAME: Filename = Filename('')
+TRAINING_FILE_PATH: Filename = Filename('')
 # Start time and stop time
 TIMESTART: float = 0.0
 TIMESTOP: float = 8.0
@@ -437,13 +439,15 @@ class Ecoli(Host):
                         conc_iso.loc[t+delt] = conc_iso.loc[t]
             
             
-            # Storing the final concentration for all strains
+            # Storing the final concentration for each strain
             df.iloc[i,9] = conc_iso.iloc[-1]
-            print(conc_iso)
-            print(i,sol2[iso],conc_iso.iloc[-1])
+            print('Isopentenol concentrations:', conc_iso)
+            print('String index:', i)
+            print('Flux value for isopentenol from MOMA calculation:', sol2[iso])
+            print('Isopentenol concentration for this strain:', conc_iso.iloc[-1])
 
         # write out the training dataset with isopentenol production concentrations
-        filename = f'{OUTPUT_FILE_PATH}/training_data_8genes_withiso.csv'
+        filename = 'training_data_8genes_withiso.csv'
         self.write_training_data_with_isopentenol(df, filename)
 
     def generate_fake_data(self, model, condition):
@@ -670,7 +674,7 @@ class Ecoli(Host):
             print(ex)
         
     def write_training_data_with_isopentenol(self, df, filename):
-        filename = f'{DATA_FILE_PATH}/{filename}'
+        filename = f'{OUTPUT_FILE_PATH}/{filename}'
         df.to_csv(filename, header=True, index=False)
 
     def write_external_metabolite(self, substrates, isopentenol_conc, filename='external_metabolites.csv', linename='WT'):
@@ -1237,7 +1241,20 @@ def check_debug(args):
 
 def generate_data_for_host(filename):
     global HOST_NAME 
-
+    global DATA_FILE_PATH
+    global OUTPUT_FILE_PATH
+    
+    # if data folder doesn't exist create it
+    if not os.path.isdir(DATA_FILE_PATH):
+        os.mkdir(DATA_FILE_PATH)
+    if not os.path.isdir(OUTPUT_FILE_PATH):
+        os.mkdir(OUTPUT_FILE_PATH)
+        
+    # copy the training file to the data folder
+    src_file = f'{TRAINING_FILE_PATH}/{TRAINING_FILE_NAME}'
+    dest_file = f'{DATA_FILE_PATH}/{TRAINING_FILE_NAME}'
+    dest = copyfile(src_file, dest_file)
+        
     """
         Generate omics data for host and model name
     """
@@ -1264,7 +1281,6 @@ def generate_data_for_host(filename):
 
 def main():
     """Main entry point to the script."""
-    global TRAINING_FILE_NAME 
     global REACTION_ID_ECOLI
     global DATA_FILE_PATH
     global HOST_NAME 
@@ -1273,6 +1289,7 @@ def main():
     global TIMESTOP
     global NUMPOINTS
     global TRAINING_FILE_NAME
+    global TRAINING_FILE_PATH
     
     # Argument Parser Configuration
     parser = argparse.ArgumentParser(
@@ -1329,12 +1346,17 @@ def main():
     parser.add_argument(
         '-np', '--numpoints',
         default=9,
-        help='specify the number of points between timestart and timestop for which to generate the time series data'
+        help='specify the number of points between timestart and timestop for which to generate the time serTRAINING_FILE_PATHies data'
     )
     parser.add_argument(
         '-tf', '--trainingfile',
         default='training_data_8genes.csv',
-        help='specify the training file name placed in the data directory in the OMG library'
+        help='specify the training file name'
+    )
+    parser.add_argument(
+        '-tfp', '--trainingfilepath',
+        default='sample_files',
+        help='specify the training file path name'
     )
     parser.add_argument(
         '-nr', '--numreactions',
@@ -1368,12 +1390,6 @@ def main():
     # Select cases depending on the debug flag
     check_debug(args)
 
-    # if data folder doesn't exist create it
-    if not os.path.isdir(DATA_FILE_PATH):
-        os.mkdir(DATA_FILE_PATH)
-    if not os.path.isdir(OUTPUT_FILE_PATH):
-        os.mkdir(OUTPUT_FILE_PATH)
-
     # check if host and model file has been mentioned
     HOST_NAME = args.host
     MODEL_FILENAME = args.modelfile
@@ -1381,11 +1397,11 @@ def main():
     TIMESTOP = args.timestop
     NUMPOINTS = args.numpoints 
     TRAINING_FILE_NAME = args.trainingfile
+    TRAINING_FILE_PATH = args.trainingfilepath
     NUM_REACTIONS = args.numreactions
     NUM_INSTANCES = args.numinstances
 
     filename: Filename = Filename(os.path.join(DATA_FILE_PATH, MODEL_FILENAME))
-    # reaction_id = 'EX_glc__D_e'
     
     # get time series omics data for specified host and model
     generate_data_for_host(filename)
