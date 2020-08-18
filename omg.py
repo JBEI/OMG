@@ -60,6 +60,7 @@ OUTPUT_FILE_PATH: Filename = Filename('data/output')
 INCHIKEY_TO_CID_MAP_FILE_PATH: Filename = Filename('mapping') 
 # MODEL_FILENAME: Filename = Filename('iECIAI39_1322.xml')  # E. coli
 MODEL_FILENAME: Filename = Filename('reannotated_base_v3.sbml')  # R. opacus
+MODEL_FILEPATH: Filename = Filename('')
 # Training file name
 TRAINING_FILE_NAME: Filename = Filename('')
 TRAINING_FILE_PATH: Filename = Filename('')
@@ -441,10 +442,12 @@ class Ecoli(Host):
             
             # Storing the final concentration for each strain
             df.iloc[i,9] = conc_iso.iloc[-1]
-            print('Isopentenol concentrations:', conc_iso)
+            print('-------------------------------------')
+            print('Isopentenol concentrations:\n', conc_iso)
             print('String index:', i)
             print('Flux value for isopentenol from MOMA calculation:', sol2[iso])
             print('Isopentenol concentration for this strain:', conc_iso.iloc[-1])
+            print('-------------------------------------')
 
         # write out the training dataset with isopentenol production concentrations
         filename = 'training_data_8genes_withiso.csv'
@@ -1254,7 +1257,12 @@ def generate_data_for_host(filename):
     src_file = f'{TRAINING_FILE_PATH}/{TRAINING_FILE_NAME}'
     dest_file = f'{DATA_FILE_PATH}/{TRAINING_FILE_NAME}'
     dest = copyfile(src_file, dest_file)
-        
+    
+    MODEL_FILEPATH
+    src_file = f'{MODEL_FILEPATH}/{MODEL_FILENAME}'
+    dest_file = f'{DATA_FILE_PATH}/{MODEL_FILENAME}'
+    dest = copyfile(src_file, dest_file)
+    
     """
         Generate omics data for host and model name
     """
@@ -1285,6 +1293,7 @@ def main():
     global DATA_FILE_PATH
     global HOST_NAME 
     global MODEL_FILENAME
+    global MODEL_FILEPATH
     global TIMESTART
     global TIMESTOP
     global NUMPOINTS
@@ -1332,6 +1341,12 @@ def main():
         # default='iJO1366_MVA.json',
         default='iJO1366_MVA.json',
         help='specify model file to use, should be in data folder'
+    )
+    parser.add_argument(
+        '-mfp', '--modelfilepath',
+        # default='iJO1366_MVA.json',
+        default='sample_files',
+        help='specify model file path to use'
     )
     parser.add_argument(
         '-tstart', '--timestart',
@@ -1392,6 +1407,7 @@ def main():
 
     # check if host and model file has been mentioned
     HOST_NAME = args.host
+    MODEL_FILEPATH = args.modelfilepath
     MODEL_FILENAME = args.modelfile
     TIMESTART = args.timestart
     TIMESTOP = args.timestop
@@ -1401,7 +1417,7 @@ def main():
     NUM_REACTIONS = args.numreactions
     NUM_INSTANCES = args.numinstances
 
-    filename: Filename = Filename(os.path.join(DATA_FILE_PATH, MODEL_FILENAME))
+    filename: Filename = Filename(f'{MODEL_FILEPATH}/{MODEL_FILENAME}')
     
     # get time series omics data for specified host and model
     generate_data_for_host(filename)
