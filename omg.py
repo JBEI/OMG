@@ -29,6 +29,7 @@ from enum import Enum
 from typing import NewType, Dict, List, Any, OrderedDict, Counter
 
 import cobra
+from cobra.util.array import create_stoichiometric_matrix
 import numpy as np
 import pandas as pd
 from cobra.exceptions import OptimizationError, Infeasible
@@ -122,363 +123,280 @@ class Ecoli(Host):
         self.LOWER_BOUND = -15
         self.UPPER_BOUND = 1000
 
-    def generate_time_series_data(self, model, condition):
-        global TRAINING_FILE_NAME 
-        global REACTION_ID_ECOLI
-        global DATA_FILE_PATH 
-        global NUM_REACTIONS
-        global NUM_INSTANCES 
-
-        # intiializing omics dictionaries to contain data across timepoints
-        proteomics_list: List = []
-        transcriptomics_list: List = []
-        fluxomics_list: List = []
-        metabolomics_list: List = []
-       
-        # The whole idea of using "batch simulation concepts from Joonhoon" is to
-        # estimate glucose consumption values (written as flux constraints below)
-        # is a more realistic way
+    def get_flux_time_series(self, model, ext_metabolites, grid):
+        '''
+        Generate fluxes and OD
+        '''
         
-        # In order to update flux values and estimate concentration of glucose, we 
-        # assume concentrations at t = 0h to be "subs0" (refer to batch simulation notebook).
-        # We also assume "volume" = 1.0 and OD at t = 0h (cell0)
-        # Assume time points, you can keep this time points or change them to what Joonhoon has
-        # Step1: Evaluate flux of glucose at current time point by this equation:
-        # model.reactions.get_by_id(k).lower_bound = max(model.reactions.get_by_id(k).lower_bound,
-        #                                                  -subs.loc[t,v]*volume/cell[t]/delt)
-        # Step2: Solve the model using the function "get_optimized_solution" present below and generate
-        # data for that time point
-        # Step 3: Calculate mu where mu = solution(biomass)
-        # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
-        # Step 5: Calculate glucose for next time point t+deltat: 
-        # subs.loc[t+delt,v] = max(subs.loc[t,v]-sol[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
-        # Go back to step 1
-        
-        time_series_omics_data = {}
+        ## First unpack the time steps for the grid provided
+        tspan, delt = grid
 
-        # time steps to calculate the biomass production for
-        t0 = TIMESTART
-        tf = TIMESTOP
-        points = NUMPOINTS
-        tspan, delt = np.linspace(t0, tf, points, dtype='float64', retstep=True)
-
-        # step interval
-        # delt = tspan[1] - tspan[0]
-
-        # panda series containing OD values for the timepionts
+        ## Create a panda series containing the cell concentation for each time point
         cell = pd.Series(index=tspan)
-        cell0 = 0.01 # in gDW/L
+        cell0 = user_params['initial_OD'] # in gDW/L
         cell[t0] = cell0
+
+        ## Create a dataframe that constains external metabolite names and their concentrations
+        # First organize external metabolites and their initial concentrations
+        met_names = []
+        initial_concentrations = []
+        for met, init_conc in ext_metabolites.items():
+            met_names.append(met)
+            initial_concentrations.append(init_conc)
+        # Create dataframe containing external metabolites
+        Emets = pd.DataFrame(index=tspan, columns=met_names)
+        # Add initial concentrations for external metabolites
+        Emets.loc[t0] = initial_concentrations    
+        # Create Dictionary mapping exchange reactions to the corresponding external metabolite 
+        Erxn2Emet = {r.id: r.reactants[0].id for r in model.exchanges if r.reactants[0].id in met_names}
+            
         
-        #======
-        # to debug precision error in when creating irrational step timepoints 
-        # and they dont match the indexes of the timepoints in the cell Series
-        debug = False
-        if debug:
-            print(tspan)
-            print(cell)
-            print(type(tspan))
-            for t in tspan:
-                print(t, )
-            sys.exit()
-            for t in tspan:
-                print(f'{t} ---> {cell[t]}')
-                if t < 8.0:
-                    cell[t+delt] = cell[t]*np.random.random_sample()
-                
-            print(cell)
-            sys.exit()
-        #======
+        ## Create storage for timeseries of models and solutions
+        # Model time series
+        model_TS = pd.Series(index=tspan)
+        # Solution time series
+        solution_TS = pd.Series(index=tspan)
 
-        # reactants
-        comp = ['glc__D_e', 'nh4_e', 'pi_e', 'so4_e', 'mg2_e', 'k_e', 'na1_e', 'cl_e']
-
-        # Dataframe containing substrates
-        subs = pd.DataFrame(index=tspan, columns=comp)
-        # initial substrate vlaues
-        subs0 = [22.203, 18.695, 69.454, 2.0, 2.0, 21.883, 103.7, 27.25] # in mM
-        subs.loc[t0] = subs0
-
-        # Panda series containing the isopentanol concentrations
-        # and solutions to the wild type after adding isopentenol
-        # pathway and introducing isopentenol fluzes and solving for the 
-        # optimum solution for maimum biomass
-        conc_iso = pd.Series(index=tspan)
-        conc_iso[tspan[0]] = 0.0
-
-        sol_time_wild = pd.Series(index=tspan)
         
-        # exterior substrates
-        subs_ext = {r.id: r.reactants[0].id for r in model.exchanges if r.reactants[0].id in comp}
-
-        # NOTE: put the body of the for loop inside a function
+        ## Main for loop solving the model for each time step and adding the corresponding OD and external metabolites created
+        volume = 1.0  # volume set arbitrarily to one because the system is extensive
         for t in tspan:
-            # Not changing the model but adding constraints for each time point
+            # Adding constraints for each time point without permanent changes to the model
             with model:
-                for k, v in subs_ext.items():
-                    # why do we set volume to one? Is it arbitrary?
-                    volume = 1.0
-                    # print(model.reactions.get_by_id(k).lower_bound)
-                    # print(-subs.loc[t,v]*volume/cell[t]/delt)
+                for rxn, met in Erxn2Emet.items():
+                    # For each exchange reaction set lower bound such that the corresponding 
+                    # external metabolite concentration does not become negative 
+                    model.reactions.get_by_id(rxn).lower_bound = max(model.reactions.get_by_id(rxn).lower_bound, 
+                                                                    -Emets.loc[t,met]*volume/cell[t]/delt)
+                
+                # Calculate fluxes 
+                solution_t = model.optimize()
+                
+                # Store the solution and model for each timepoint for future use (e.g. MOMA)
+                solution_TS[t] = solution_t
+                model_TS[t] = model.copy()
+                            
+                # Calculate OD and external metabolite concentrations for next time point t+delta
+                cell[t+delt], Emets.loc[t+delt] = self.advance_OD_Emets(Erxn2Emet, cell[t], Emets.loc[t], delt, solution_t, BIOMASS_REACTION_ID)
+                print(t, solution_t.status, solution_t[BIOMASS_REACTION_ID])     # Minimum output for testing
+                
+        return solution_TS, model_TS, cell, Emets, Erxn2Emet
 
-                    # Set global reactions bounds (in addition to local)
-                    # set the lower bound to the maximum of the lower bound in the model and the change of glucose 
-                    model.reactions.get_by_id(k).lower_bound = max(model.reactions.get_by_id(k).lower_bound, -subs.loc[t,v]*volume/cell[t]/delt)
-                    self.LOWER_BOUND = model.reactions.get_by_id(k).lower_bound
-                    # print(self.LOWER_BOUND)
-                    # self.UPPER_BOUND = -15
-                    cobra_config = cobra.Configuration()
-                    cobra_config.bounds = self.LOWER_BOUND, self.UPPER_BOUND
 
-                    # get fake proteomics data and write it to XLSX file
-                    condition = 1
-                    proteomics, transcriptomics, fluxomics, metabolomics, solution = self.generate_fake_data(model, condition)
-
-                    # Step 3: Calculate mu where mu = solution(biomass)
-                    mu = solution[REACTION_ID_ECOLI]
-
-                    # Step 4: Calculate OD for next time point: cell[t+delt] = cell[t]*np.exp(mu*delt)
-                    # print("===================")
-                    # print("t, t+delt, cell[t]: ", t, t+delt, cell[t])
-                    # print("cell[t]*np.exp(mu*delt): ", cell[t]*np.exp(mu*delt) )
-                    # print("cell[t], mu, delt: ", cell[t], mu, delt)
-                    cell[t+delt] = cell[t]*np.exp(mu*delt)
-                    # print("t+delt, cell[t+delt]: ", t+delt, cell[t+delt])
-                    # if np.isnan(cell[t+delt]):
-                    #     print("I am here")
-                    #     print("cell: ", cell)
-                    #     return
-
-                    # Step 5: Calculate glucose for next time point t+deltat:
-                    subs.loc[t+delt,v] = max(subs.loc[t,v]-solution[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0) 
-
-                # appending the dictionaries to a master list that keeps track of the timepoints associated with the data generated
-                proteomics_list.append((proteomics, t))
-                transcriptomics_list.append((transcriptomics, t))
-                fluxomics_list.append((fluxomics, t))
-                metabolomics_list.append((metabolomics, t))
- 
-                # optimize model using pFBA after inducing isopentenol and formate formation 
-                # and get isopentenol concentrations
-                # NOTE: pass the training file as an argument from the cli
-                training_data_file = f'{DATA_FILE_PATH}/{TRAINING_FILE_NAME}'
-                sol_time_wild = self.generate_isopentenol_concentrations(model, sol_time_wild, t, tspan, delt, cell, subs, subs_ext, conc_iso)
-                # print(sol_time_wild)
-
-        # generate training data for reactions with isopentenol production after optimizing model using MOMA
-        # NOTE: This is not working as I do not have the 'cplex' solver installed and it is looking for a 
-        # qp-solver that is not there to solve the MOMA optimization
-        # Have to run this in the jprime server
-        # NOTE: for only a few of them
-        self.generate_isopentenol_and_solution_for_biomass_using_moma(model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext, NUM_REACTIONS, NUM_INSTANCES)
-
-        time_series_omics_data = {'proteomics': proteomics_list, 'transcriptomics': transcriptomics_list, 'fluxomics': fluxomics_list, 'metabolomics': metabolomics_list}
+    def advance_OD_Emets(self, Erxn2Emet, old_cell, old_Emets, delt, solution, BIOMASS_REACTION_ID):
+        # Output is same as input if nothing happens in the if clause
+        new_cell  = old_cell
+        new_Emets = old_Emets
         
-        # write all the data generated
-        self.write_experiment_description_file(condition)
-        self.write_omics_files(time_series_omics_data)
-        self.write_OD_data(cell)
-        # write external metabolites in subs: Ammonia and glucose and isoprenol concentrations
-        self.write_external_metabolite(subs, conc_iso)
-
-    # This uses the modified E. Coli model that has the added isopentenol pathway
-    # QUESTION: Do we need to add the isopentenol pathway to it, if not provided?DO we need to check it?
-    def generate_isopentenol_concentrations(self, model, sol_time_wild, timepoint, tspan, delt, cell, subs, subs_ext, conc_iso):
-        iso = 'EX_isoprenol_e'
-
-        # adding minimum flux constriants for isopentenol and formate
-        iso_cons = model.problem.Constraint(model.reactions.EX_isoprenol_e.flux_expression,
-                                lb = 0.20)
-        model.add_cons_vars(iso_cons)
-        for_cons = model.problem.Constraint(model.reactions.EX_for_e.flux_expression,
-                                lb = 0.10)
-        model.add_cons_vars(for_cons)
-        # display(model.summary())
-        sol_t = model.optimize()
-        # storing the solution for each timepoint which are going to be reference solutions for moma (see below)
-        sol_time_wild[timepoint] = sol_t
-        mu = sol_t[REACTION_ID_ECOLI]
-
-        if sol_t.status == 'optimal' and mu > 1e-6:
+        # Obtain the value of mu (growth rate)
+        mu = solution[BIOMASS_REACTION_ID]
+        
+        # Calculate OD and external metabolite concentrations for next step
+        if solution.status == 'optimal' and mu > 1e-6:  # Update only if solution is optimal and mu is not zero, otherwise do not update
             # Calculating next time point's OD
-            cell[timepoint+delt] = cell[timepoint]*np.exp(mu*delt)
-            for k, v in subs_ext.items():
-                # Calculating substrate's concentration for next time point
-                subs.loc[timepoint+delt,v] = max(subs.loc[timepoint,v]-sol_t[k]/mu*cell[timepoint]*(1-np.exp(mu*delt)),0.0)
-            if sol_t[iso] > 0:
-                # Calculating isoprenol concentration for next time point
-                conc_iso.loc[timepoint+delt] = conc_iso.loc[timepoint]-sol_t[iso]/mu*cell[timepoint]*(1-np.exp(mu*delt))
-            else:
-                conc_iso.loc[0:t] = 0
-                conc_iso.loc[timepoint+delt] = conc_iso.loc[timepoint]-sol_t[iso]/mu*cell[timepoint]*(1-np.exp(mu*delt))
-        else:
-            cell[timepoint+delt] = cell[timepoint]
-            for k, v in subs_ext.items():
-                subs.loc[timepoint+delt,v] = subs.loc[timepoint,v]
-            conc_iso.loc[timepoint+delt] = conc_iso.loc[timepoint]
+            new_cell = old_cell *np.exp(mu*delt) 
+            # Calculating external external metabolite concentrations for next time point
+            for rxn, met in Erxn2Emet.items():
+                new_Emets[met] = max(old_Emets.loc[met]-solution[rxn]/mu*old_cell*(1-np.exp(mu*delt)),0.0)  
+        
+        return new_cell, new_Emets
 
-        return sol_time_wild
+    def getBEFluxes(self, model_TS, design, solution_TS, grid):
+        ## Unpacking time points grid
+        tspan, delt = grid
+        
+        ## Parameters for flux constraints
+        high = 1.1
+        low  = 0.50
 
-    def generate_isopentenol_and_solution_for_biomass_using_moma(self, model, sol_time_wild, training_data_file, tspan, delt, cell, subs, subs_ext, n_reactions=None, n_instances=None):
-        model.solver = 'cplex'
-        iso = 'EX_isoprenol_e'
-        df = pd.read_csv(training_data_file)
+        ## Unpack information for desired flux changes
+        # Get names for reaction targets
+        reaction_names =list(design.index[1:])
+        # Find number of target reactions and number of designs (or strains changed)
+        #n_reactions = design.shape[1] - 1
+        #n_instances = design.shape[0] - 1
+            
+        ## Time series containing the flux solution obtained through MOMA
+        solutionsMOMA_TS = pd.Series(index=tspan)
 
-        # The original e.coli iJO1366 model does not have the isoprenol pathway. 
-        # Thus, performing simple flux balance analysis on the model will not allocate 
-        # any flux for isoprenol production reaction. So, we modify the model so that 
-        # it produces a small amount of isoprenol. In addition, we force a small amount 
-        # of formate production which forces the model to activate the 'PFL' reaction.
-        with model:
-            # display(model.summary())
-            # Constraint to force a small amount of isoprenol production
-            iso_cons = model.problem.Constraint(model.reactions.EX_isoprenol_e.flux_expression,
-                                        lb = 0.20)
-            # Adding the constraint to the model
-            model.add_cons_vars(iso_cons)
-            # Constraint to force a small amount of formate production which would activate the "PFL" reaction
-            for_cons = model.problem.Constraint(model.reactions.EX_for_e.flux_expression,
-                                        lb = 0.10)
-            # Adding the constraint to the model
-            model.add_cons_vars(for_cons)
-            WT_FBA_sol = cobra.flux_analysis.pfba(model)
-            print(WT_FBA_sol.status, WT_FBA_sol[REACTION_ID_ECOLI], WT_FBA_sol[iso])
+        ## Main loop: for each strain and at each time point, find new flux profile through MOMA    
+        #for i in range(0,n_instances):
+        for t in tspan:
+            model = model_TS[t]
+            sol1 = solution_TS[t] # Reference solution calculated for each time point
+            with model:
+                # Adding the fluxed modifications for chosen reactions
+                for reaction in reaction_names:
+                    flux = sol1.fluxes[reaction]
+                    lbcoeff =low
+                    ubcoeff =high
+                    if flux < 0:
+                        lbcoeff = high
+                        ubcoeff = low
 
-        # Calculating the number of reactions that should be modified (n_genes) and 
-        # number of strains for which isoprenol concentration should be estimated 
-        if n_reactions is None:
-            n_reactions = df.shape[1] - 1
-        if n_instances is None:
-            n_instances = df.shape[0] - 1
+                    reaction_constraint = model.problem.Constraint(model.reactions.get_by_id(reaction).flux_expression, 
+                                                lb = sol1.fluxes[reaction]*design[reaction]*lbcoeff,
+                                                ub = sol1.fluxes[reaction]*design[reaction]*ubcoeff)
+                                                #lb = model.reactions.get_by_id(reaction).lower_bound*design[reaction],
+                                                #ub = model.reactions.get_by_id(reaction).upper_bound*design[reaction])
+                    model.add_cons_vars(reaction_constraint)
 
-        # Inserting the isoprenol concentration as the last column in the dataframe
-        df.insert(loc=n_reactions+1, column='Isoprenol Concentration (mM)', value=None)
+                # Reference solution calculated for each time point in above cell for wild type
+                #sol1 = solution_TS[t]
 
-        # Panda series containing the isopentanol concentrations
-        # and solutions to the wild type after adding isopentenol
-        # pathway and introducing isopentenol fluzes and solving for the 
-        # optimum solution for maimum biomass
-        conc_iso = pd.Series(index=tspan)
-        conc_iso[tspan[0]] = 0.0
-
-        volume = 1.0
-        # For each strain
-        for i in range(0,n_instances):
-            # At each time point
-            for t in tspan:
-                # Adding constraints to the model at each time point for each strain without globally changing the model
-                with model:
-                    for k, v in subs_ext.items():
-                        model.reactions.get_by_id(k).lower_bound = max(model.reactions.get_by_id(k).lower_bound,
-                                                                -subs.loc[t,v]*volume/cell[t]/delt)
-                    # Adding the fluxed modifications for chosen reactions
-                    cons1 = model.problem.Constraint(model.reactions.ACCOAC.flux_expression, 
-                                                    lb = WT_FBA_sol['ACCOAC']*df.iloc[i,1],
-                                                    ub = WT_FBA_sol['ACCOAC']*df.iloc[i,1])
-                    model.add_cons_vars(cons1)
-                
-                    cons2 = model.problem.Constraint(model.reactions.MDH.flux_expression,
-                                                    lb = WT_FBA_sol['MDH']*df.iloc[i,2],
-                                                    ub = WT_FBA_sol['MDH']*df.iloc[i,2])
-                    model.add_cons_vars(cons2)
-                
-                    cons3 = model.problem.Constraint(model.reactions.PTAr.flux_expression,
-                                                    lb = WT_FBA_sol['PTAr']*df.iloc[i,3],
-                                                    ub = WT_FBA_sol['PTAr']*df.iloc[i,3])
-                    model.add_cons_vars(cons3)
-    
-                    cons4 = model.problem.Constraint(model.reactions.CS.flux_expression,
-                                                    lb = WT_FBA_sol['CS']*df.iloc[i,4],
-                                                    ub = WT_FBA_sol['CS']*df.iloc[i,4])
-                    model.add_cons_vars(cons4)
-                
-                    cons5 = model.problem.Constraint(model.reactions.ACACT1r.flux_expression,
-                                                    lb = WT_FBA_sol['ACACT1r']*df.iloc[i,5],
-                                                    ub = WT_FBA_sol['ACACT1r']*df.iloc[i,5])
-                    model.add_cons_vars(cons5)
-                
-                    cons6 = model.problem.Constraint(model.reactions.PPC.flux_expression,
-                                                    lb = WT_FBA_sol['PPC']*df.iloc[i,6],
-                                                    ub = WT_FBA_sol['PPC']*df.iloc[i,6])
-                    model.add_cons_vars(cons6)
-                
-                    cons7 = model.problem.Constraint(model.reactions.PPCK.flux_expression,
-                                                    lb = WT_FBA_sol['PPCK']*df.iloc[i,7],
-                                                    ub = WT_FBA_sol['PPCK']*df.iloc[i,7])
-                
-                    model.add_cons_vars(cons7)
-                
-                    cons8 = model.problem.Constraint(model.reactions.PFL.flux_expression,
-                                                    lb = WT_FBA_sol['PFL']*df.iloc[i,8],
-                                                    ub = WT_FBA_sol['PFL']*df.iloc[i,8])
-                
-                    model.add_cons_vars(cons8)
+                # Moma solution for each time point
+                sol2 = cobra.flux_analysis.moma(model, solution=sol1, linear=False) 
                     
-                    # Reference solution calculated for each time point in above cell for wild type
-                    sol1 = sol_time_wild[t]
-                    # print(sol_time_wild)
-                    # print(sol1)
+                # saving the moma solutions across timepoints
+                solutionsMOMA_TS[t] = sol2
+                    
+        return solutionsMOMA_TS
 
-                    # Moma solution for each time point
-                    sol2 = cobra.flux_analysis.moma(model, solution=sol1, linear=False)
-                    mu = sol2[REACTION_ID_ECOLI]
-                    # print(i,t, sol2.status, mu)
-                    if sol2.status == 'optimal' and mu > 1e-6:
-                        cell[t+delt] = cell[t]*np.exp(mu*delt)
-                        for k, v in subs_ext.items():
-                            subs.loc[t+delt,v] = max(subs.loc[t,v]-sol2[k]/mu*cell[t]*(1-np.exp(mu*delt)),0.0)
-                        if sol2[iso] > 0:
-                            conc_iso.loc[t+delt] = conc_iso.loc[t]-sol2[iso]/mu*cell[t]*(1-np.exp(mu*delt))
+        def integrate_fluxes(self, solution_TS, model_TS, ext_metabolites, grid, BIOMASS_REACTION_ID):
+            ## First unpack the time steps for the grid provided
+            tspan, delt = grid
+
+            ## Create a panda series containing the cell concentation for each time point
+            cell = pd.Series(index=tspan)
+            cell0 = user_params['initial_OD'] # in gDW/L
+            cell[t0] = cell0
+            
+            ## Create a dataframe that constains external metabolite names and their concentrations (DUPLICATED CODE)
+            # First organize external metabolites and their initial concentrations
+            model = model_TS[0]
+            met_names = []
+            initial_concentrations = []
+            for met, init_conc in ext_metabolites.items():
+                met_names.append(met)
+                initial_concentrations.append(init_conc)
+            # Create dataframe containing external metabolites
+            Emets = pd.DataFrame(index=tspan, columns=met_names)
+            # Add initial concentrations for external metabolites
+            Emets.loc[t0] = initial_concentrations    
+            # Create Dictionary mapping exchange reactions to the corresponding external metabolite 
+            Erxn2Emet = {r.id: r.reactants[0].id for r in model.exchanges if r.reactants[0].id in met_names}
+            
+            ## Main loop adding contributions for each time step
+            for t in tspan:     
+                # Calculate OD and external metabolite concentrations for next time point t+delta
+                cell[t+delt], Emets.loc[t+delt] = self.advance_OD_Emets(Erxn2Emet, cell[t], Emets.loc[t], delt, solution_TS[t], BIOMASS_REACTION_ID)
+            
+            return cell, Emets
+                
+
+        def get_proteomics_transcriptomics_data(self, model, solution):
+            """
+
+            :param model:
+            :param solution:
+            :param condition:
+            :return:
+            """
+
+            # pre-determined linear constant (NOTE: Allow user to set this via parameter)
+            # DISCUSS!!
+            k = 0.8
+            q = 0.06
+
+            proteomics = {}
+            transcriptomics = {}
+
+            rxnIDs = solution.fluxes.keys()
+            for rxnId in rxnIDs:
+                reaction = model.reactions.get_by_id(rxnId)
+                for gene in list(reaction.genes):
+
+                    # this will ignore all the reactions that does not have the gene.annotation property
+                    # DISCUSS!!
+                    if gene.annotation:
+                        if 'uniprot' not in gene.annotation:
+                            if 'goa' in gene.annotation:
+                                protein_id = gene.annotation['goa']
+                            else:
+                                break
                         else:
-                            conc_iso.loc[0:t] = 0
-                            conc_iso.loc[t+delt] = conc_iso.loc[t]-sol2[iso]/mu*cell[t]*(1-np.exp(mu*delt))
+                            protein_id = gene.annotation['uniprot'][0]
+                        
+                        # add random noise wjhich is 5 percent of the signal
+                        noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
+                        noise = noiseSigma*np.random.randn();
+                        proteomics[protein_id] = (solution.fluxes[rxnId]/k) + noise
+
+                    # create transcriptomics dict
+                    noiseSigma = 0.05 * proteomics[protein_id]/q;
+                    noise = noiseSigma*np.random.randn();
+                    transcriptomics[gene.id] = (proteomics[protein_id]/q) + noise
+
+            return proteomics, transcriptomics
+
+        # NOTE: Work on this
+        def get_metabolomics_data(model, solution):
+            """
+
+            :param model:
+            :param condition:
+            :return:
+            """
+            metabolomics = {}
+            # get metabolites
+
+            # read the inchikey to pubchem ids mapping file
+            inchikey_to_cid = {}
+            inchikey_to_cid = read_pubchem_id_file()
+            
+            # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
+            sm = create_stoichiometric_matrix(model, array_type='DataFrame')
+            sm = sm.abs()
+
+            # get all the fluxes across reactions from the solution
+            fluxes = solution.fluxes
+            
+            # calculating the dot product of the stoichiometry matrix and the fluxes to calculate the net change 
+            # in concentration of the metabolites across reactions
+            net_change_in_concentrations = sm.dot(fluxes)  
+            # converting all na values to zeroes and counting the total number of changes that happens for each metabolite
+            num_changes_in_metabolites = sm.fillna(0).astype(bool).sum(axis=1)
+            
+            for met_id, conc in net_change_in_concentrations.items():
+                metabolite = model.metabolites.get_by_id(met_id)
+                
+                # if there is an inchikey ID for the metabolite
+                if 'inchi_key' in metabolite.annotation:
+                    # if it is a list get the first element
+                    if type(metabolite.annotation['inchi_key']) is list:
+                        inchi_key = metabolite.annotation['inchi_key'][0]
                     else:
-                        cell[t+delt] = cell[t]
-                        for k, v in subs_ext.items():
-                            subs.loc[t+delt,v] = subs.loc[t,v]
-                        conc_iso.loc[t+delt] = conc_iso.loc[t]
-            
-            
-            # Storing the final concentration for each strain
-            df.iloc[i,9] = conc_iso.iloc[-1]
-            print('Isopentenol concentrations:', conc_iso)
-            print('String index:', i)
-            print('Flux value for isopentenol from MOMA calculation:', sol2[iso])
-            print('Isopentenol concentration for this strain:', conc_iso.iloc[-1])
+                        inchi_key = metabolite.annotation['inchi_key']
+                
+                    if inchi_key in inchikey_to_cid.keys():
+                        # if the CID is not in the metabolomics dict keys AND the mapped value is not None and the reactions flux is not 0   
+                        if (inchikey_to_cid[inchi_key] not in metabolomics.keys()) and (inchikey_to_cid[inchi_key] is not None):
+                            metabolomics[inchikey_to_cid[inchi_key]] = conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
+                            
+                        elif (inchikey_to_cid[inchi_key] is not None):
+                            metabolomics[inchikey_to_cid[inchi_key]] += conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
+                        
+            return metabolomics
 
-        # write out the training dataset with isopentenol production concentrations
-        filename = 'training_data_8genes_withiso.csv'
-        self.write_training_data_with_isopentenol(df, filename)
+        def get_multiomics(model, solution):
+            """
 
-    def generate_fake_data(self, model, condition):
-        """
+            :param model: cobra model object
+            :param solution: solution for the model optimization using cobra
+            :param data_type: defines the type of -omics data to generate (all by default)
+            :return:
+            """
 
-        :param model: cobra model object
-        :param solution: solution for the model optimization using cobra
-        :param data_type: defines the type of -omics data to generate (all by default)
-        :return:
-        """
+            proteomics = {}
+            transcriptomics = {}
+            fluxomics = {}
+            metabolomics = {}
 
-        self.proteomics = {}
-        self.transcriptomics = {}
-        self.fluxomics = {}
-        self.metabolomics = {}
+            proteomics, transcriptomics = get_proteomics_transcriptomics_data(model, solution)
 
-        # reaction_id of choice passed to the function# hardcoded here for this particular file (Need to convert this to an interactive cli program)
-        reaction_id = REACTION_ID_ECOLI
+            metabolomics = get_metabolomics_data(model)
 
-        # while condition:
-            # print("Condition parameter: ", condition)
-        condition-=1
-        solution = self.get_optimized_solution(model, reaction_id)
-        # solution: cobra.Solution = cobra.core.solution.get_solution(
-        #     model, raise_error=False)
-
-        proteomics, transcriptomics, fluxomics = self.get_proteomics_transcriptomics_fluxomics_data(model, solution, condition)
-        
-        metabolomics = self.get_metabolomics_data(model, condition)
-        
-        return (proteomics, transcriptomics, fluxomics, metabolomics, solution)
+            return (proteomics, transcriptomics, metabolomics)
 
     # NOTE: 
     def read_pubchem_id_file(self):
@@ -503,106 +421,6 @@ class Ecoli(Host):
 
         return inchikey_to_cid
 
-    def get_metabolomics_data(self, model, condition):
-        """
-
-        :param model:
-        :param condition:
-        :return:
-        """
-        metabolomics = {}
-        # get metabolites
-        # NOTE: Need to find a better algorithm. This is O(n^3)
-
-        # read the inchikey to pubchem ids mapping file
-        inchikey_to_cid = {}
-        inchikey_to_cid = self.read_pubchem_id_file()
-
-        for met in model.metabolites:
-            # get associated reactions
-            for reaction in list(met.reactions):
-                # get dictionary of associated metabolites and their concentrations
-                for metabolite, conc in reaction._metabolites.items():
-                    if metabolite.id == met.id:
-                        # map the BIGG ids to CIDs using the inchikeys in the metabolites and the ampping file
-                        # that we have generated from Pubchem
-                        # remember that not all Inchikeys dont have a mappping to a CIDs and there are
-                        # multiple mappings for some Inchikeys
-                        if 'inchi_key' in met.annotation:
-                            if type(met.annotation['inchi_key']) is list:
-                                inchi_key = met.annotation['inchi_key'][0]
-                            else:
-                                inchi_key = met.annotation['inchi_key']
-                            
-                            if inchi_key in inchikey_to_cid.keys():
-                                if inchikey_to_cid[inchi_key] not in metabolomics.keys():
-                                    if inchikey_to_cid[inchi_key] is not None:
-                                        metabolomics[inchikey_to_cid[inchi_key]] = abs(conc)
-                                else:
-                                    if inchikey_to_cid[inchi_key] is not None:
-                                        metabolomics[inchikey_to_cid[inchi_key]] += abs(conc)
-            # getting number of associated reactions and averaging the metabolic concentration value
-            num_reactions = len(list(met.reactions))
-
-            # check if inchi_key attribite present else ignore metabolite
-            if 'inchi_key' in met.annotation.keys() and inchi_key in inchikey_to_cid.keys():
-                if inchikey_to_cid[inchi_key] is not None:
-                    metabolomics[inchikey_to_cid[inchi_key]]/=num_reactions
-
-        return metabolomics
-
-    def get_proteomics_transcriptomics_fluxomics_data(self, model, solution, condition):
-        """
-
-        :param model:
-        :param solution:
-        :param condition:
-        :return:
-        """
-
-        # pre-determined linear constant (NOTE: Allow user to set this via parameter)
-        # DISCUSS!!
-        k = 0.8
-        q = 0.06
-
-        proteomics = {}
-        transcriptomics = {}
-        fluxomics = {}
-
-        # print(solution.fluxes['EX_cm_e'])
-        rxnIDs = solution.fluxes.keys()
-        for rxnId in rxnIDs:
-            reaction = model.reactions.get_by_id(rxnId)
-            for gene in list(reaction.genes):
-
-                # this will ignore all the reactions that does not have the gene.annotation property
-                # DISCUSS!!
-                if gene.annotation:
-                    if 'uniprot' not in gene.annotation:
-                        if 'goa' in gene.annotation:
-                            protein_id = gene.annotation['goa']
-                            # print("HERE")
-                        else:
-                            break
-                    else:
-                        protein_id = gene.annotation['uniprot'][0]
-                        # print("HERERERERERERERER")
-
-                    # create proteomics dict
-                    # Adding noise which is 5% of the signal data. signal + signal*0.05 = signal*1.05
-                    # print(rxnId)
-                    # print(solution.fluxes)
-                    # print(type(solution.fluxes))
-                    # print(solution.fluxes[rxnId])
-                    # print(protein_id)
-
-                    proteomics[protein_id] = (solution.fluxes[rxnId]/k)*1.05
-                    fluxomics[rxnId] = solution.fluxes[rxnId]
-
-                # create transcriptomics dict
-                transcriptomics[gene.id] = (proteomics[protein_id]/q)*1.05
-
-        return proteomics, transcriptomics, fluxomics
 
     def write_experiment_description_file(self, condition=1, line_name='WT'):
         # create the filename
