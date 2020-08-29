@@ -252,151 +252,151 @@ class Ecoli(Host):
                     
         return solutionsMOMA_TS
 
-        def integrate_fluxes(self, solution_TS, model_TS, ext_metabolites, grid, BIOMASS_REACTION_ID):
-            ## First unpack the time steps for the grid provided
-            tspan, delt = grid
+    def integrate_fluxes(self, solution_TS, model_TS, ext_metabolites, grid, BIOMASS_REACTION_ID):
+        ## First unpack the time steps for the grid provided
+        tspan, delt = grid
 
-            ## Create a panda series containing the cell concentation for each time point
-            cell = pd.Series(index=tspan)
-            cell0 = user_params['initial_OD'] # in gDW/L
-            cell[t0] = cell0
+        ## Create a panda series containing the cell concentation for each time point
+        cell = pd.Series(index=tspan)
+        cell0 = user_params['initial_OD'] # in gDW/L
+        cell[t0] = cell0
+        
+        ## Create a dataframe that constains external metabolite names and their concentrations (DUPLICATED CODE)
+        # First organize external metabolites and their initial concentrations
+        model = model_TS[0]
+        met_names = []
+        initial_concentrations = []
+        for met, init_conc in ext_metabolites.items():
+            met_names.append(met)
+            initial_concentrations.append(init_conc)
+        # Create dataframe containing external metabolites
+        Emets = pd.DataFrame(index=tspan, columns=met_names)
+        # Add initial concentrations for external metabolites
+        Emets.loc[t0] = initial_concentrations    
+        # Create Dictionary mapping exchange reactions to the corresponding external metabolite 
+        Erxn2Emet = {r.id: r.reactants[0].id for r in model.exchanges if r.reactants[0].id in met_names}
+        
+        ## Main loop adding contributions for each time step
+        for t in tspan:     
+            # Calculate OD and external metabolite concentrations for next time point t+delta
+            cell[t+delt], Emets.loc[t+delt] = self.advance_OD_Emets(Erxn2Emet, cell[t], Emets.loc[t], delt, solution_TS[t], BIOMASS_REACTION_ID)
+        
+        return cell, Emets
             
-            ## Create a dataframe that constains external metabolite names and their concentrations (DUPLICATED CODE)
-            # First organize external metabolites and their initial concentrations
-            model = model_TS[0]
-            met_names = []
-            initial_concentrations = []
-            for met, init_conc in ext_metabolites.items():
-                met_names.append(met)
-                initial_concentrations.append(init_conc)
-            # Create dataframe containing external metabolites
-            Emets = pd.DataFrame(index=tspan, columns=met_names)
-            # Add initial concentrations for external metabolites
-            Emets.loc[t0] = initial_concentrations    
-            # Create Dictionary mapping exchange reactions to the corresponding external metabolite 
-            Erxn2Emet = {r.id: r.reactants[0].id for r in model.exchanges if r.reactants[0].id in met_names}
-            
-            ## Main loop adding contributions for each time step
-            for t in tspan:     
-                # Calculate OD and external metabolite concentrations for next time point t+delta
-                cell[t+delt], Emets.loc[t+delt] = self.advance_OD_Emets(Erxn2Emet, cell[t], Emets.loc[t], delt, solution_TS[t], BIOMASS_REACTION_ID)
-            
-            return cell, Emets
-                
 
-        def get_proteomics_transcriptomics_data(self, model, solution):
-            """
+    def get_proteomics_transcriptomics_data(self, model, solution):
+        """
 
-            :param model:
-            :param solution:
-            :param condition:
-            :return:
-            """
+        :param model:
+        :param solution:
+        :param condition:
+        :return:
+        """
 
-            # pre-determined linear constant (NOTE: Allow user to set this via parameter)
-            # DISCUSS!!
-            k = 0.8
-            q = 0.06
+        # pre-determined linear constant (NOTE: Allow user to set this via parameter)
+        # DISCUSS!!
+        k = 0.8
+        q = 0.06
 
-            proteomics = {}
-            transcriptomics = {}
+        proteomics = {}
+        transcriptomics = {}
 
-            rxnIDs = solution.fluxes.keys()
-            for rxnId in rxnIDs:
-                reaction = model.reactions.get_by_id(rxnId)
-                for gene in list(reaction.genes):
+        rxnIDs = solution.fluxes.keys()
+        for rxnId in rxnIDs:
+            reaction = model.reactions.get_by_id(rxnId)
+            for gene in list(reaction.genes):
 
-                    # this will ignore all the reactions that does not have the gene.annotation property
-                    # DISCUSS!!
-                    if gene.annotation:
-                        if 'uniprot' not in gene.annotation:
-                            if 'goa' in gene.annotation:
-                                protein_id = gene.annotation['goa']
-                            else:
-                                break
+                # this will ignore all the reactions that does not have the gene.annotation property
+                # DISCUSS!!
+                if gene.annotation:
+                    if 'uniprot' not in gene.annotation:
+                        if 'goa' in gene.annotation:
+                            protein_id = gene.annotation['goa']
                         else:
-                            protein_id = gene.annotation['uniprot'][0]
-                        
-                        # add random noise wjhich is 5 percent of the signal
-                        noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
-                        noise = noiseSigma*np.random.randn();
-                        proteomics[protein_id] = (solution.fluxes[rxnId]/k) + noise
-
-                    # create transcriptomics dict
-                    noiseSigma = 0.05 * proteomics[protein_id]/q;
-                    noise = noiseSigma*np.random.randn();
-                    transcriptomics[gene.id] = (proteomics[protein_id]/q) + noise
-
-            return proteomics, transcriptomics
-
-        # NOTE: Work on this
-        def get_metabolomics_data(model, solution):
-            """
-
-            :param model:
-            :param condition:
-            :return:
-            """
-            metabolomics = {}
-            # get metabolites
-
-            # read the inchikey to pubchem ids mapping file
-            inchikey_to_cid = {}
-            inchikey_to_cid = read_pubchem_id_file()
-            
-            # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
-            sm = create_stoichiometric_matrix(model, array_type='DataFrame')
-            sm = sm.abs()
-
-            # get all the fluxes across reactions from the solution
-            fluxes = solution.fluxes
-            
-            # calculating the dot product of the stoichiometry matrix and the fluxes to calculate the net change 
-            # in concentration of the metabolites across reactions
-            net_change_in_concentrations = sm.dot(fluxes)  
-            # converting all na values to zeroes and counting the total number of changes that happens for each metabolite
-            num_changes_in_metabolites = sm.fillna(0).astype(bool).sum(axis=1)
-            
-            for met_id, conc in net_change_in_concentrations.items():
-                metabolite = model.metabolites.get_by_id(met_id)
-                
-                # if there is an inchikey ID for the metabolite
-                if 'inchi_key' in metabolite.annotation:
-                    # if it is a list get the first element
-                    if type(metabolite.annotation['inchi_key']) is list:
-                        inchi_key = metabolite.annotation['inchi_key'][0]
+                            break
                     else:
-                        inchi_key = metabolite.annotation['inchi_key']
-                
-                    if inchi_key in inchikey_to_cid.keys():
-                        # if the CID is not in the metabolomics dict keys AND the mapped value is not None and the reactions flux is not 0   
-                        if (inchikey_to_cid[inchi_key] not in metabolomics.keys()) and (inchikey_to_cid[inchi_key] is not None):
-                            metabolomics[inchikey_to_cid[inchi_key]] = conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
-                            
-                        elif (inchikey_to_cid[inchi_key] is not None):
-                            metabolomics[inchikey_to_cid[inchi_key]] += conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
+                        protein_id = gene.annotation['uniprot'][0]
+                    
+                    # add random noise wjhich is 5 percent of the signal
+                    noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
+                    noise = noiseSigma*np.random.randn();
+                    proteomics[protein_id] = (solution.fluxes[rxnId]/k) + noise
+
+                # create transcriptomics dict
+                noiseSigma = 0.05 * proteomics[protein_id]/q;
+                noise = noiseSigma*np.random.randn();
+                transcriptomics[gene.id] = (proteomics[protein_id]/q) + noise
+
+        return proteomics, transcriptomics
+
+    # NOTE: Work on this
+    def get_metabolomics_data(self, model, solution):
+        """
+
+        :param model:
+        :param condition:
+        :return:
+        """
+        metabolomics = {}
+        # get metabolites
+
+        # read the inchikey to pubchem ids mapping file
+        inchikey_to_cid = {}
+        inchikey_to_cid = read_pubchem_id_file()
+        
+        # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
+        sm = create_stoichiometric_matrix(model, array_type='DataFrame')
+        sm = sm.abs()
+
+        # get all the fluxes across reactions from the solution
+        fluxes = solution.fluxes
+        
+        # calculating the dot product of the stoichiometry matrix and the fluxes to calculate the net change 
+        # in concentration of the metabolites across reactions
+        net_change_in_concentrations = sm.dot(fluxes)  
+        # converting all na values to zeroes and counting the total number of changes that happens for each metabolite
+        num_changes_in_metabolites = sm.fillna(0).astype(bool).sum(axis=1)
+        
+        for met_id, conc in net_change_in_concentrations.items():
+            metabolite = model.metabolites.get_by_id(met_id)
+            
+            # if there is an inchikey ID for the metabolite
+            if 'inchi_key' in metabolite.annotation:
+                # if it is a list get the first element
+                if type(metabolite.annotation['inchi_key']) is list:
+                    inchi_key = metabolite.annotation['inchi_key'][0]
+                else:
+                    inchi_key = metabolite.annotation['inchi_key']
+            
+                if inchi_key in inchikey_to_cid.keys():
+                    # if the CID is not in the metabolomics dict keys AND the mapped value is not None and the reactions flux is not 0   
+                    if (inchikey_to_cid[inchi_key] not in metabolomics.keys()) and (inchikey_to_cid[inchi_key] is not None):
+                        metabolomics[inchikey_to_cid[inchi_key]] = conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
                         
-            return metabolomics
+                    elif (inchikey_to_cid[inchi_key] is not None):
+                        metabolomics[inchikey_to_cid[inchi_key]] += conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
+                    
+        return metabolomics
 
-        def get_multiomics(model, solution):
-            """
+    def get_multiomics(self, model, solution):
+        """
 
-            :param model: cobra model object
-            :param solution: solution for the model optimization using cobra
-            :param data_type: defines the type of -omics data to generate (all by default)
-            :return:
-            """
+        :param model: cobra model object
+        :param solution: solution for the model optimization using cobra
+        :param data_type: defines the type of -omics data to generate (all by default)
+        :return:
+        """
 
-            proteomics = {}
-            transcriptomics = {}
-            fluxomics = {}
-            metabolomics = {}
+        proteomics = {}
+        transcriptomics = {}
+        fluxomics = {}
+        metabolomics = {}
 
-            proteomics, transcriptomics = get_proteomics_transcriptomics_data(model, solution)
+        proteomics, transcriptomics = get_proteomics_transcriptomics_data(model, solution)
 
-            metabolomics = get_metabolomics_data(model)
+        metabolomics = get_metabolomics_data(model)
 
-            return (proteomics, transcriptomics, metabolomics)
+        return (proteomics, transcriptomics, metabolomics)
 
     # NOTE: 
     def read_pubchem_id_file(self):
