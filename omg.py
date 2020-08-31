@@ -317,7 +317,7 @@ def get_proteomics_transcriptomics_data(model, solution):
 
     return proteomics, transcriptomics
 
-def get_metabolomics_data(model, solution):
+def get_metabolomics_data(model, solution, mapping_file):
     """
 
     :param model:
@@ -329,7 +329,7 @@ def get_metabolomics_data(model, solution):
 
     # read the inchikey to pubchem ids mapping file
     inchikey_to_cid = {}
-    inchikey_to_cid = read_pubchem_id_file()
+    inchikey_to_cid = read_pubchem_id_file(mapping_file)
     
     # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
     sm = create_stoichiometric_matrix(model, array_type='DataFrame')
@@ -365,7 +365,7 @@ def get_metabolomics_data(model, solution):
                 
     return metabolomics
 
-def get_multiomics(model, solution):
+def get_multiomics(model, solution, mapping_file):
     """
 
     :param model: cobra model object
@@ -381,14 +381,13 @@ def get_multiomics(model, solution):
 
     proteomics, transcriptomics = get_proteomics_transcriptomics_data(model, solution)
 
-    metabolomics = get_metabolomics_data(model, solution)
+    metabolomics = get_metabolomics_data(model, solution, mapping_file)
 
     return (proteomics, transcriptomics, metabolomics)
 
-def read_pubchem_id_file():
+def read_pubchem_id_file(mapping_file):
     inchikey_to_cid = {}
-    filename = f'{INCHIKEY_TO_CID_MAP_FILE_PATH}/inchikey_to_cid.txt'
-    with open(filename, 'r') as fh:
+    with open(mapping_file, 'r') as fh:
             try:
                 line = fh.readline()
                 while line:
