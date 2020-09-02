@@ -325,6 +325,7 @@ def get_metabolomics_data(model, solution, mapping_file):
     :return:
     """
     metabolomics = {}
+    metabolomics_with_old_ids = {}
     # get metabolites
 
     # read the inchikey to pubchem ids mapping file
@@ -359,13 +360,15 @@ def get_metabolomics_data(model, solution, mapping_file):
                 # if the CID is not in the metabolomics dict keys AND the mapped value is not None and the reactions flux is not 0   
                 if (inchikey_to_cid[inchi_key] not in metabolomics.keys()) and (inchikey_to_cid[inchi_key] is not None):
                     metabolomics[inchikey_to_cid[inchi_key]] = conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
+                    metabolomics_with_old_ids[met_id] = conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
                     
                 elif (inchikey_to_cid[inchi_key] is not None):
                     metabolomics[inchikey_to_cid[inchi_key]] += conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
+                    metabolomics_with_old_ids[met_id] = conc/num_changes_in_metabolites.iloc[num_changes_in_metabolites.index.get_loc(met_id)]
                 
-    return metabolomics
+    return metabolomics, metabolomics_with_old_ids
 
-def get_multiomics(model, solution, mapping_file):
+def get_multiomics(model, solution, mapping_file, old_ids=False):
     """
 
     :param model: cobra model object
@@ -381,9 +384,12 @@ def get_multiomics(model, solution, mapping_file):
 
     proteomics, transcriptomics = get_proteomics_transcriptomics_data(model, solution)
 
-    metabolomics = get_metabolomics_data(model, solution, mapping_file)
-
-    return (proteomics, transcriptomics, metabolomics)
+    metabolomics, metabolomics_with_old_ids = get_metabolomics_data(model, solution, mapping_file)
+    
+    if old_ids:
+        return (proteomics, transcriptomics, metabolomics, metabolomics_with_old_ids)
+    else:
+        return (proteomics, transcriptomics, metabolomics)
 
 def read_pubchem_id_file(mapping_file):
     inchikey_to_cid = {}
@@ -421,7 +427,7 @@ def write_experiment_description_file(condition=1, line_name='WT'):
 
     fh.close()
 
-def write_omics_files(time_series_omics_data, omics_type, output_file_path, line_name='WT'):
+def write_omics_files(time_series_omics_data, omics_type, output_file_path, line_name='WT', old_ids=False):
     """
 
     :param dataframe:
@@ -438,7 +444,10 @@ def write_omics_files(time_series_omics_data, omics_type, output_file_path, line
             }
 
     # create the filenames
-    omics_file_name: str = f'{output_file_path}/{omics_type}_fakedata_sample.csv'
+    if omics_type == 'metabolomics' and old_ids == True:
+        omics_file_name: str = f'{output_file_path}/{omics_type}_oldids_fakedata_sample.csv'
+    else:
+        omics_file_name: str = f'{output_file_path}/{omics_type}_fakedata_sample.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
     
