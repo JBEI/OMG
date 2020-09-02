@@ -421,12 +421,11 @@ def write_experiment_description_file(condition=1, line_name='WT'):
 
     fh.close()
 
-def write_omics_files(time_series_omics_data, condition=1, line_name='WT'):
+def write_omics_files(time_series_omics_data, omics_type, output_file_path, line_name='WT'):
     """
 
     :param dataframe:
     :param data_type:
-    :param condition:
     :return:
     """
 
@@ -438,37 +437,37 @@ def write_omics_files(time_series_omics_data, condition=1, line_name='WT'):
             "metabolomics": "mg/L"
             }
 
-    # for each omics type data
-    for omics_type, omics_list in time_series_omics_data.items():
-        # create the filenames
-        omics_file_name: str = f'{OUTPUT_FILE_PATH}/{omics_type}_fakedata_sample_{condition}.csv'
-        
-        # open a file to write omics data for each type and for all timepoints and constraints
-        try:
-            with open(omics_file_name, 'w') as fh:
-                fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
-                for omics_dict, timepoint in omics_list:
-                    dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
-                    for index, series in dataframe.iteritems():
-                        for id, value in series.iteritems():
-                            fh.write((f'{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n'))
-
-        except Exception as ex:
-            print("Error in writing file!")
-            print(ex)
+    # create the filenames
+    omics_file_name: str = f'{output_file_path}/{omics_type}_fakedata_sample.csv'
+    if not os.path.isdir(output_file_path):
+        os.mkdir(output_file_path)
     
-        fh.close()
+    # open a file to write omics data for each type and for all timepoints and constraints
+    try:
+        with open(omics_file_name, 'w') as fh:
+            fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
+            for timepoint, omics_dict in time_series_omics_data.items():
+                dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
+                for index, series in dataframe.iteritems():
+                    for id, value in series.iteritems():
+                        fh.write((f'{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n'))
 
-def write_OD_data(cell, line_name='WT'):
+    except Exception as ex:
+        print("Error in writing file!")
+        print(ex)
+    
+
+def write_OD_data(cell, output_file_path, line_name='WT'):
     # create the filename
-    OD_data_file: str = f'{OUTPUT_FILE_PATH}/OD_fakedata_sample.csv'
+    OD_data_file: str = f'{output_file_path}/OD_fakedata_sample.csv'
+    if not os.path.isdir(output_file_path):
+        os.mkdir(output_file_path)
 
     # write experiment description file
     try:
         with open(OD_data_file, 'w') as fh:
             fh.write(f'Line Name,Measurement Type,Concentration,Units,Time,Value\n')
             for index, value in cell.items():
-                # print(index, value)
                 fh.write((f'{line_name},Optical Density,0.75,g/L,{index},{value}\n'))
 
     except Exception as ex:
@@ -479,12 +478,16 @@ def write_training_data_with_isopentenol(df, filename):
     filename = f'{OUTPUT_FILE_PATH}/{filename}'
     df.to_csv(filename, header=True, index=False)
 
-def write_external_metabolite(substrates, isopentenol_conc, filename='external_metabolites.csv', linename='WT'):
+def write_external_metabolite(substrates, output_file_path, filename='external_metabolites.csv', linename='WT'):
     # create the filename
-    external_metabolites: str = f'{OUTPUT_FILE_PATH}/{filename}'
+    external_metabolites: str = f'{output_file_path}/{filename}'
+    if not os.path.isdir(output_file_path):
+        os.mkdir(output_file_path)
+        
     # get ammonium and glucose from substrates
     glucose = substrates.loc[:, 'glc__D_e']
     ammonium = substrates.loc[:, 'nh4_e']
+    isopentenol = substrates.loc[:, 'isoprenol_e']
 
     try:
         with open(external_metabolites, 'w') as fh:
@@ -497,7 +500,7 @@ def write_external_metabolite(substrates, isopentenol_conc, filename='external_m
                 fh.write((f'{linename},CID:16741146,{index},{value},mg/L\n'))
 
             # write out isopentenol concentrations
-            for index, value in isopentenol_conc.items():
+            for index, value in isopentenol.items():
                 fh.write((f'{linename},CID:15983957,{index},{value},mg/L\n'))
     
     except Exception as ex:
