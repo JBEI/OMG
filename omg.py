@@ -412,9 +412,9 @@ def read_pubchem_id_file(mapping_file):
 
     return inchikey_to_cid
 
-def write_experiment_description_file(condition=1, line_name='WT'):
+def write_experiment_description_file(output_file_path, line_name='WT'):
     # create the filename
-    experiment_description_file_name = f'{OUTPUT_FILE_PATH}/experiment_description_file.csv'
+    experiment_description_file_name = f'{output_file_path}/experiment_description_file.csv'
 
     #write experiment description file
     try:
@@ -427,7 +427,24 @@ def write_experiment_description_file(condition=1, line_name='WT'):
 
     fh.close()
 
-def write_omics_files(time_series_omics_data, omics_type, output_file_path, line_name='WT', old_ids=False):
+def write_in_al_format(time_series_omics_data, omics_type, user_params):
+    
+    try:
+        for timepoint, omics_dict in time_series_omics_data.items():
+            al_file_name = f'{user_params["output_file_path"]}/{omics_type}_al_format_{timepoint}_hour.csv'
+            with open(al_file_name, 'w') as ofh:
+                dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
+                for index, series in dataframe.iteritems():
+                    for id, value in series.iteritems():
+                        ofh.write(f'{id},{value}\n')
+    except:
+        print('Error in writing in Arrowland format')
+        
+def write_in_edd_format(time_series_omics_data, omics_type, user_params):
+    pass
+    
+                    
+def write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', old_ids=False, al_format=False):
     """
 
     :param dataframe:
@@ -442,33 +459,41 @@ def write_omics_files(time_series_omics_data, omics_type, output_file_path, line
             "transcriptomics": "FPKM",\
             "metabolomics": "mg/L"
             }
-
+    
+    output_file_path = user_params['output_file_path']
     # create the filenames
     if omics_type == 'metabolomics' and old_ids == True:
-        omics_file_name: str = f'{output_file_path}/{omics_type}_oldids_fakedata_sample.csv'
+        omics_file_name: str = f'{output_file_path}/{omics_type}_oldids_synthetic_data_sample.csv'
     else:
-        omics_file_name: str = f'{output_file_path}/{omics_type}_fakedata_sample.csv'
+        omics_file_name: str = f'{output_file_path}/{omics_type}_synthetic_data_sample.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
     
-    # open a file to write omics data for each type and for all timepoints and constraints
-    try:
-        with open(omics_file_name, 'w') as fh:
-            fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
-            for timepoint, omics_dict in time_series_omics_data.items():
-                dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
-                for index, series in dataframe.iteritems():
-                    for id, value in series.iteritems():
-                        fh.write((f'{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n'))
+    # check which format we have to create the data in
+    if not al_format:
+        # write in EDD format
+        # open a file to write omics data for each type and for all timepoints and constraints
+        try:
+            with open(omics_file_name, 'w') as fh:
+                fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
+                for timepoint, omics_dict in time_series_omics_data.items():
+                    dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
+                    for index, series in dataframe.iteritems():
+                        for id, value in series.iteritems():
+                            fh.write((f'{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n'))
 
-    except Exception as ex:
-        print("Error in writing file!")
-        print(ex)
+        except Exception as ex:
+            print("Error in writing file!")
+            print(ex)
+    
+    else:
+        # write the omics files in ARROWLAND format by separating in terms of the timepoints
+        write_in_al_format(time_series_omics_data, omics_type, user_params)
     
 
 def write_OD_data(cell, output_file_path, line_name='WT'):
     # create the filename
-    OD_data_file: str = f'{output_file_path}/OD_fakedata_sample.csv'
+    OD_data_file: str = f'{output_file_path}/OD_synthetic_data_sample.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
 
