@@ -444,7 +444,7 @@ def write_in_edd_format(time_series_omics_data, omics_type, user_params):
     pass
     
                     
-def write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', old_ids=False, al_format=False):
+def write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', al_format=False):
     """
 
     :param dataframe:
@@ -462,7 +462,7 @@ def write_omics_files(time_series_omics_data, omics_type, user_params, line_name
     
     output_file_path = user_params['output_file_path']
     # create the filenames
-    if omics_type == 'metabolomics' and old_ids == True:
+    if omics_type == 'metabolomics' and al_format == True:
         omics_file_name: str = f'{output_file_path}/{omics_type}_oldids_synthetic_data_sample.csv'
     else:
         omics_file_name: str = f'{output_file_path}/{omics_type}_synthetic_data_sample.csv'
