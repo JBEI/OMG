@@ -413,6 +413,8 @@ def read_pubchem_id_file(mapping_file):
 
 def write_experiment_description_file(output_file_path, line_name='WT'):
     
+    # HARD CODED ONLY FOR WILD TYPE!
+    
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
             
@@ -423,7 +425,7 @@ def write_experiment_description_file(output_file_path, line_name='WT'):
     try:
         with open(experiment_description_file_name, 'w') as fh:
             fh.write(f'Line Name, Line Description, Part ID, Media, Shaking Speed, Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n')
-            fh.write(f"{line_name}, KEIO wild type, ABF_001327, M9, 1, 0.1, 50, 200, 30, 1\n")
+            fh.write(f"{line_name}, Wild type E. coli, ABFPUB_000310, M9, 1, 0.1, 50, 200, 30, 1\n")
     except Exception as ex:
         print("Error in writing file!")
         print(ex)
