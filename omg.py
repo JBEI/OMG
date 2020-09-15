@@ -425,7 +425,13 @@ def write_experiment_description_file(output_file_path, line_name='WT'):
     try:
         with open(experiment_description_file_name, 'w') as fh:
             fh.write(f'Line Name, Line Description, Part ID, Media, Shaking Speed, Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n')
-            fh.write(f"{line_name}, Wild type E. coli, ABFPUB_000310, M9, 1, 0.1, 50, 200, 30, 1\n")
+            if line_name == 'WT':
+                line_descr = 'Wild type E. coli'
+                part_id = 'ABFPUB_000310'
+            else:
+                line_descr = ''
+                part_id = 'ABFPUB_000310'  #THIS SHOULD BE CHANGED!
+            fh.write(f"{line_name}, {line_descr}, {part_id}, M9, 1, 0.1, 50, 200, 30, 1\n")
     except Exception as ex:
         print("Error in writing file!")
         print(ex)
@@ -438,7 +444,7 @@ def write_in_al_format(time_series_omics_data, omics_type, user_params, line_nam
             os.mkdir(output_file_path)
             
         for timepoint, omics_dict in time_series_omics_data.items():
-            al_file_name = f'{output_file_path}/{omics_type}_arrowland_{timepoint}hrs_{line_name}.csv'
+            al_file_name = f'{output_file_path}/{omics_type}_arrowland_{timepoint}hrs.csv'
 
             with open(al_file_name, 'w') as ofh:
                 dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
@@ -460,7 +466,7 @@ def write_in_edd_format(time_series_omics_data, omics_type, user_params, line_na
     # write in EDD format
     output_file_path = user_params['edd_omics_file_path']
     # create the filenames
-    omics_file_name: str = f'{output_file_path}/{omics_type}_synthetic_data_sample_{line_name}.csv'
+    omics_file_name: str = f'{output_file_path}/{omics_type}_synthetic_data.csv'
             
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
@@ -499,7 +505,7 @@ def write_omics_files(time_series_omics_data, omics_type, user_params, line_name
 
 def write_OD_data(cell, output_file_path, line_name='WT'):
     # create the filename
-    OD_data_file: str = f'{output_file_path}/OD_synthetic_data_sample.csv'
+    OD_data_file: str = f'{output_file_path}/OD_synthetic_data.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
 
@@ -518,9 +524,9 @@ def write_training_data_with_isopentenol(df, filename):
     filename = f'{OUTPUT_FILE_PATH}/{filename}'
     df.to_csv(filename, header=True, index=False)
 
-def write_external_metabolite(substrates, output_file_path, filename='external_metabolites.csv', linename='WT'):
-    # create the filename
-    external_metabolites: str = f'{output_file_path}/{filename}'
+def write_external_metabolite(substrates, output_file_path, linename='WT'):
+    # create the filename      
+    external_metabolites: str = f'{output_file_path}/external_metabolites.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
         
