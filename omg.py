@@ -305,15 +305,15 @@ def get_proteomics_transcriptomics_data(model, solution):
                 else:
                     protein_id = gene.annotation['uniprot'][0]
                 
-                # add random noise wjhich is 5 percent of the signal
+                # add random noise which is 5 percent of the signal
                 noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
                 noise = noiseSigma*np.random.randn();
-                proteomics[protein_id] = (solution.fluxes[rxnId]/k) + noise
+                proteomics[protein_id] = abs((solution.fluxes[rxnId]/k) + noise)
 
-            # create transcriptomics dict
-            noiseSigma = 0.05 * proteomics[protein_id]/q;
-            noise = noiseSigma*np.random.randn();
-            transcriptomics[gene.id] = (proteomics[protein_id]/q) + noise
+                # create transcriptomics dict
+                noiseSigma = 0.05 * proteomics[protein_id]/q;
+                noise = noiseSigma*np.random.randn();
+                transcriptomics[gene.id] = abs((proteomics[protein_id]/q) + noise)
 
     return proteomics, transcriptomics
 
@@ -334,14 +334,15 @@ def get_metabolomics_data(model, solution, mapping_file):
     
     # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
     sm = create_stoichiometric_matrix(model, array_type='DataFrame')
-    sm = sm.abs()
 
     # get all the fluxes across reactions from the solution
     fluxes = solution.fluxes
     
     # calculating the dot product of the stoichiometry matrix and the fluxes to calculate the net change 
     # in concentration of the metabolites across reactions
-    net_change_in_concentrations = sm.dot(fluxes)  
+    net_change_in_concentrations = sm.dot(fluxes)
+    net_change_in_concentrations = net_change_in_concentrations.abs()
+
     # converting all na values to zeroes and counting the total number of changes that happens for each metabolite
     num_changes_in_metabolites = sm.fillna(0).astype(bool).sum(axis=1)
     
