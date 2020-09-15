@@ -85,7 +85,7 @@ GENE_IDS_DBS: List[str] = ['kegg.genes']  # R. opacus
 UNITS: Dict[Omics, str] = {
     Omics.PROTEOMICS: 'proteins/cell',
     Omics.TRANSCRIPTOMICS: "FPKM",
-    Omics.METABOLOMICS: "mg/L"
+    Omics.METABOLOMICS: "mM"
 }
 # Fix the flux value to -15 as we have data for this constraint
 LOWER_BOUND: int = -15
@@ -460,7 +460,7 @@ def write_in_edd_format(time_series_omics_data, omics_type, user_params, line_na
     unit_dict = { "fluxomics": 'mmol/gdwh',\
         "proteomics": 'proteins/cell',\
         "transcriptomics": "FPKM",\
-        "metabolomics": "mg/L"
+        "metabolomics": "mM"
     }
     
     # write in EDD format
@@ -540,14 +540,14 @@ def write_external_metabolite(substrates, output_file_path, linename='WT'):
             # get ammonium and glucose from substrates
             fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
             for index, value in glucose.items():
-                fh.write((f'{linename},CID:5793,{index},{value},mg/L\n'))
+                fh.write((f'{linename},CID:5793,{index},{value},mM\n'))
                 
             for index, value in ammonium.items():
-                fh.write((f'{linename},CID:16741146,{index},{value},mg/L\n'))
+                fh.write((f'{linename},CID:16741146,{index},{value},mM\n'))
 
             # write out isopentenol concentrations
             for index, value in isopentenol.items():
-                fh.write((f'{linename},CID:15983957,{index},{value},mg/L\n'))
+                fh.write((f'{linename},CID:15983957,{index},{value},mM\n'))
     
     except Exception as ex:
         print("Error in writing OD file")
