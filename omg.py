@@ -437,7 +437,7 @@ def write_experiment_description_file(output_file_path, line_name='WT'):
         print("Error in writing file!")
         print(ex)
 
-def write_in_al_format(time_series_omics_data, omics_type, user_params, line_name):
+def write_in_al_format(time_series_omics_data, omics_type, user_params):
     
     try:
         output_file_path = user_params['al_omics_file_path']
@@ -501,7 +501,7 @@ def write_omics_files(time_series_omics_data, omics_type, user_params, line_name
     
     else:
         # write the omics files in ARROWLAND format by separating in terms of the timepoints
-        write_in_al_format(time_series_omics_data, omics_type, user_params, line_name)
+        write_in_al_format(time_series_omics_data, omics_type, user_params)
     
 
 def write_OD_data(cell, output_file_path, line_name='WT'):
@@ -525,7 +525,7 @@ def write_training_data_with_isopentenol(df, filename):
     filename = f'{OUTPUT_FILE_PATH}/{filename}'
     df.to_csv(filename, header=True, index=False)
 
-def write_external_metabolite(substrates, output_file_path, linename='WT'):
+def write_external_metabolite(substrates, output_file_path, line_name='WT'):
     # create the filename      
     external_metabolites: str = f'{output_file_path}/external_metabolites.csv'
     if not os.path.isdir(output_file_path):
@@ -541,14 +541,14 @@ def write_external_metabolite(substrates, output_file_path, linename='WT'):
             # get ammonium and glucose from substrates
             fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
             for index, value in glucose.items():
-                fh.write((f'{linename},CID:5793,{index},{value},mM\n'))
+                fh.write((f'{line_name},CID:5793,{index},{value},mM\n'))
                 
             for index, value in ammonium.items():
-                fh.write((f'{linename},CID:16741146,{index},{value},mM\n'))
+                fh.write((f'{line_name},CID:16741146,{index},{value},mM\n'))
 
             # write out isopentenol concentrations
             for index, value in isopentenol.items():
-                fh.write((f'{linename},CID:15983957,{index},{value},mM\n'))
+                fh.write((f'{line_name},CID:15983957,{index},{value},mM\n'))
     
     except Exception as ex:
         print("Error in writing OD file")
