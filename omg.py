@@ -548,7 +548,7 @@ def write_external_metabolite(substrates, output_file_path, line_name='WT'):
 
             # write out isopentenol concentrations
             for index, value in isopentenol.items():
-                fh.write((f'{line_name},CID:15983957,{index},{value},mM\n'))
+                fh.write((f'{line_name},CID:12988,{index},{value},mM\n'))
     
     except Exception as ex:
         print("Error in writing OD file")
