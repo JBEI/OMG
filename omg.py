@@ -412,7 +412,7 @@ def read_pubchem_id_file(mapping_file):
 
     return inchikey_to_cid
 
-def write_experiment_description_file(output_file_path, line_name='WT'):
+def write_experiment_description_file(output_file_path, line_name='WT', label=''):
     
     # HARD CODED ONLY FOR WILD TYPE!
     
@@ -420,7 +420,7 @@ def write_experiment_description_file(output_file_path, line_name='WT'):
         os.mkdir(output_file_path)
             
     # create the filename
-    experiment_description_file_name = f'{output_file_path}/experiment_description_file.csv'
+    experiment_description_file_name = f'{output_file_path}/EDD_experiment_description_file{label}.csv'
 
     #write experiment description file
     try:
@@ -437,7 +437,7 @@ def write_experiment_description_file(output_file_path, line_name='WT'):
         print("Error in writing file!")
         print(ex)
 
-def write_in_al_format(time_series_omics_data, omics_type, user_params):
+def write_in_al_format(time_series_omics_data, omics_type, user_params, label=''):
     
     try:
         output_file_path = user_params['al_omics_file_path']
@@ -445,7 +445,7 @@ def write_in_al_format(time_series_omics_data, omics_type, user_params):
             os.mkdir(output_file_path)
             
         for timepoint, omics_dict in time_series_omics_data.items():
-            al_file_name = f'{output_file_path}/{omics_type}_arrowland_{timepoint}hrs.csv'
+            al_file_name = f'{output_file_path}/AL_{omics_type}{timepoint}hrs{label}.csv'
 
             with open(al_file_name, 'w') as ofh:
                 dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
@@ -455,7 +455,7 @@ def write_in_al_format(time_series_omics_data, omics_type, user_params):
     except:
         print('Error in writing in Arrowland format')
         
-def write_in_edd_format(time_series_omics_data, omics_type, user_params, line_name):
+def write_in_edd_format(time_series_omics_data, omics_type, user_params, line_name, label=''):
     
     # Dictionary to map omics type with the units of measurement
     unit_dict = { "fluxomics": 'mmol/gdwh',\
@@ -467,7 +467,7 @@ def write_in_edd_format(time_series_omics_data, omics_type, user_params, line_na
     # write in EDD format
     output_file_path = user_params['edd_omics_file_path']
     # create the filenames
-    omics_file_name: str = f'{output_file_path}/{omics_type}_synthetic_data.csv'
+    omics_file_name: str = f'{output_file_path}/EDD_{omics_type}{label}.csv'
             
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
@@ -486,7 +486,7 @@ def write_in_edd_format(time_series_omics_data, omics_type, user_params, line_na
         print(ex)
     
                     
-def write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', al_format=False):
+def write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', al_format=False, label=''):
     """
 
     :param dataframe:
@@ -497,16 +497,16 @@ def write_omics_files(time_series_omics_data, omics_type, user_params, line_name
     # check which format we have to create the data in
     if not al_format:
         # write the omics files in EDD format by separating in terms of the timepoints
-        write_in_edd_format(time_series_omics_data, omics_type, user_params, line_name)
+        write_in_edd_format(time_series_omics_data, omics_type, user_params, line_name, label=label)
     
     else:
         # write the omics files in ARROWLAND format by separating in terms of the timepoints
-        write_in_al_format(time_series_omics_data, omics_type, user_params)
+        write_in_al_format(time_series_omics_data, omics_type, user_params, label=label)
     
 
-def write_OD_data(cell, output_file_path, line_name='WT'):
+def write_OD_data(cell, output_file_path, line_name='WT', label=''):
     # create the filename
-    OD_data_file: str = f'{output_file_path}/OD_synthetic_data.csv'
+    OD_data_file: str = f'{output_file_path}/EDD_OD{label}.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
 
@@ -525,9 +525,9 @@ def write_training_data_with_isopentenol(df, filename):
     filename = f'{OUTPUT_FILE_PATH}/{filename}'
     df.to_csv(filename, header=True, index=False)
 
-def write_external_metabolite(substrates, output_file_path, line_name='WT'):
+def write_external_metabolite(substrates, output_file_path, line_name='WT', label=''):
     # create the filename      
-    external_metabolites: str = f'{output_file_path}/external_metabolites.csv'
+    external_metabolites: str = f'{output_file_path}/EDD_external_metabolites{label}.csv'
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
         
