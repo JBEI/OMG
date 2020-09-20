@@ -445,7 +445,7 @@ def write_in_al_format(time_series_omics_data, omics_type, user_params, label=''
             os.mkdir(output_file_path)
             
         for timepoint, omics_dict in time_series_omics_data.items():
-            al_file_name = f'{output_file_path}/AL_{omics_type}{timepoint}hrs{label}.csv'
+            al_file_name = f'{output_file_path}/AL_{omics_type}_{timepoint}_hrs{label}.csv'
 
             with open(al_file_name, 'w') as ofh:
                 dataframe = pd.DataFrame.from_dict(omics_dict, orient='index', columns=[f'{omics_type}_value'])
@@ -531,28 +531,33 @@ def write_external_metabolite(substrates, output_file_path, line_name='WT', labe
     if not os.path.isdir(output_file_path):
         os.mkdir(output_file_path)
         
-    # get ammonium and glucose from substrates
-    glucose = substrates.loc[:, 'glc__D_e']
-    ammonium = substrates.loc[:, 'nh4_e']
+    # Table for metabolites to be exported
+    glucose     = substrates.loc[:, 'glc__D_e']
+    ammonium    = substrates.loc[:, 'nh4_e']
     isopentenol = substrates.loc[:, 'isoprenol_e']
-
-    try:
-        with open(external_metabolites, 'w') as fh:
-            # get ammonium and glucose from substrates
-            fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
-            for index, value in glucose.items():
-                fh.write((f'{line_name},CID:5793,{index},{value},mM\n'))
-                
-            for index, value in ammonium.items():
-                fh.write((f'{line_name},CID:16741146,{index},{value},mM\n'))
-
-            # write out isopentenol concentrations
-            for index, value in isopentenol.items():
-                fh.write((f'{line_name},CID:12988,{index},{value},mM\n'))
+    acetate     = substrates.loc[:, 'ac_e']
+    formate     = substrates.loc[:, 'for_e']
+    lactate     = substrates.loc[:, 'lac__D_e']
+    ethanol     = substrates.loc[:, 'etoh_e']
     
+    output_metabolites = {
+        "5793": glucose, "16741146": ammonium, "12988": isopentenol, "175": acetate, "283": formate, "612": lactate, "702": ethanol}
+    
+    # Write file lines
+    try:
+        with open(external_metabolites,'w') as fh:
+            # Top header
+            fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
+            # Metabolite lines
+            for cid in output_metabolites:
+                met = output_metabolites[cid]
+                for index,value in met.items():
+                    fh.write((f'{line_name},CID:{cid},{index},{value},mM\n'))
+   
     except Exception as ex:
         print("Error in writing OD file")
-        print(ex)
+        print(ex)             
+
 
 def get_random_number():
     """
