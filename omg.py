@@ -513,9 +513,9 @@ def write_OD_data(cell, output_file_path, line_name='WT', label=''):
     # write experiment description file
     try:
         with open(OD_data_file, 'w') as fh:
-            fh.write(f'Line Name,Measurement Type,Concentration,Units,Time,Value\n')
+            fh.write(f'Line Name,Measurement Type,Time,Value,Units\n')
             for index, value in cell.items():
-                fh.write((f'{line_name},Optical Density,0.75,g/L,{index},{value}\n'))
+                fh.write((f'{line_name},Optical Density,{index},{value},n/a\n'))
 
     except Exception as ex:
         print("Error in writing OD file")
@@ -540,8 +540,11 @@ def write_external_metabolite(substrates, output_file_path, line_name='WT', labe
     lactate     = substrates.loc[:, 'lac__D_e']
     ethanol     = substrates.loc[:, 'etoh_e']
     
+#    output_metabolites = {
+#        "5793": glucose, "16741146": ammonium, "12988": isopentenol, "175": acetate, "283": formate, "612": #lactate, "702": ethanol}
+    
     output_metabolites = {
-        "5793": glucose, "16741146": ammonium, "12988": isopentenol, "175": acetate, "283": formate, "612": lactate, "702": ethanol}
+        "5793": glucose, "12988": isopentenol, "175": acetate, "283": formate, "612": lactate, "702": ethanol}
     
     # Write file lines
     try:
