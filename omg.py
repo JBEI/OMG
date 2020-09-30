@@ -340,8 +340,8 @@ def get_metabolomics_data(model, solution, mapping_file):
     
     # calculating the dot product of the stoichiometry matrix and the fluxes to calculate the net change 
     # in concentration of the metabolites across reactions
-    net_change_in_concentrations = sm.dot(fluxes)
-    net_change_in_concentrations = net_change_in_concentrations.abs()
+    net_change_in_concentrations = sm.abs().dot(fluxes.abs())
+    #net_change_in_concentrations = net_change_in_concentrations.abs()
 
     # converting all na values to zeroes and counting the total number of changes that happens for each metabolite
     num_changes_in_metabolites = sm.fillna(0).astype(bool).sum(axis=1)
