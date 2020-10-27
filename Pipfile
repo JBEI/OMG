@@ -9,6 +9,9 @@ verify_ssl = true
 cobra = "*"
 pandas = "*"
 openpyxl = "*"
+pytest = "*"
+datatest = "*"
+pytest-datadir = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

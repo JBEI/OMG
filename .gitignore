@@ -4,9 +4,11 @@
 venv
 data
 *.csv
-!sample_files/*.csv
 *.xlsx
 Pipfile.lock
 .ipynb_checkpoints/
 *.tgz
+!sample_files/*.csv
+!test/*
+!test/data/*
 __pycache__/
