@@ -10,3 +10,5 @@ Pipfile.lock
 .ipynb_checkpoints/
 *.tgz
 __pycache__/
+test
+
