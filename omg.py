@@ -9,7 +9,7 @@ Requirements: Python 3.7.2, cobra, numpy, pandas.
 
 __author__ = 'LBL-QMM'
 __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
-__license__ = 'GNU Affero General Public License Version 3'
+__license__ = ''
 __status__ = 'Alpha'
 __date__ = 'Dec 2019'
 __version__ = '0.1.1'
