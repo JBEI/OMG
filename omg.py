@@ -306,13 +306,13 @@ def get_proteomics_transcriptomics_data(model, solution):
                     protein_id = gene.annotation['uniprot'][0]
                 
                 # add random noise which is 5 percent of the signal
-                noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
-                noise = noiseSigma*np.random.randn();
+                noiseSigma = 0.05 * solution.fluxes[rxnId]/k
+                noise = noiseSigma*np.random.randn()
                 proteomics[protein_id] = abs((solution.fluxes[rxnId]/k) + noise)
 
                 # create transcriptomics dict
-                noiseSigma = 0.05 * proteomics[protein_id]/q;
-                noise = noiseSigma*np.random.randn();
+                noiseSigma = 0.05 * proteomics[protein_id]/q
+                noise = noiseSigma*np.random.randn()
                 transcriptomics[gene.id] = abs((proteomics[protein_id]/q) + noise)
 
     return proteomics, transcriptomics
