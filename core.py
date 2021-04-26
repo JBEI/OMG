@@ -199,6 +199,30 @@ def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
     
     return cell, Emets
 
+def get_optimized_solution(model, reaction_id, lower_bound, upper_bound):
+    """
+
+    :param model:
+    :param reaction_id:
+    :return solution:
+    """
+
+    # fix the flux value to -15 as we have data for this constraint
+    model.reactions.get_by_id(reaction_id).lower_bound = lower_bound
+    model.reactions.get_by_id(reaction_id).upper_bound = upper_bound
+    # print(model.reactions.get_by_id(reaction_id))
+
+    print("Displaying the reaction bounds after constraining them:")
+    print(model.reactions.get_by_id(reaction_id).bounds)
+
+    # optimizing the model for only the selected reaction   
+    # model.slim_optimize()
+
+    # optimizing model
+    solution = model.optimize()
+
+    return solution
+
 def get_proteomics_transcriptomics_data(model, solution):
     """
 
