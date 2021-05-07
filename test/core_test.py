@@ -2,10 +2,15 @@ import pytest
 import pandas as pd
 import datatest as dt
 from pandas.util.testing import assert_frame_equal
-import sys
-import os
-import omg
 import pickle
+import os
+import sys
+
+# sys.path.append('../src/')
+sys.path.append('/Users/somtirtharoy/workspace/Projects/OMG/src/')
+
+from core import *
+
 
 
 #=============================================================================
@@ -60,9 +65,10 @@ def grid_data(user_params_data):
 
 @pytest.fixture(scope="module")
 def model_TS_data():
-    with open('test/data/model_TS_pickle', 'rb') as model_TS_pickle:
-        model_TS = pickle.load(model_TS_pickle)
-    return model_TS
+    # with open('test/data/model_TS_pickle', 'rb') as model_TS_pickle:
+    #     model_TS = pickle.load(model_TS_pickle)
+    # return model_TS
+    pass
 
 @pytest.fixture(scope="module")
 def solution_TS_data():
@@ -136,5 +142,5 @@ def test_Emets(model_TS_data, solution_TS_data):
     # read model and solution objects form pickle files
 
     
-    cell, Emets = omg.integrate_fluxes(solution_TS_data, model_TS_data, ext_metabolites, grid, user_params)
+    # cell, Emets = omg.integrate_fluxes(solution_TS_data, model_TS_data, ext_metabolites, grid, user_params)
     pass

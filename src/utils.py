@@ -5,7 +5,6 @@ import random
 import os
 
 
-
 def read_pubchem_id_file(mapping_file):
     inchikey_to_cid = {}
     with open(mapping_file, 'r') as fh:

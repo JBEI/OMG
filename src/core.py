@@ -12,10 +12,9 @@ __copyright__ = 'Copyright (C) 2019 Berkeley Lab'
 __license__ = ''
 __status__ = 'Alpha'
 __date__ = 'Dec 2019'
-__version__ = '0.1.1
+__version__ = '0.1.1'
 
 
-import argparse
 import collections as col
 import os
 import random
