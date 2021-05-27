@@ -39,7 +39,19 @@ from .utils import *
 
 def get_flux_time_series(model, ext_metabolites, grid, user_params):
     """
-    Generate fluxes and OD
+    Generate fluxes for all timepoints and corresponding OD data
+
+    :param model: a host model on which to run FBA on and calculate the fluxes
+    :param ext_metabolites: external metabolites we are interested in
+    :grid: tuple having the time span over which we calculate the time series
+            data and the step in betweent he timepoints
+    :user_params: user params that have all the user parameters supplied by the
+        user to customize the solution
+    :return solution:
+    :model_TS:
+    :cell:
+    :Emets:
+    :Erxn2Emet:
     """
 
     ## First unpack the time steps for the grid provided
@@ -107,6 +119,21 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
 
 
 def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params):
+    """
+    Get the concentration of the external metabolites over time
+
+    :param Erxn2Emet:
+    :param old_cell:
+    :param old_Emets:
+    :param delt:
+    :param solution:
+    :param user_params:
+
+    :return
+    :new_cell:
+    :new_Emets:
+    """
+
     # Output is same as input if nothing happens in the if clause
     new_cell = old_cell
     new_Emets = old_Emets
@@ -132,6 +159,18 @@ def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params
 
 
 def getBEFluxes(model_TS, design, solution_TS, grid):
+    """
+    Get the fluxes for the bio-engineered strains
+
+    :param model_TS:
+    :param design:
+    :param solution_TS:
+    :param grid:
+
+    :return
+    :solutionsMOMA_TS
+    """
+
     ## Unpacking time points grid
     tspan, delt = grid
 
@@ -186,6 +225,19 @@ def getBEFluxes(model_TS, design, solution_TS, grid):
 
 
 def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
+    """
+    Get the concentration of the external metabolites over time
+
+    :param solution_TS:
+    :param model_TS:
+    :param ext_metabolites:
+    :param grid:
+    :param user_params:
+
+    :return
+    :cell:
+    :Emets:
+    """
 
     ## First unpack the time steps for the grid provided
     tspan, delt = grid
@@ -227,9 +279,13 @@ def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
 
 def get_optimized_solution(model, reaction_id, lower_bound, upper_bound):
     """
+    Get the FBA solution of the model by maximizing biomass production
 
     :param model:
     :param reaction_id:
+    :lower_bound:
+    :upper_bound:
+
     :return solution:
     """
 
@@ -252,11 +308,15 @@ def get_optimized_solution(model, reaction_id, lower_bound, upper_bound):
 
 def get_proteomics_transcriptomics_data(model, solution, noise_zero=False):
     """
+    Get transcriptomics and proteomics data
 
     :param model:
     :param solution:
-    :param condition:
+    :param noise_zero:
+
     :return:
+    :proteomics:
+    :transcriptomics:
     """
 
     # pre-determined linear constant (NOTE: Allow user to set this via parameter)
@@ -300,11 +360,17 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False):
 
 def get_metabolomics_data(model, solution, mapping_file):
     """
+    Get metabolomics data
 
     :param model:
-    :param condition:
+    :param solution:
+    :mapping_file:
+
     :return:
+    :metabolomics:
+    :metabolomics_with_old_ids:
     """
+
     metabolomics = {}
     metabolomics_with_old_ids = {}
     # get metabolites
@@ -375,11 +441,17 @@ def get_metabolomics_data(model, solution, mapping_file):
 
 def get_multiomics(model, solution, mapping_file, old_ids=False):
     """
+    Get mulitomics data
 
     :param model: cobra model object
     :param solution: solution for the model optimization using cobra
-    :param data_type: defines the type of -omics data to generate (all by default)
+    :param mapping_file:
+    :old_ids:
+
     :return:
+    :proteomics:
+    :transcriptomics:
+    :metabolomics:
     """
 
     proteomics = {}
