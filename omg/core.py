@@ -89,7 +89,8 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
 
     ## Main for loop solving the model for each time step and adding the corresponding OD and external metabolites created
     volume = 1.0  # volume set arbitrarily to one because the system is extensive
-    for t in tspan:
+    for t in [0., 1., 2.]:
+
         # Adding constraints for each time point without permanent changes to the model
         with model:
             for rxn, met in Erxn2Emet.items():
@@ -108,9 +109,14 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
             model_TS[t] = model.copy()
 
             # Calculate OD and external metabolite concentrations for next time point t+delta
+            cell_ret, Emets_ret = advance_OD_Emets(
+                Erxn2Emet, cell[t], Emets.loc[t], delt, solution_t, user_params
+            )
+
             cell[t + delt], Emets.loc[t + delt] = advance_OD_Emets(
                 Erxn2Emet, cell[t], Emets.loc[t], delt, solution_t, user_params
             )
+
             print(
                 t, solution_t.status, solution_t[user_params["BIOMASS_REACTION_ID"]]
             )  # Minimum output for testing
@@ -118,7 +124,7 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
     return solution_TS, model_TS, cell, Emets, Erxn2Emet
 
 
-def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params):
+def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params, debug=False):
     """
     Get the concentration of the external metabolites over time
 
@@ -142,9 +148,15 @@ def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params
     mu = solution[user_params["BIOMASS_REACTION_ID"]]
 
     # Calculate OD and external metabolite concentrations for next step
-    if (
-        solution.status == "optimal" and mu > 1e-6
-    ):  # Update only if solution is optimal and mu is not zero, otherwise do not update
+    # Update only if solution is optimal and mu is not zero, otherwise do not update
+    if(debug):
+        solution_status = solution['status']
+    else:
+        solution_status = solution.status
+    
+    if(
+        solution_status == "optimal" and mu > 1e-6
+    ):  
         # Calculating next time point's OD
         new_cell = old_cell * np.exp(mu * delt)
         # Calculating external external metabolite concentrations for next time point
