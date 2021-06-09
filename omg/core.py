@@ -89,7 +89,7 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
 
     ## Main for loop solving the model for each time step and adding the corresponding OD and external metabolites created
     volume = 1.0  # volume set arbitrarily to one because the system is extensive
-    for t in [0., 1., 2.]:
+    for t in [0.0, 1.0, 2.0]:
 
         # Adding constraints for each time point without permanent changes to the model
         with model:
@@ -124,7 +124,9 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
     return solution_TS, model_TS, cell, Emets, Erxn2Emet
 
 
-def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params, debug=False):
+def advance_OD_Emets(
+    Erxn2Emet, old_cell, old_Emets, delt, solution, user_params, debug=False
+):
     """
     Get the concentration of the external metabolites over time
 
@@ -149,14 +151,12 @@ def advance_OD_Emets(Erxn2Emet, old_cell, old_Emets, delt, solution, user_params
 
     # Calculate OD and external metabolite concentrations for next step
     # Update only if solution is optimal and mu is not zero, otherwise do not update
-    if(debug):
-        solution_status = solution['status']
+    if debug:
+        solution_status = solution["status"]
     else:
         solution_status = solution.status
-    
-    if(
-        solution_status == "optimal" and mu > 1e-6
-    ):  
+
+    if solution_status == "optimal" and mu > 1e-6:
         # Calculating next time point's OD
         new_cell = old_cell * np.exp(mu * delt)
         # Calculating external external metabolite concentrations for next time point
@@ -318,7 +318,7 @@ def get_optimized_solution(model, reaction_id, lower_bound, upper_bound):
     return solution
 
 
-def get_proteomics_transcriptomics_data(model, solution, noise_zero=False):
+def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug=True):
     """
     Get transcriptomics and proteomics data
 
@@ -339,7 +339,11 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False):
     proteomics = {}
     transcriptomics = {}
 
-    rxnIDs = solution.fluxes.keys()
+    if debug:
+        rxnIDs = solution["fluxes"].keys()
+    else:
+        rxnIDs = solution.fluxes.keys()
+
     for rxnId in rxnIDs:
         reaction = model.reactions.get_by_id(rxnId)
         for gene in list(reaction.genes):
@@ -356,12 +360,22 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False):
                     protein_id = gene.annotation["uniprot"][0]
 
                 # add random noise which is 5 percent of the signal
+                noise = 0
                 if not noise_zero:
-                    noiseSigma = 0.05 * solution.fluxes[rxnId] / k
+                    if debug:
+                        noiseSigma = 0.05 * solution["fluxes"][rxnId] / k
+                    else:
+                        noiseSigma = 0.05 * solution.fluxes[rxnId] / k
                     noise = noiseSigma * np.random.randn()
-                proteomics[protein_id] = abs((solution.fluxes[rxnId] / k) + noise)
+                if debug:
+                    proteomics[protein_id] = abs(
+                        (solution["fluxes"][rxnId] / k) + noise
+                    )
+                else:
+                    proteomics[protein_id] = abs((solution.fluxes[rxnId] / k) + noise)
 
                 # create transcriptomics dict
+                noise = 0
                 if not noise_zero:
                     noiseSigma = 0.05 * proteomics[protein_id] / q
                     noise = noiseSigma * np.random.randn()

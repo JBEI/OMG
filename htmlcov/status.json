@@ -1,0 +1,87 @@
+{
+  "format": 2,
+  "version": "5.5",
+  "globals": "38c562db668a4c95c907bca7a3be0717",
+  "files": {
+    "omg___init___py": {
+      "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+      "index": {
+        "nums": [1, 0, 0, 0, 0, 0, 0],
+        "html_filename": "omg___init___py.html",
+        "relative_filename": "omg/__init__.py"
+      }
+    },
+    "omg_core_py": {
+      "hash": "443e9ecbc3cd57762f3459f5752e5ef3",
+      "index": {
+        "nums": [1, 176, 0, 106, 0, 0, 0],
+        "html_filename": "omg_core_py.html",
+        "relative_filename": "omg/core.py"
+      }
+    },
+    "omg_core_test_py": {
+      "hash": "29f281a9f455fe0253f57da8d3c18fde",
+      "index": {
+        "nums": [1, 54, 0, 3, 0, 0, 0],
+        "html_filename": "omg_core_test_py.html",
+        "relative_filename": "omg/core_test.py"
+      }
+    },
+    "omg_integration_tests___init___py": {
+      "hash": "af9d0d0de0ea3b71d198bc63f1499a7d",
+      "index": {
+        "nums": [1, 0, 0, 0, 0, 0, 0],
+        "html_filename": "omg_integration_tests___init___py.html",
+        "relative_filename": "omg/integration_tests/__init__.py"
+      }
+    },
+    "omg_integration_tests_core_integration_test_py": {
+      "hash": "9ff1d230d89666276251a1f61ae50784",
+      "index": {
+        "nums": [1, 43, 0, 6, 0, 0, 0],
+        "html_filename": "omg_integration_tests_core_integration_test_py.html",
+        "relative_filename": "omg/integration_tests/core_integration_test.py"
+      }
+    },
+    "omg_integration_tests_data___init___py": {
+      "hash": "8f59a7e9210db62370cd600c1c607645",
+      "index": {
+        "nums": [1, 0, 0, 0, 0, 0, 0],
+        "html_filename": "omg_integration_tests_data___init___py.html",
+        "relative_filename": "omg/integration_tests/data/__init__.py"
+      }
+    },
+    "omg_pathways_py": {
+      "hash": "e5caf158415f44a577eca800ccef37de",
+      "index": {
+        "nums": [1, 67, 0, 3, 0, 0, 0],
+        "html_filename": "omg_pathways_py.html",
+        "relative_filename": "omg/pathways.py"
+      }
+    },
+    "omg_pathways_test_py": {
+      "hash": "cbf22d78e8a6b5b0a49b7eaf30ad17dc",
+      "index": {
+        "nums": [1, 20, 0, 0, 0, 0, 0],
+        "html_filename": "omg_pathways_test_py.html",
+        "relative_filename": "omg/pathways_test.py"
+      }
+    },
+    "omg_util_test_py": {
+      "hash": "30d58b685cfb1229d640d6e778e22e18",
+      "index": {
+        "nums": [1, 24, 0, 0, 0, 0, 0],
+        "html_filename": "omg_util_test_py.html",
+        "relative_filename": "omg/util_test.py"
+      }
+    },
+    "omg_utils_py": {
+      "hash": "560b1fcaadd0cf3b23f833bca5e03d80",
+      "index": {
+        "nums": [1, 124, 0, 90, 0, 0, 0],
+        "html_filename": "omg_utils_py.html",
+        "relative_filename": "omg/utils.py"
+      }
+    }
+  }
+}

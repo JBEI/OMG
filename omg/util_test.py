@@ -62,12 +62,6 @@ def test_write_experiment_description_file(get_experiment_description_file):
         assert lines == get_experiment_description_file
 
 
-# def test_write_in_al_format():
-#     pass
-
-# def test_write_in_edd_format(time_series_omics_data, omics_type, user_params, line_name, label=''):
-#     pass
-
 # def test_write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', al_format=False, label=''):
 #     pass
 
@@ -78,16 +72,4 @@ def test_write_experiment_description_file(get_experiment_description_file):
 #     pass
 
 # def test_write_external_metabolite(substrates, output_file_path, output_metabolites, line_name='WT', label=''):
-#     pass
-
-# def test_get_random_number():
-#     pass
-
-# def test_add_random_noise():
-#     pass
-
-# def test_get_list_of_reactions(file_name):
-#     pass
-
-# def test_read_model(file_name):
 #     pass

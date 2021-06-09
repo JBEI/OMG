@@ -1,4 +1,5 @@
 import copy
+import math
 import os
 import pickle
 import sys
@@ -102,54 +103,34 @@ def solution_TS_data():
 
 def test_get_flux_time_series(model_TS_data, solution_TS_data, user_params_data):
     # model = cobra.io.load_json_model('omg/integration_tests/data/iJO1366_MVA.json')
-    user_params = user_params_data
-    ext_metabolites = user_params["ext_metabolites"]
+    ext_metabolites = user_params_data["ext_metabolites"]
 
-    t0 = user_params["timestart"]
-    tf = user_params["timestop"]
-    points = user_params["numtimepoints"]
+    t0 = user_params_data["timestart"]
+    tf = user_params_data["timestop"]
+    points = user_params_data["numtimepoints"]
     grid = np.linspace(t0, tf, points, dtype="float64", retstep=True)
 
     solution_TS, model_TS, cell, Emets, Erxn2Emet = get_flux_time_series(
-        model_TS_data, ext_metabolites, grid, user_params
+        model_TS_data, ext_metabolites, grid, user_params_data
     )
 
     # Asserts
     # compare fluxes from the solution and compare that
-    # for i, sol in solution_TS.items():
-    #     for index, flux in sol.fluxes.items():
-    #         if "BIOMASS_Ec_iJO1366_WT_53p95M" in index:
-    #             assert flux == solution_TS_data[str(i)]
-
-    # assert model_TS == model_TS_data
-
-
-# def test_Emets(model_TS_data, solution_TS_data, grid_data, user_params_data):
-#     #     # setting the objects that needs toget passed ot the called function
-#     #     # export the dataframes from the notebook and write them out to be imported as fixtures
-#     #     # integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params)
-
-#     #     # read model and solution objects form pickle files
-
-#     pass
-#     # cell, Emets = integrate_fluxes(solution_TS_data, model_TS_data, user_params_data['ext_metabolites'], grid_data, user_params_data)
-#     pass
+    for i, sol in solution_TS.items():
+        if not isinstance(sol, float):
+            for index, flux in sol.fluxes.items():
+                if (
+                    "BIOMASS_Ec_iJO1366_WT_53p95M" in index
+                ):  # change the hardcoded the biomass reaction name
+                    assert flux == solution_TS_data[str(i)]
 
 
-# def test_get_proteomics_transcriptomics_data(model_TS_data, solution_TS_data):
-#     pass
-#     # proteomics, transcriptomics = get_proteomics_transcriptomics_data(
-#     #     model_TS_data, solution_TS_data
-#     # )
+def test_integrate_fluxes(model_TS_data, solution_TS_data, grid_data, user_params_data):
+    #     # setting the objects that needs toget passed ot the called function
+    #     # export the dataframes from the notebook and write them out to be imported as fixtures
+    #     # integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params)
 
-#     # assert
-#     # how to aassert this if with the random noise in place?
+    #     # read model and solution objects form pickle files
 
-
-# def get_multiomics(model_TS_data, solution_TS_data, user_params_data):
-#     pass
-#     # proteomics, transcriptomics, metabolomics = get_multiomics(
-#     #     model_TS_data, solution_TS_data, user_params_data["mapping_file"], old_ids=True
-#     # )
-
-#     # assert
+    # cell, Emets = integrate_fluxes(solution_TS_data, model_TS_data, user_params_data['ext_metabolites'], grid_data, user_params_data)
+    pass

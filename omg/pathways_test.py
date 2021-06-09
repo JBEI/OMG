@@ -33,3 +33,4 @@ def test_add_isopentenol_pathway():
     sce = cobra.io.load_json_model(sce_fname)
     mod_model = add_isopentenol_pathway(model, sce, {}, write_file=False)
     assert model_has_IPP_pathway(mod_model) == True
+    # change
