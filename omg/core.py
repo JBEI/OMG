@@ -360,19 +360,17 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug
                     protein_id = gene.annotation["uniprot"][0]
 
                 # add random noise which is 5 percent of the signal
+                if debug:
+                    reaction_flux = solution["fluxes"][rxnId]
+                else:
+                    reaction_flux = solution.fluxes[rxnId]
+
                 noise = 0
                 if not noise_zero:
-                    if debug:
-                        noiseSigma = 0.05 * solution["fluxes"][rxnId] / k
-                    else:
-                        noiseSigma = 0.05 * solution.fluxes[rxnId] / k
+                    noiseSigma = 0.05 * (reaction_flux / k)
                     noise = noiseSigma * np.random.randn()
-                if debug:
-                    proteomics[protein_id] = abs(
-                        (solution["fluxes"][rxnId] / k) + noise
-                    )
-                else:
-                    proteomics[protein_id] = abs((solution.fluxes[rxnId] / k) + noise)
+
+                proteomics[protein_id] = abs((reaction_flux / k) + noise)
 
                 # create transcriptomics dict
                 noise = 0
@@ -384,7 +382,7 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug
     return proteomics, transcriptomics
 
 
-def get_metabolomics_data(model, solution, mapping_file):
+def get_metabolomics_data(model, solution, mapping_file, file_mapped=False):
     """
     Get metabolomics data
 
@@ -402,8 +400,11 @@ def get_metabolomics_data(model, solution, mapping_file):
     # get metabolites
 
     # read the inchikey to pubchem ids mapping file
-    inchikey_to_cid = {}
-    inchikey_to_cid = read_pubchem_id_file(mapping_file)
+    if file_mapped:
+        inchikey_to_cid = mapping_file
+    else:
+        inchikey_to_cid = {}
+        inchikey_to_cid = read_pubchem_id_file(mapping_file)
 
     # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
     sm = create_stoichiometric_matrix(model, array_type="DataFrame")

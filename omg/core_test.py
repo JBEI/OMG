@@ -40,9 +40,18 @@ def grid_data(user_params_data):
 def model_data():
     cwd = os.getcwd()  # Get the current working directory (cwd)
     model = cobra.io.load_json_model(
-        os.path.join(cwd, "omg/integration_tests/data/iJO1366_MVA.json")
+        # os.path.join(cwd, "omg/integration_tests/data/iJO1366_MVA.json")
+        os.path.join(cwd, "omg/integration_tests/data/model_with_constraints.json")
     )
     return model
+
+
+@pytest.fixture(scope="module")
+def solution_data():
+    cwd = os.getcwd()
+    with open(os.path.join(cwd, "omg/integration_tests/data/solution_old.json")) as fh:
+        solution = json.load(fh)
+    return solution
 
 
 @pytest.fixture(scope="module")
@@ -86,6 +95,52 @@ def emet_values_data():
         emet_values = fh.readlines()[0].split(",")
         emet_values_list = [float(i) for i in emet_values]
     return emet_values_list
+
+
+@pytest.fixture(scope="module")
+def solution_pickle_data():
+    cwd = os.getcwd()
+    with open(
+        os.path.join(cwd, "omg/integration_tests/data/solution_0.0.pkl"), "rb"
+    ) as fh:
+        solution = pickle.load(fh)
+    return solution
+
+
+@pytest.fixture(scope="module")
+def proteomics_data():
+    cwd = os.getcwd()
+    with open(os.path.join(cwd, "omg/integration_tests/data/proteomics.json")) as fh:
+        proteomics = json.load(fh)
+    return proteomics
+
+
+@pytest.fixture(scope="module")
+def transcriptomics_data():
+    cwd = os.getcwd()
+    with open(
+        os.path.join(cwd, "omg/integration_tests/data/transcriptomics.json")
+    ) as fh:
+        transcriptomics = json.load(fh)
+    return transcriptomics
+
+
+@pytest.fixture(scope="module")
+def metabolomics_data():
+    cwd = os.getcwd()
+    with open(os.path.join(cwd, "omg/integration_tests/data/metabolomics.json")) as fh:
+        metabolomics = json.load(fh)
+    return metabolomics
+
+
+@pytest.fixture(scope="module")
+def inchikey_to_cid_data():
+    cwd = os.getcwd()
+    with open(
+        os.path.join(cwd, "omg/integration_tests/data/inchikey_to_cid.json")
+    ) as fh:
+        inchikey_to_cid = json.load(fh)
+    return inchikey_to_cid
 
 
 # =============================================================================
@@ -177,51 +232,36 @@ def test_getBEFLuxes(user_params_data):
     # asserts
 
 
-# def test_get_proteomics_transcriptomics_data(model_data):
+def test_get_proteomics_transcriptomics_data(
+    model_data, solution_pickle_data, proteomics_data, transcriptomics_data
+):
 
-#     solution = {
-#         user_params_data["BIOMASS_REACTION_ID"]: 0.5363612610171437,
-#         "EX_glc__D_e": -10.0,
-#         "EX_k_e": -0.10469396362171933,
-#         "EX_ac_e": 2.070936704316201,
-#         "EX_lac__D_e": 7.748590341151804,
-#         "EX_mg2_e": -0.004652933939323722,
-#         "EX_na1_e": 0.0,
-#         "EX_nh4_e": -5.7931435806642355,
-#         "EX_cl_e": -0.0027917603635942327,
-#         "EX_pi_e": -0.5173906995762337,
-#         "EX_so4_e": -0.13527567364113363,
-#         "EX_etoh_e": 0.0,
-#         "EX_for_e": 0.1,
-#         "EX_isoprenol_e": 0.2,
-#     }
-#     solution["status"] = "optimal"
+    proteomics, transcriptomics = get_proteomics_transcriptomics_data(
+        model_data, solution_pickle_data, True, False
+    )
 
-#     fluxes = {
-#         'EX_cm_e': 0.0,
-#         'EX_cmp_e': 0.0,
-#         'EX_co2_e': 9.495591490233586,
-#         'EX_cobalt2_e': -1.3409031525428593e-05,
-#         'DM_4crsol_c': 0.00011960856120682304,
-#         'DM_5drib_c': 0.00012068128372887121,
-#         'DM_aacald_c': -0.0,
-#         'DM_amob_c': 1.0727225220342873e-06,
-#         'DM_mththf_c': 0.0002402898449420654,
-#         'EX_colipa_e': -0.0,
-#         'DM_oxam_c': -0.0,
-#         'EX_glc__D_e': -10.0,
-#         'EX_glcn_e': 0.0,
-#         'BIOMASS_Ec_iJO1366_WT_53p95M': 0.0,
-#         'EX_glcr_e': 0.0,
-#         'EX_colipap_e': -0.0,
-#         'EX_glcur_e': 0.0,
-#         'EX_glcur1p_e': 0.0,
-#         'BIOMASS_Ec_iJO1366_core_53p95M': 0.5363612610171437,
-#     }
-#     solution['fluxes'] = fluxes
+    #  print(proteomics['O32583'])
+    # print(proteomics['O32583'])
+    # print(proteomics['P69681'])
+    # print(proteomics_data['P69681'])
 
-# proteomics, transcriptomics = get_proteomics_transcriptomics_data(
-#     model_data, solution, True, True
-# )
+    print(len(proteomics.keys()))
+    print(len(proteomics_data.keys()))
 
-# assert
+    print(len(transcriptomics.keys()))
+    print(len(transcriptomics_data.keys()))
+
+    # assert
+    # assert proteomics == proteomics_data
+    # assert transcriptomics == transcriptomics_data
+
+
+def test_get_metabolomics_data(
+    model_data, solution_pickle_data, inchikey_to_cid_data, metabolomics_data
+):
+    metabolomics, metabolomics_with_old_ids = get_metabolomics_data(
+        model_data, solution_pickle_data, inchikey_to_cid_data, True
+    )
+
+    # assert
+    assert metabolomics == metabolomics_data
