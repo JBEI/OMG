@@ -89,7 +89,8 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
 
     ## Main for loop solving the model for each time step and adding the corresponding OD and external metabolites created
     volume = 1.0  # volume set arbitrarily to one because the system is extensive
-    for t in [0.0, 1.0, 2.0]:
+    for t in tspan:
+    # for t in [0.0, 1.0, 2.0]:
 
         # Adding constraints for each time point without permanent changes to the model
         with model:
@@ -107,6 +108,9 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
             # Store the solution and model for each timepoint for future use (e.g. MOMA)
             solution_TS[t] = solution_t
             model_TS[t] = model.copy()
+
+            # import pickle
+            # pickle.dump(solution_t, open( f'solution_{t}.pkl', "wb" ))
 
             # Calculate OD and external metabolite concentrations for next time point t+delta
             cell_ret, Emets_ret = advance_OD_Emets(

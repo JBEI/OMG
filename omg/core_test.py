@@ -190,9 +190,6 @@ def test_advance_OD_Emets(
     # assert_series_equal(actual_Emets, old_Emets)
 
 
-# docker-compose exec <container_name> python -m pytest
-
-
 def test_getBEFLuxes(user_params_data):
     t0 = 0.0
     tf = 1.0
