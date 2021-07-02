@@ -98,8 +98,10 @@ def write_in_edd_format(
     # create the filenames
     omics_file_name: str = f"{output_file_path}/EDD_{omics_type}{label}.csv"
 
-    if not os.path.isdir(output_file_path):
-        os.mkdir(output_file_path)
+    # if not os.path.isdir(output_file_path):
+    #     os.mkdir(output_file_path)
+    if not os.path.exists(output_file_path):
+        os.makedirs(output_file_path)
 
     # open a file to write omics data for each type and for all timepoints and constraints
     try:

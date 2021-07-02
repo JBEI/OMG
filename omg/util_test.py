@@ -1,3 +1,4 @@
+import json
 import os
 import pickle
 import sys
@@ -11,9 +12,19 @@ from .utils import *
 
 # sys.path.append('../src/')
 # sys.path.append('/Users/somtirtharoy/workspace/Projects/OMG/omg/')
+sys.path.append("../")
 
 
 # FIXTURES
+
+
+@pytest.fixture(scope="module")
+def user_params_data():
+    cwd = os.getcwd()
+
+    with open(os.path.join(cwd, "omg/integration_tests/data/user_params.json")) as fh:
+        user_param_dict = json.load(fh)
+    return user_param_dict
 
 
 @pytest.fixture(scope="module")
@@ -63,10 +74,35 @@ def test_write_experiment_description_file(get_experiment_description_file):
 
 
 # def test_write_omics_files(time_series_omics_data, omics_type, user_params, line_name='WT', al_format=False, label=''):
+
+#     write_omics_files(proteomics_timeseries, 'proteomics', user_params, line_name='WT', label='_WT')
 #     pass
 
-# def test_write_OD_data(cell, output_file_path, line_name='WT', label=''):
-#     pass
+
+def test_write_OD_data(user_params_data):
+    proteomics_timeseries = {
+        0.0: {
+            "P77747": 0.0,
+            "P02931": 0.0,
+            "P02932": 0.0,
+            "P06996": 0.0,
+            "P68183": 0.0,
+            "P68187": 0.0,
+            "P0AEX9": 0.0,
+            "P02916": 0.0,
+            "P02943": 0.0,
+        }
+    }
+
+    output_file_path = user_params_data["output_file_path"]
+    # print(output_file_path)
+    # print(os.path.exists(output_file_path))
+    # print(os.path.isdir(output_file_path))
+    if not os.path.exists(output_file_path):
+        # print('===================================================> Here')
+        os.makedirs(output_file_path)
+    # write_in_edd_format(proteomics_timeseries, 'proteomics', user_params_data, 'WT', 'WT')
+
 
 # def test_write_training_data_with_isopentenol(df, filename, output_file_path):
 #     pass

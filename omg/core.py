@@ -53,17 +53,17 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
     :Emets:
     :Erxn2Emet:
     """
-
     ## First unpack the time steps for the grid provided
     tspan, delt = grid
 
-    ## Create a panda series containing the cell concentation for each time point
+    # Create a panda series containing the cell concentation for each time point
     cell = pd.Series(index=tspan)
     cell0 = user_params["initial_OD"]  # in gDW/L
     t0 = user_params["timestart"]
     cell[t0] = cell0
 
-    ## Create a dataframe that constains external metabolite names and their concentrations
+    # Create a dataframe that constains external metabolite names
+    # and their concentrations
     # First organize external metabolites and their initial concentrations
     met_names = []
     initial_concentrations = []
@@ -74,7 +74,8 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
     Emets = pd.DataFrame(index=tspan, columns=met_names)
     # Add initial concentrations for external metabolites
     Emets.loc[t0] = initial_concentrations
-    # Create Dictionary mapping exchange reactions to the corresponding external metabolite
+    # Create Dictionary mapping exchange reactions to
+    # the corresponding external metabolite
     Erxn2Emet = {
         r.id: r.reactants[0].id
         for r in model.exchanges
@@ -87,15 +88,19 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
     # Solution time series
     solution_TS = pd.Series(index=tspan)
 
-    ## Main for loop solving the model for each time step and adding the corresponding OD and external metabolites created
-    volume = 1.0  # volume set arbitrarily to one because the system is extensive
+    ## Main for loop solving the model for each time step and adding
+    # the corresponding OD and external metabolites created
+    # volume set arbitrarily to one because the system is extensive
+    volume = 1.0
     for t in tspan:
-    # for t in [0.0, 1.0, 2.0]:
+        # for t in [0.0, 1.0, 2.0]:
 
-        # Adding constraints for each time point without permanent changes to the model
+        # Adding constraints for each time point without
+        # permanent changes to the model
         with model:
             for rxn, met in Erxn2Emet.items():
-                # For each exchange reaction set lower bound such that the corresponding
+                # For each exchange reaction set lower bound such
+                # that the corresponding
                 # external metabolite concentration does not become negative
                 model.reactions.get_by_id(rxn).lower_bound = max(
                     model.reactions.get_by_id(rxn).lower_bound,
@@ -105,18 +110,13 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
             # Calculate fluxes
             solution_t = model.optimize()
 
-            # Store the solution and model for each timepoint for future use (e.g. MOMA)
+            # Store the solution and model for each timepoint
+            # for future use (e.g. MOMA)
             solution_TS[t] = solution_t
             model_TS[t] = model.copy()
 
-            # import pickle
-            # pickle.dump(solution_t, open( f'solution_{t}.pkl', "wb" ))
-
-            # Calculate OD and external metabolite concentrations for next time point t+delta
-            cell_ret, Emets_ret = advance_OD_Emets(
-                Erxn2Emet, cell[t], Emets.loc[t], delt, solution_t, user_params
-            )
-
+            # Calculate OD and external metabolite concentrations
+            # for next time point t+delta
             cell[t + delt], Emets.loc[t + delt] = advance_OD_Emets(
                 Erxn2Emet, cell[t], Emets.loc[t], delt, solution_t, user_params
             )
@@ -129,7 +129,14 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
 
 
 def advance_OD_Emets(
-    Erxn2Emet, old_cell, old_Emets, delt, solution, user_params, debug=False
+    Erxn2Emet,
+    old_cell,
+    old_Emets,
+    delt,
+    solution,
+    user_params,
+    timestep=None,
+    debug=False,
 ):
     """
     Get the concentration of the external metabolites over time
@@ -146,7 +153,8 @@ def advance_OD_Emets(
     :new_Emets:
     """
 
-    # Output is same as input if nothing happens in the if clause
+    # Output is same as input if nothing happens
+    # in the if solution_status == "optimal" and mu > 1e-6 clause
     new_cell = old_cell
     new_Emets = old_Emets
 
@@ -154,7 +162,8 @@ def advance_OD_Emets(
     mu = solution[user_params["BIOMASS_REACTION_ID"]]
 
     # Calculate OD and external metabolite concentrations for next step
-    # Update only if solution is optimal and mu is not zero, otherwise do not update
+    # Update only if solution is optimal and mu is not zero,
+    # otherwise do not update
     if debug:
         solution_status = solution["status"]
     else:
@@ -163,7 +172,8 @@ def advance_OD_Emets(
     if solution_status == "optimal" and mu > 1e-6:
         # Calculating next time point's OD
         new_cell = old_cell * np.exp(mu * delt)
-        # Calculating external external metabolite concentrations for next time point
+        # Calculating external external metabolite concentrations
+        # for next time point
         for rxn, met in Erxn2Emet.items():
             new_Emets[met] = max(
                 old_Emets.loc[met]
@@ -194,21 +204,23 @@ def getBEFluxes(model_TS, design, solution_TS, grid):
     high = 1.1
     low = 0.50
 
-    ## Unpack information for desired flux changes
+    # Unpack information for desired flux changes
     # Get names for reaction targets
     reaction_names = list(design.index[1:])
     # Find number of target reactions and number of designs (or strains changed)
     # n_reactions = design.shape[1] - 1
     # n_instances = design.shape[0] - 1
 
-    ## Time series containing the flux solution obtained through MOMA
+    # Time series containing the flux solution obtained through MOMA
     solutionsMOMA_TS = pd.Series(index=tspan)
 
-    ## Main loop: for each strain and at each time point, find new flux profile through MOMA
+    # Main loop: for each strain and at each time point,
+    # find new flux profile through MOMA
     # for i in range(0,n_instances):
     for t in tspan:
         model = model_TS[t]
-        sol1 = solution_TS[t]  # Reference solution calculated for each time point
+        # Reference solution calculated for each time point
+        sol1 = solution_TS[t]
         with model:
             # Adding the fluxed modifications for chosen reactions
             for reaction in reaction_names:
@@ -224,11 +236,11 @@ def getBEFluxes(model_TS, design, solution_TS, grid):
                     lb=sol1.fluxes[reaction] * design[reaction] * lbcoeff,
                     ub=sol1.fluxes[reaction] * design[reaction] * ubcoeff,
                 )
-                # lb = model.reactions.get_by_id(reaction).lower_bound*design[reaction],
-                # ub = model.reactions.get_by_id(reaction).upper_bound*design[reaction])
+
                 model.add_cons_vars(reaction_constraint)
 
-            # Reference solution calculated for each time point in above cell for wild type
+            # Reference solution calculated for each time point
+            # in above cell for wild type
             # sol1 = solution_TS[t]
 
             # Moma solution for each time point
@@ -240,7 +252,9 @@ def getBEFluxes(model_TS, design, solution_TS, grid):
     return solutionsMOMA_TS
 
 
-def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
+def integrate_fluxes(
+    solution_TS, model_TS, ext_metabolites, grid, user_params, debug=False
+):
     """
     Get the concentration of the external metabolites over time
 
@@ -258,13 +272,15 @@ def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
     ## First unpack the time steps for the grid provided
     tspan, delt = grid
 
-    ## Create a panda series containing the cell concentation for each time point
+    ## Create a panda series containing the cell concentation
+    # for each time point
     cell = pd.Series(index=tspan)
     cell0 = user_params["initial_OD"]  # in gDW/L
     t0 = user_params["timestart"]
     cell[t0] = cell0
 
-    ## Create a dataframe that constains external metabolite names and their concentrations (DUPLICATED CODE)
+    ## Create a dataframe that constains external metabolite names
+    # and their concentrations (DUPLICATED CODE)
     # First organize external metabolites and their initial concentrations
     model = model_TS[0]
     met_names = []
@@ -276,7 +292,8 @@ def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
     Emets = pd.DataFrame(index=tspan, columns=met_names)
     # Add initial concentrations for external metabolites
     Emets.loc[t0] = initial_concentrations
-    # Create Dictionary mapping exchange reactions to the corresponding external metabolite
+    # Create Dictionary mapping exchange reactions to the
+    # corresponding external metabolite
     Erxn2Emet = {
         r.id: r.reactants[0].id
         for r in model.exchanges
@@ -285,9 +302,18 @@ def integrate_fluxes(solution_TS, model_TS, ext_metabolites, grid, user_params):
 
     ## Main loop adding contributions for each time step
     for t in tspan:
-        # Calculate OD and external metabolite concentrations for next time point t+delta
+        # Calculate OD and external metabolite concentrations
+        # for next time point t+delta
+
         cell[t + delt], Emets.loc[t + delt] = advance_OD_Emets(
-            Erxn2Emet, cell[t], Emets.loc[t], delt, solution_TS[t], user_params
+            Erxn2Emet,
+            cell[t],
+            Emets.loc[t],
+            delt,
+            solution_TS[t],
+            user_params,
+            t,
+            debug,
         )
 
     return cell, Emets
@@ -335,7 +361,8 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug
     :transcriptomics:
     """
 
-    # pre-determined linear constant (NOTE: Allow user to set this via parameter)
+    # pre-determined linear constant
+    # (NOTE: Allow user to set this via parameter)
     # DISCUSS!!
     k = 0.8
     q = 0.06
@@ -352,7 +379,8 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug
         reaction = model.reactions.get_by_id(rxnId)
         for gene in list(reaction.genes):
 
-            # this will ignore all the reactions that does not have the gene.annotation property
+            # this will ignore all the reactions that does not have
+            # the gene.annotation property
             # DISCUSS!!
             if gene.annotation:
                 if "uniprot" not in gene.annotation:
@@ -410,18 +438,21 @@ def get_metabolomics_data(model, solution, mapping_file, file_mapped=False):
         inchikey_to_cid = {}
         inchikey_to_cid = read_pubchem_id_file(mapping_file)
 
-    # create the stoichoimetry matrix fomr the model as a Dataframe and convert all the values to absolute values
+    # create the stoichoimetry matrix fomr the model as a Dataframe and
+    # onvert all the values to absolute values
     sm = create_stoichiometric_matrix(model, array_type="DataFrame")
 
     # get all the fluxes across reactions from the solution
     fluxes = solution.fluxes
 
-    # calculating the dot product of the stoichiometry matrix and the fluxes to calculate the net change
+    # calculating the dot product of the stoichiometry matrix and the fluxes
+    # to calculate the net change
     # in concentration of the metabolites across reactions
     net_change_in_concentrations = sm.abs().dot(fluxes.abs())
     # net_change_in_concentrations = net_change_in_concentrations.abs()
 
-    # converting all na values to zeroes and counting the total number of changes that happens for each metabolite
+    # converting all na values to zeroes and counting the total number of
+    # changes that happens for each metabolite
     num_changes_in_metabolites = sm.fillna(0).astype(bool).sum(axis=1)
 
     for met_id, conc in net_change_in_concentrations.items():
@@ -436,7 +467,8 @@ def get_metabolomics_data(model, solution, mapping_file, file_mapped=False):
                 inchi_key = metabolite.annotation["inchi_key"]
 
             if inchi_key in inchikey_to_cid.keys():
-                # if the CID is not in the metabolomics dict keys AND the mapped value is not None and the reactions flux is not 0
+                # if the CID is not in the metabolomics dict keys AND the
+                # mapped value is not None and the reactions flux is not 0
                 if (inchikey_to_cid[inchi_key] not in metabolomics.keys()) and (
                     inchikey_to_cid[inchi_key] is not None
                 ):
