@@ -2,12 +2,7 @@
 .vscode
 .DS_Store
 venv
-data
-*.csv
-!sample_files/*.csv
-*.xlsx
 Pipfile.lock
 .ipynb_checkpoints/
 *.tgz
 __pycache__/
-

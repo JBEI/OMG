@@ -157,6 +157,10 @@ def solution_TS_data(user_params_data, grid_data):
 # =============================================================================
 
 
+def almost_equal(x, y, threshold=0.0001):
+    return abs(x - y) < threshold
+
+
 def test_get_flux_time_series(
     model_data, solution_TS_data, user_params_data, grid_data, erxn2emet_data
 ):
@@ -203,6 +207,65 @@ def test_get_flux_time_series(
     # actual_cell = cell.tolist()
     # print(actual_cell)
     # assert expected_cell == actual_cell
+
+
+def test_getBEFluxes(model_data, grid_data, user_params_data):
+    """
+        We test this function for two strains as it takes a long time to run
+        for all 95 strains
+    """
+    # solution = getBEFluxes(model_TS, design, solution_TS_data, grid_data)
+
+    t0 = 0.0
+    tf = 1.0
+    points = 1
+    tspan, delt = np.linspace(t0, tf, points, dtype="float64", retstep=True)
+    grid_data = (tspan, delt)
+
+    # get model_TS and solution_TS
+    solution_TS, model_TS, cell, Emets, Erxn2Emet = get_flux_time_series(
+        model_data, user_params_data["ext_metabolites"], grid_data, user_params_data
+    )
+
+    cwd = os.getcwd()
+    designs_df = pd.read_csv(
+        os.path.join(cwd, f"omg/integration_tests/data/ice_mo_strains.csv"),
+        usecols=["Part ID", "Name", "Summary"],
+    )
+    designs_df.columns = ["Part ID", "Line Name", "Line Description"]
+
+    # select only two strains from the designs
+    designs_df = designs_df.loc[0:2, :]
+
+    # getting the reaction names
+    reactions = designs_df["Line Description"][0].split("_")[::2]
+    for rxn in reactions:
+        designs_df[rxn] = None
+
+    for i in range(len(designs_df)):
+        if designs_df["Line Name"][i] == "WT":
+            designs_df.loc[i][reactions] = [1 for r in range(len(reactions))]
+        else:
+            values = designs_df.loc[i]["Line Description"].split("_")[1::2]
+            designs_df.loc[i][reactions] = [float(value) for value in values]
+
+    designs_df = designs_df.drop(columns=["Line Description", "Part ID"])
+
+    # running MOMA
+    solutionsMOMA_TS = {}
+    cols = ["Line Name"]
+    num_strains = 2
+    cols.extend(reactions)
+    for i in range(num_strains):
+        design = designs_df[cols].loc[i]
+        solutionsMOMA_TS[i] = getBEFluxes(model_TS, design, solution_TS, grid_data)
+
+    # solutionsMOMA_TS[i] = getBEFluxes(model_TS, design, solution_TS, grid)
+
+    # asserts
+    # read fluxes for solutions
+
+    # assert fluxes for the solutions
 
 
 def get_optimized_model_at_t(model, erxn2emet, timestep, grid_data, cell):
@@ -260,6 +323,7 @@ def test_integrate_fluxes(
         debug=True,
     )
 
+    print(cell)
     # Asserts
     index_map = {int(t): t for t in tspan}
     expected_Emets = (
@@ -270,8 +334,13 @@ def test_integrate_fluxes(
     Emets = Emets.astype(float)
     assert_frame_equal(expected_Emets, Emets)
 
+    # assert cell
+    with open(os.path.join(cwd, f"omg/integration_tests/data/cell_data.txt")) as fh:
+        expected_cell = [float(line.strip()) for line in fh.readlines()]
+    print(expected_cell)
+    actual_cell = cell.tolist()
+    print(actual_cell)
+    from pytest import approx
 
-def test_getBEFluxes(model_TS, design, solution_TS_data, grid_data):
-    pass
-
-    # getBEFluxes(model_TS, design, solution_TS_data, grid_data)
+    assert [0.100242 + 0.200023, 0.20042 + 0.40000677] == approx([0.3, 0.6])
+    # assert expected_cell == approx(actual_cell)

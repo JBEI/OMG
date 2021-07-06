@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
     <title>
-      Coverage for omg/integration_tests/core_integration_test.py: 86%
+      Coverage for omg/integration_tests/core_integration_test.py: 81%
     </title>
     <link rel="icon" sizes="32x32" href="favicon_32.png" />
     <link rel="stylesheet" href="style.css" type="text/css" />
@@ -21,7 +21,7 @@
       <div class="content">
         <h1>
           Coverage for <b>omg/integration_tests/core_integration_test.py</b> :
-          <span class="pc_cov">86%</span>
+          <span class="pc_cov">81%</span>
         </h1>
         <img
           id="keyboard_icon"
@@ -29,20 +29,20 @@
           alt="Show keyboard shortcuts"
         />
         <h2 class="stats">
-          43 statements &nbsp;
+          154 statements &nbsp;
           <button
             type="button"
             class="run shortkey_r button_toggle_run"
             title="Toggle lines run"
           >
-            37 run
+            124 run
           </button>
           <button
             type="button"
             class="mis show_mis shortkey_m button_toggle_mis"
             title="Toggle lines missing"
           >
-            6 missing
+            30 missing
           </button>
           <button
             type="button"
@@ -88,28 +88,28 @@
         <span class="n"><a href="#t2">2</a></span
         ><span class="t"
           ><span class="key">import</span>
-          <span class="nam">math</span>&nbsp;</span
+          <span class="nam">json</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t3" class="run">
         <span class="n"><a href="#t3">3</a></span
         ><span class="t"
           ><span class="key">import</span>
-          <span class="nam">os</span>&nbsp;</span
+          <span class="nam">math</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t4" class="run">
         <span class="n"><a href="#t4">4</a></span
         ><span class="t"
           ><span class="key">import</span>
-          <span class="nam">pickle</span>&nbsp;</span
+          <span class="nam">os</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t5" class="run">
         <span class="n"><a href="#t5">5</a></span
         ><span class="t"
           ><span class="key">import</span>
-          <span class="nam">sys</span>&nbsp;</span
+          <span class="nam">pickle</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t6" class="pln">
@@ -126,26 +126,19 @@
       <p id="t8" class="run">
         <span class="n"><a href="#t8">8</a></span
         ><span class="t"
-          ><span class="key">import</span> <span class="nam">datatest</span>
-          <span class="key">as</span> <span class="nam">dt</span>&nbsp;</span
+          ><span class="key">import</span> <span class="nam">pandas</span>
+          <span class="key">as</span> <span class="nam">pd</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t9" class="run">
         <span class="n"><a href="#t9">9</a></span
         ><span class="t"
-          ><span class="key">import</span> <span class="nam">pandas</span>
-          <span class="key">as</span> <span class="nam">pd</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t10" class="run">
-        <span class="n"><a href="#t10">10</a></span
-        ><span class="t"
           ><span class="key">import</span>
           <span class="nam">pytest</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t11" class="run">
-        <span class="n"><a href="#t11">11</a></span
+      <p id="t10" class="run">
+        <span class="n"><a href="#t10">10</a></span
         ><span class="t"
           ><span class="key">from</span> <span class="nam">pandas</span
           ><span class="op">.</span><span class="nam">util</span
@@ -154,56 +147,56 @@
           <span class="nam">assert_frame_equal</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t12" class="pln">
-        <span class="n"><a href="#t12">12</a></span
+      <p id="t11" class="pln">
+        <span class="n"><a href="#t11">11</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t13" class="run">
-        <span class="n"><a href="#t13">13</a></span
+      <p id="t12" class="run">
+        <span class="n"><a href="#t12">12</a></span
         ><span class="t"
           ><span class="key">from</span> <span class="op">.</span
           ><span class="op">.</span><span class="nam">core</span>
           <span class="key">import</span> <span class="op">*</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t14" class="pln">
-        <span class="n"><a href="#t14">14</a></span
+      <p id="t13" class="pln">
+        <span class="n"><a href="#t13">13</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t15" class="pln">
-        <span class="n"><a href="#t15">15</a></span
+      <p id="t14" class="pln">
+        <span class="n"><a href="#t14">14</a></span
         ><span class="t"
           ><span class="com"
             >#
             #=============================================================================</span
           >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t15" class="pln">
+        <span class="n"><a href="#t15">15</a></span
+        ><span class="t"
+          ><span class="com"># # FIXTURES FOR TESTS</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t16" class="pln">
         <span class="n"><a href="#t16">16</a></span
         ><span class="t"
-          ><span class="com"># # FIXTURES FOR TESTS</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t17" class="pln">
-        <span class="n"><a href="#t17">17</a></span
-        ><span class="t"
           ><span class="com"
             >#
             #=============================================================================</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
+      <p id="t17" class="pln">
+        <span class="n"><a href="#t17">17</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
       <p id="t18" class="pln">
         <span class="n"><a href="#t18">18</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t19" class="pln">
+      <p id="t19" class="run">
         <span class="n"><a href="#t19">19</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t20" class="run">
-        <span class="n"><a href="#t20">20</a></span
         ><span class="t"
           ><span class="op">@</span><span class="nam">pytest</span
           ><span class="op">.</span><span class="nam">fixture</span
@@ -212,256 +205,68 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t21" class="run">
-        <span class="n"><a href="#t21">21</a></span
+      <p id="t20" class="run">
+        <span class="n"><a href="#t20">20</a></span
         ><span class="t"
           ><span class="key">def</span> <span class="nam">user_params_data</span
           ><span class="op">(</span><span class="op">)</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t22" class="run">
-        <span class="n"><a href="#t22">22</a></span
+      <p id="t21" class="run">
+        <span class="n"><a href="#t21">21</a></span
         ><span class="t">
-          <span class="key">return</span> <span class="op">{</span>&nbsp;</span
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t23" class="pln">
+      <p id="t22" class="pln">
+        <span class="n"><a href="#t22">22</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t23" class="run">
         <span class="n"><a href="#t23">23</a></span
         ><span class="t">
-          <span class="str">"host"</span><span class="op">:</span>
-          <span class="str">"ecoli"</span><span class="op">,</span>
-          <span class="com"># ecoli or ropacus</span>&nbsp;</span
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/user_params.json"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t24" class="pln">
+      <p id="t24" class="run">
         <span class="n"><a href="#t24">24</a></span
         ><span class="t">
-          <span class="str">"modelfile"</span><span class="op">:</span>
-          <span class="str">"../data/models/iJO1366_MVA.json"</span
-          ><span class="op">,</span>&nbsp;</span
+          <span class="nam">user_param_dict</span> <span class="op">=</span>
+          <span class="nam">json</span><span class="op">.</span
+          ><span class="nam">load</span><span class="op">(</span
+          ><span class="nam">fh</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t25" class="pln">
+      <p id="t25" class="run">
         <span class="n"><a href="#t25">25</a></span
         ><span class="t">
-          <span class="str">"cerevisiae_modelfile"</span
-          ><span class="op">:</span>
-          <span class="str">"../data/models/iMM904.json"</span
-          ><span class="op">,</span>&nbsp;</span
+          <span class="key">return</span>
+          <span class="nam">user_param_dict</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t26" class="pln">
         <span class="n"><a href="#t26">26</a></span
-        ><span class="t">
-          <span class="str">"timestart"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
       <p id="t27" class="pln">
         <span class="n"><a href="#t27">27</a></span
-        ><span class="t">
-          <span class="str">"timestop"</span><span class="op">:</span>
-          <span class="num">8.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t28" class="pln">
+      <p id="t28" class="run">
         <span class="n"><a href="#t28">28</a></span
-        ><span class="t">
-          <span class="str">"numtimepoints"</span><span class="op">:</span>
-          <span class="num">9</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t29" class="pln">
-        <span class="n"><a href="#t29">29</a></span
-        ><span class="t">
-          <span class="str">"designsfile"</span><span class="op">:</span>
-          <span class="str">"ice_mo_strains.csv"</span
-          ><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t30" class="pln">
-        <span class="n"><a href="#t30">30</a></span
-        ><span class="t">
-          <span class="str">"designsfilepath"</span><span class="op">:</span>
-          <span class="str">"../data/"</span
-          ><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t31" class="pln">
-        <span class="n"><a href="#t31">31</a></span
-        ><span class="t">
-          <span class="str">"mapping_file"</span><span class="op">:</span>
-          <span class="str">"../mapping/inchikey_to_cid.txt"</span
-          ><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t32" class="pln">
-        <span class="n"><a href="#t32">32</a></span
-        ><span class="t">
-          <span class="str">"output_file_path"</span><span class="op">:</span>
-          <span class="str">"../data/omg_output"</span
-          ><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t33" class="pln">
-        <span class="n"><a href="#t33">33</a></span
-        ><span class="t">
-          <span class="str">"edd_omics_file_path"</span
-          ><span class="op">:</span>
-          <span class="str">"../data/omg_output/edd/"</span
-          ><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t34" class="pln">
-        <span class="n"><a href="#t34">34</a></span
-        ><span class="t">
-          <span class="str">"numreactions"</span><span class="op">:</span>
-          <span class="num">8</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t35" class="pln">
-        <span class="n"><a href="#t35">35</a></span
-        ><span class="t">
-          <span class="str">"numinstances"</span><span class="op">:</span>
-          <span class="num">96</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t36" class="pln">
-        <span class="n"><a href="#t36">36</a></span
-        ><span class="t">
-          <span class="str">"ext_metabolites"</span><span class="op">:</span>
-          <span class="op">{</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t37" class="pln">
-        <span class="n"><a href="#t37">37</a></span
-        ><span class="t">
-          <span class="str">"glc__D_e"</span><span class="op">:</span>
-          <span class="num">22.203</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t38" class="pln">
-        <span class="n"><a href="#t38">38</a></span
-        ><span class="t">
-          <span class="str">"nh4_e"</span><span class="op">:</span>
-          <span class="num">18.695</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t39" class="pln">
-        <span class="n"><a href="#t39">39</a></span
-        ><span class="t">
-          <span class="str">"pi_e"</span><span class="op">:</span>
-          <span class="num">69.454</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t40" class="pln">
-        <span class="n"><a href="#t40">40</a></span
-        ><span class="t">
-          <span class="str">"so4_e"</span><span class="op">:</span>
-          <span class="num">2.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t41" class="pln">
-        <span class="n"><a href="#t41">41</a></span
-        ><span class="t">
-          <span class="str">"mg2_e"</span><span class="op">:</span>
-          <span class="num">2.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t42" class="pln">
-        <span class="n"><a href="#t42">42</a></span
-        ><span class="t">
-          <span class="str">"k_e"</span><span class="op">:</span>
-          <span class="num">21.883</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t43" class="pln">
-        <span class="n"><a href="#t43">43</a></span
-        ><span class="t">
-          <span class="str">"na1_e"</span><span class="op">:</span>
-          <span class="num">103.7</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t44" class="pln">
-        <span class="n"><a href="#t44">44</a></span
-        ><span class="t">
-          <span class="str">"cl_e"</span><span class="op">:</span>
-          <span class="num">27.25</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t45" class="pln">
-        <span class="n"><a href="#t45">45</a></span
-        ><span class="t">
-          <span class="str">"isoprenol_e"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t46" class="pln">
-        <span class="n"><a href="#t46">46</a></span
-        ><span class="t">
-          <span class="str">"ac_e"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t47" class="pln">
-        <span class="n"><a href="#t47">47</a></span
-        ><span class="t">
-          <span class="str">"for_e"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t48" class="pln">
-        <span class="n"><a href="#t48">48</a></span
-        ><span class="t">
-          <span class="str">"lac__D_e"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t49" class="pln">
-        <span class="n"><a href="#t49">49</a></span
-        ><span class="t">
-          <span class="str">"etoh_e"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t50" class="pln">
-        <span class="n"><a href="#t50">50</a></span
-        ><span class="t">
-          <span class="op">}</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t51" class="pln">
-        <span class="n"><a href="#t51">51</a></span
-        ><span class="t">
-          <span class="str">"initial_OD"</span><span class="op">:</span>
-          <span class="num">0.01</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t52" class="pln">
-        <span class="n"><a href="#t52">52</a></span
-        ><span class="t">
-          <span class="str">"BIOMASS_REACTION_ID"</span
-          ><span class="op">:</span>
-          <span class="str">"BIOMASS_Ec_iJO1366_core_53p95M"</span
-          ><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t53" class="pln">
-        <span class="n"><a href="#t53">53</a></span
-        ><span class="t"> <span class="op">}</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t54" class="pln">
-        <span class="n"><a href="#t54">54</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t55" class="pln">
-        <span class="n"><a href="#t55">55</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t56" class="run">
-        <span class="n"><a href="#t56">56</a></span
         ><span class="t"
           ><span class="op">@</span><span class="nam">pytest</span
           ><span class="op">.</span><span class="nam">fixture</span
@@ -470,16 +275,16 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t57" class="run">
-        <span class="n"><a href="#t57">57</a></span
+      <p id="t29" class="run">
+        <span class="n"><a href="#t29">29</a></span
         ><span class="t"
           ><span class="key">def</span> <span class="nam">grid_data</span
           ><span class="op">(</span><span class="nam">user_params_data</span
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t58" class="mis show_mis">
-        <span class="n"><a href="#t58">58</a></span
+      <p id="t30" class="run">
+        <span class="n"><a href="#t30">30</a></span
         ><span class="t">
           <span class="nam">t0</span> <span class="op">=</span>
           <span class="nam">user_params_data</span><span class="op">[</span
@@ -487,8 +292,8 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t59" class="mis show_mis">
-        <span class="n"><a href="#t59">59</a></span
+      <p id="t31" class="run">
+        <span class="n"><a href="#t31">31</a></span
         ><span class="t">
           <span class="nam">tf</span> <span class="op">=</span>
           <span class="nam">user_params_data</span><span class="op">[</span
@@ -496,8 +301,8 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t60" class="mis show_mis">
-        <span class="n"><a href="#t60">60</a></span
+      <p id="t32" class="run">
+        <span class="n"><a href="#t32">32</a></span
         ><span class="t">
           <span class="nam">points</span> <span class="op">=</span>
           <span class="nam">user_params_data</span><span class="op">[</span
@@ -505,8 +310,8 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t61" class="mis show_mis">
-        <span class="n"><a href="#t61">61</a></span
+      <p id="t33" class="run">
+        <span class="n"><a href="#t33">33</a></span
         ><span class="t">
           <span class="nam">tspan</span><span class="op">,</span>
           <span class="nam">delt</span> <span class="op">=</span>
@@ -521,8 +326,8 @@
           ><span class="key">True</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t62" class="mis show_mis">
-        <span class="n"><a href="#t62">62</a></span
+      <p id="t34" class="run">
+        <span class="n"><a href="#t34">34</a></span
         ><span class="t">
           <span class="nam">grid</span> <span class="op">=</span>
           <span class="op">(</span><span class="nam">tspan</span
@@ -530,23 +335,23 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t63" class="mis show_mis">
-        <span class="n"><a href="#t63">63</a></span
+      <p id="t35" class="run">
+        <span class="n"><a href="#t35">35</a></span
         ><span class="t">
           <span class="key">return</span>
           <span class="nam">grid</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t64" class="pln">
-        <span class="n"><a href="#t64">64</a></span
+      <p id="t36" class="pln">
+        <span class="n"><a href="#t36">36</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t65" class="pln">
-        <span class="n"><a href="#t65">65</a></span
+      <p id="t37" class="pln">
+        <span class="n"><a href="#t37">37</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t66" class="run">
-        <span class="n"><a href="#t66">66</a></span
+      <p id="t38" class="run">
+        <span class="n"><a href="#t38">38</a></span
         ><span class="t"
           ><span class="op">@</span><span class="nam">pytest</span
           ><span class="op">.</span><span class="nam">fixture</span
@@ -555,16 +360,16 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t67" class="run">
-        <span class="n"><a href="#t67">67</a></span
+      <p id="t39" class="run">
+        <span class="n"><a href="#t39">39</a></span
         ><span class="t"
-          ><span class="key">def</span> <span class="nam">model_TS_data</span
+          ><span class="key">def</span> <span class="nam">model_data</span
           ><span class="op">(</span><span class="op">)</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t68" class="run">
-        <span class="n"><a href="#t68">68</a></span
+      <p id="t40" class="run">
+        <span class="n"><a href="#t40">40</a></span
         ><span class="t">
           <span class="nam">cwd</span> <span class="op">=</span>
           <span class="nam">os</span><span class="op">.</span
@@ -574,30 +379,8 @@
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t69" class="pln">
-        <span class="n"><a href="#t69">69</a></span
-        ><span class="t">
-          <span class="com"
-            ># with open(os.path.join(cwd,
-            'omg/integration_tests/data/model_TS.pickle'), 'rb') as
-            model_TS_pickle:</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t70" class="pln">
-        <span class="n"><a href="#t70">70</a></span
-        ><span class="t">
-          <span class="com"># model_TS = pickle.load(model_TS_pickle)</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t71" class="pln">
-        <span class="n"><a href="#t71">71</a></span
-        ><span class="t"> <span class="com"># return model_TS</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t72" class="run">
-        <span class="n"><a href="#t72">72</a></span
+      <p id="t41" class="run">
+        <span class="n"><a href="#t41">41</a></span
         ><span class="t">
           <span class="nam">model</span> <span class="op">=</span>
           <span class="nam">cobra</span><span class="op">.</span
@@ -606,8 +389,8 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t73" class="pln">
-        <span class="n"><a href="#t73">73</a></span
+      <p id="t42" class="pln">
+        <span class="n"><a href="#t42">42</a></span
         ><span class="t">
           <span class="nam">os</span><span class="op">.</span
           ><span class="nam">path</span><span class="op">.</span
@@ -617,28 +400,209 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t74" class="pln">
-        <span class="n"><a href="#t74">74</a></span
+      <p id="t43" class="pln">
+        <span class="n"><a href="#t43">43</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t75" class="run">
-        <span class="n"><a href="#t75">75</a></span
+      <p id="t44" class="pln">
+        <span class="n"><a href="#t44">44</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t45" class="pln">
+        <span class="n"><a href="#t45">45</a></span
+        ><span class="t">
+          <span class="com"># adding constraints</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t46" class="run">
+        <span class="n"><a href="#t46">46</a></span
+        ><span class="t">
+          <span class="nam">iso</span> <span class="op">=</span>
+          <span class="str">"EX_isoprenol_e"</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t47" class="run">
+        <span class="n"><a href="#t47">47</a></span
+        ><span class="t">
+          <span class="nam">iso_cons</span> <span class="op">=</span>
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">problem</span><span class="op">.</span
+          ><span class="nam">Constraint</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t48" class="pln">
+        <span class="n"><a href="#t48">48</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">EX_isoprenol_e</span><span class="op">.</span
+          ><span class="nam">flux_expression</span><span class="op">,</span>
+          <span class="nam">lb</span><span class="op">=</span
+          ><span class="num">0.20</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t49" class="pln">
+        <span class="n"><a href="#t49">49</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t50" class="run">
+        <span class="n"><a href="#t50">50</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">add_cons_vars</span><span class="op">(</span
+          ><span class="nam">iso_cons</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t51" class="run">
+        <span class="n"><a href="#t51">51</a></span
+        ><span class="t">
+          <span class="nam">for_cons</span> <span class="op">=</span>
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">problem</span><span class="op">.</span
+          ><span class="nam">Constraint</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t52" class="pln">
+        <span class="n"><a href="#t52">52</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">EX_for_e</span><span class="op">.</span
+          ><span class="nam">flux_expression</span><span class="op">,</span>
+          <span class="nam">lb</span><span class="op">=</span
+          ><span class="num">0.10</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t53" class="pln">
+        <span class="n"><a href="#t53">53</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t54" class="run">
+        <span class="n"><a href="#t54">54</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">add_cons_vars</span><span class="op">(</span
+          ><span class="nam">for_cons</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t55" class="run">
+        <span class="n"><a href="#t55">55</a></span
+        ><span class="t">
+          <span class="nam">o2_cons</span> <span class="op">=</span>
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">problem</span><span class="op">.</span
+          ><span class="nam">Constraint</span><span class="op">(</span
+          ><span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">EX_o2_e</span><span class="op">.</span
+          ><span class="nam">flux_expression</span><span class="op">,</span>
+          <span class="nam">lb</span><span class="op">=</span
+          ><span class="op">-</span><span class="num">8.0</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t56" class="run">
+        <span class="n"><a href="#t56">56</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">add_cons_vars</span><span class="op">(</span
+          ><span class="nam">o2_cons</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t57" class="pln">
+        <span class="n"><a href="#t57">57</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t58" class="run">
+        <span class="n"><a href="#t58">58</a></span
+        ><span class="t">
+          <span class="nam">CC_rxn_names</span> <span class="op">=</span>
+          <span class="op">[</span><span class="str">"ACCOAC"</span
+          ><span class="op">,</span> <span class="str">"MDH"</span
+          ><span class="op">,</span> <span class="str">"PTAr"</span
+          ><span class="op">,</span> <span class="str">"CS"</span
+          ><span class="op">,</span> <span class="str">"ACACT1r"</span
+          ><span class="op">,</span> <span class="str">"PPC"</span
+          ><span class="op">,</span> <span class="str">"PPCK"</span
+          ><span class="op">,</span> <span class="str">"PFL"</span
+          ><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t59" class="run">
+        <span class="n"><a href="#t59">59</a></span
+        ><span class="t">
+          <span class="key">for</span> <span class="nam">reaction</span>
+          <span class="key">in</span> <span class="nam">CC_rxn_names</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t60" class="run">
+        <span class="n"><a href="#t60">60</a></span
+        ><span class="t">
+          <span class="nam">reaction_constraint</span>
+          <span class="op">=</span> <span class="nam">model</span
+          ><span class="op">.</span><span class="nam">problem</span
+          ><span class="op">.</span><span class="nam">Constraint</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t61" class="pln">
+        <span class="n"><a href="#t61">61</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">get_by_id</span><span class="op">(</span
+          ><span class="nam">reaction</span><span class="op">)</span
+          ><span class="op">.</span><span class="nam">flux_expression</span
+          ><span class="op">,</span> <span class="nam">lb</span
+          ><span class="op">=</span><span class="op">-</span
+          ><span class="num">1.0</span><span class="op">,</span>
+          <span class="nam">ub</span><span class="op">=</span
+          ><span class="num">1.0</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t62" class="pln">
+        <span class="n"><a href="#t62">62</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t63" class="run">
+        <span class="n"><a href="#t63">63</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">add_cons_vars</span><span class="op">(</span
+          ><span class="nam">reaction_constraint</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t64" class="pln">
+        <span class="n"><a href="#t64">64</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t65" class="run">
+        <span class="n"><a href="#t65">65</a></span
         ><span class="t">
           <span class="key">return</span>
           <span class="nam">model</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t76" class="pln">
-        <span class="n"><a href="#t76">76</a></span
+      <p id="t66" class="pln">
+        <span class="n"><a href="#t66">66</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t77" class="pln">
-        <span class="n"><a href="#t77">77</a></span
+      <p id="t67" class="pln">
+        <span class="n"><a href="#t67">67</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t78" class="run">
-        <span class="n"><a href="#t78">78</a></span
+      <p id="t68" class="run">
+        <span class="n"><a href="#t68">68</a></span
         ><span class="t"
           ><span class="op">@</span><span class="nam">pytest</span
           ><span class="op">.</span><span class="nam">fixture</span
@@ -647,196 +611,839 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t79" class="run">
-        <span class="n"><a href="#t79">79</a></span
+      <p id="t69" class="run">
+        <span class="n"><a href="#t69">69</a></span
         ><span class="t"
-          ><span class="key">def</span> <span class="nam">solution_TS_data</span
+          ><span class="key">def</span> <span class="nam">solution_data</span
           ><span class="op">(</span><span class="op">)</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t80" class="pln">
-        <span class="n"><a href="#t80">80</a></span
+      <p id="t70" class="mis show_mis">
+        <span class="n"><a href="#t70">70</a></span
         ><span class="t">
-          <span class="com"
-            ># cwd = os.getcwd() # Get the current working directory (cwd)</span
-          >&nbsp;</span
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t81" class="pln">
-        <span class="n"><a href="#t81">81</a></span
+      <p id="t71" class="mis show_mis">
+        <span class="n"><a href="#t71">71</a></span
         ><span class="t">
-          <span class="com"
-            ># with open(os.path.join(cwd,
-            'omg/integration_tests/data/solution_TS_pickle'), 'rb') as
-            solution_TS_pickle:</span
-          >&nbsp;</span
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/solution_old.json"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t82" class="pln">
-        <span class="n"><a href="#t82">82</a></span
-        ><span class="t">
-          <span class="com"
-            ># solution_TS = pickle.load(solution_TS_pickle)</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t83" class="pln">
-        <span class="n"><a href="#t83">83</a></span
-        ><span class="t">
-          <span class="com"># return solution_TS</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t84" class="run">
-        <span class="n"><a href="#t84">84</a></span
+      <p id="t72" class="mis show_mis">
+        <span class="n"><a href="#t72">72</a></span
         ><span class="t">
           <span class="nam">solution</span> <span class="op">=</span>
-          <span class="op">{</span>&nbsp;</span
+          <span class="nam">json</span><span class="op">.</span
+          ><span class="nam">load</span><span class="op">(</span
+          ><span class="nam">fh</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t85" class="pln">
-        <span class="n"><a href="#t85">85</a></span
-        ><span class="t">
-          <span class="str">"0.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t86" class="pln">
-        <span class="n"><a href="#t86">86</a></span
-        ><span class="t">
-          <span class="str">"1.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t87" class="pln">
-        <span class="n"><a href="#t87">87</a></span
-        ><span class="t">
-          <span class="str">"2.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t88" class="pln">
-        <span class="n"><a href="#t88">88</a></span
-        ><span class="t">
-          <span class="str">"3.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t89" class="pln">
-        <span class="n"><a href="#t89">89</a></span
-        ><span class="t">
-          <span class="str">"5.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t90" class="pln">
-        <span class="n"><a href="#t90">90</a></span
-        ><span class="t">
-          <span class="str">"4.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t91" class="pln">
-        <span class="n"><a href="#t91">91</a></span
-        ><span class="t">
-          <span class="str">"5.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t92" class="pln">
-        <span class="n"><a href="#t92">92</a></span
-        ><span class="t">
-          <span class="str">"6.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t93" class="pln">
-        <span class="n"><a href="#t93">93</a></span
-        ><span class="t">
-          <span class="str">"7.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t94" class="pln">
-        <span class="n"><a href="#t94">94</a></span
-        ><span class="t">
-          <span class="str">"8.0"</span><span class="op">:</span>
-          <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t95" class="pln">
-        <span class="n"><a href="#t95">95</a></span
-        ><span class="t"> <span class="op">}</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t96" class="run">
-        <span class="n"><a href="#t96">96</a></span
+      <p id="t73" class="mis show_mis">
+        <span class="n"><a href="#t73">73</a></span
         ><span class="t">
           <span class="key">return</span>
           <span class="nam">solution</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t97" class="pln">
-        <span class="n"><a href="#t97">97</a></span
+      <p id="t74" class="pln">
+        <span class="n"><a href="#t74">74</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t98" class="pln">
-        <span class="n"><a href="#t98">98</a></span
+      <p id="t75" class="pln">
+        <span class="n"><a href="#t75">75</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t99" class="pln">
-        <span class="n"><a href="#t99">99</a></span
+      <p id="t76" class="run">
+        <span class="n"><a href="#t76">76</a></span
         ><span class="t"
-          ><span class="com"
-            >#
-            =============================================================================</span
-          >&nbsp;</span
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t100" class="pln">
-        <span class="n"><a href="#t100">100</a></span
-        ><span class="t"><span class="com"># TESTS</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t101" class="pln">
-        <span class="n"><a href="#t101">101</a></span
-        ><span class="t"
-          ><span class="com"
-            >#
-            =============================================================================</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t102" class="pln">
-        <span class="n"><a href="#t102">102</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t103" class="pln">
-        <span class="n"><a href="#t103">103</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t104" class="run">
-        <span class="n"><a href="#t104">104</a></span
+      <p id="t77" class="run">
+        <span class="n"><a href="#t77">77</a></span
         ><span class="t"
           ><span class="key">def</span>
-          <span class="nam">test_get_flux_time_series</span
-          ><span class="op">(</span><span class="nam">model_TS_data</span
-          ><span class="op">,</span> <span class="nam">solution_TS_data</span
-          ><span class="op">,</span> <span class="nam">user_params_data</span
+          <span class="nam">solution_old_data</span><span class="op">(</span
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t105" class="pln">
+      <p id="t78" class="mis show_mis">
+        <span class="n"><a href="#t78">78</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t79" class="mis show_mis">
+        <span class="n"><a href="#t79">79</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/solution_old.json"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t80" class="mis show_mis">
+        <span class="n"><a href="#t80">80</a></span
+        ><span class="t">
+          <span class="nam">solution_old</span> <span class="op">=</span>
+          <span class="nam">json</span><span class="op">.</span
+          ><span class="nam">load</span><span class="op">(</span
+          ><span class="nam">fh</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t81" class="mis show_mis">
+        <span class="n"><a href="#t81">81</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">solution_old</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t82" class="pln">
+        <span class="n"><a href="#t82">82</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t83" class="pln">
+        <span class="n"><a href="#t83">83</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t84" class="run">
+        <span class="n"><a href="#t84">84</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t85" class="run">
+        <span class="n"><a href="#t85">85</a></span
+        ><span class="t"
+          ><span class="key">def</span>
+          <span class="nam">init_met_conc_data</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t86" class="mis show_mis">
+        <span class="n"><a href="#t86">86</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t87" class="mis show_mis">
+        <span class="n"><a href="#t87">87</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/init_met_conc.csv"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t88" class="mis show_mis">
+        <span class="n"><a href="#t88">88</a></span
+        ><span class="t">
+          <span class="nam">conc</span> <span class="op">=</span>
+          <span class="nam">fh</span><span class="op">.</span
+          ><span class="nam">readlines</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span
+          ><span class="op">.</span><span class="nam">split</span
+          ><span class="op">(</span><span class="str">","</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t89" class="mis show_mis">
+        <span class="n"><a href="#t89">89</a></span
+        ><span class="t">
+          <span class="nam">conc_list</span> <span class="op">=</span>
+          <span class="op">[</span><span class="nam">float</span
+          ><span class="op">(</span><span class="nam">i</span
+          ><span class="op">)</span> <span class="key">for</span>
+          <span class="nam">i</span> <span class="key">in</span>
+          <span class="nam">conc</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t90" class="mis show_mis">
+        <span class="n"><a href="#t90">90</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">conc_list</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t91" class="pln">
+        <span class="n"><a href="#t91">91</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t92" class="pln">
+        <span class="n"><a href="#t92">92</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t93" class="run">
+        <span class="n"><a href="#t93">93</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t94" class="run">
+        <span class="n"><a href="#t94">94</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">erxn2emet_data</span
+          ><span class="op">(</span><span class="op">)</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t95" class="run">
+        <span class="n"><a href="#t95">95</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t96" class="run">
+        <span class="n"><a href="#t96">96</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/erxn2emet.json"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t97" class="run">
+        <span class="n"><a href="#t97">97</a></span
+        ><span class="t">
+          <span class="nam">Erxn2Emet_dict</span> <span class="op">=</span>
+          <span class="nam">json</span><span class="op">.</span
+          ><span class="nam">load</span><span class="op">(</span
+          ><span class="nam">fh</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t98" class="run">
+        <span class="n"><a href="#t98">98</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">Erxn2Emet_dict</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t99" class="pln">
+        <span class="n"><a href="#t99">99</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t100" class="pln">
+        <span class="n"><a href="#t100">100</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t101" class="run">
+        <span class="n"><a href="#t101">101</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t102" class="run">
+        <span class="n"><a href="#t102">102</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">cell_data</span
+          ><span class="op">(</span><span class="nam">grid_data</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t103" class="run">
+        <span class="n"><a href="#t103">103</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t104" class="run">
+        <span class="n"><a href="#t104">104</a></span
+        ><span class="t">
+          <span class="nam">tspan</span> <span class="op">=</span>
+          <span class="nam">grid_data</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t105" class="run">
         <span class="n"><a href="#t105">105</a></span
         ><span class="t">
-          <span class="com"
-            ># model =
-            cobra.io.load_json_model('omg/integration_tests/data/iJO1366_MVA.json')</span
-          >&nbsp;</span
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">f"omg/integration_tests/data/cell.txt"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t106" class="run">
         <span class="n"><a href="#t106">106</a></span
+        ><span class="t">
+          <span class="nam">cell_series</span> <span class="op">=</span>
+          <span class="nam">pd</span><span class="op">.</span
+          ><span class="nam">Series</span><span class="op">(</span
+          ><span class="op">[</span><span class="nam">float</span
+          ><span class="op">(</span><span class="nam">line</span
+          ><span class="op">.</span><span class="nam">strip</span
+          ><span class="op">(</span><span class="op">)</span
+          ><span class="op">)</span> <span class="key">for</span>
+          <span class="nam">line</span> <span class="key">in</span>
+          <span class="nam">fh</span><span class="op">.</span
+          ><span class="nam">readlines</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">]</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t107" class="run">
+        <span class="n"><a href="#t107">107</a></span
+        ><span class="t">
+          <span class="nam">cell</span> <span class="op">=</span>
+          <span class="nam">cell_series</span><span class="op">.</span
+          ><span class="nam">rename</span><span class="op">(</span
+          ><span class="op">{</span><span class="nam">int</span
+          ><span class="op">(</span><span class="nam">t</span
+          ><span class="op">)</span><span class="op">:</span>
+          <span class="nam">t</span> <span class="key">for</span>
+          <span class="nam">t</span> <span class="key">in</span>
+          <span class="nam">tspan</span><span class="op">}</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t108" class="run">
+        <span class="n"><a href="#t108">108</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">cell</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t109" class="pln">
+        <span class="n"><a href="#t109">109</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t110" class="pln">
+        <span class="n"><a href="#t110">110</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t111" class="run">
+        <span class="n"><a href="#t111">111</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t112" class="run">
+        <span class="n"><a href="#t112">112</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">met_names_data</span
+          ><span class="op">(</span><span class="op">)</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t113" class="mis show_mis">
+        <span class="n"><a href="#t113">113</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t114" class="mis show_mis">
+        <span class="n"><a href="#t114">114</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/met_names.csv"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t115" class="mis show_mis">
+        <span class="n"><a href="#t115">115</a></span
+        ><span class="t">
+          <span class="nam">met_names</span> <span class="op">=</span>
+          <span class="nam">fh</span><span class="op">.</span
+          ><span class="nam">readlines</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span
+          ><span class="op">.</span><span class="nam">split</span
+          ><span class="op">(</span><span class="str">","</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t116" class="mis show_mis">
+        <span class="n"><a href="#t116">116</a></span
+        ><span class="t">
+          <span class="nam">met_names_list</span> <span class="op">=</span>
+          <span class="op">[</span><span class="nam">i</span>
+          <span class="key">for</span> <span class="nam">i</span>
+          <span class="key">in</span> <span class="nam">met_names</span
+          ><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t117" class="mis show_mis">
+        <span class="n"><a href="#t117">117</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">met_names_list</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t118" class="pln">
+        <span class="n"><a href="#t118">118</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t119" class="pln">
+        <span class="n"><a href="#t119">119</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t120" class="run">
+        <span class="n"><a href="#t120">120</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t121" class="run">
+        <span class="n"><a href="#t121">121</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">emet_values_data</span
+          ><span class="op">(</span><span class="op">)</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t122" class="mis show_mis">
+        <span class="n"><a href="#t122">122</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t123" class="mis show_mis">
+        <span class="n"><a href="#t123">123</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span><span class="nam">os</span
+          ><span class="op">.</span><span class="nam">path</span
+          ><span class="op">.</span><span class="nam">join</span
+          ><span class="op">(</span><span class="nam">cwd</span
+          ><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/emet_values.csv"</span
+          ><span class="op">)</span><span class="op">)</span>
+          <span class="key">as</span> <span class="nam">fh</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t124" class="mis show_mis">
+        <span class="n"><a href="#t124">124</a></span
+        ><span class="t">
+          <span class="nam">emet_values</span> <span class="op">=</span>
+          <span class="nam">fh</span><span class="op">.</span
+          ><span class="nam">readlines</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span
+          ><span class="op">.</span><span class="nam">split</span
+          ><span class="op">(</span><span class="str">","</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t125" class="mis show_mis">
+        <span class="n"><a href="#t125">125</a></span
+        ><span class="t">
+          <span class="nam">emet_values_list</span> <span class="op">=</span>
+          <span class="op">[</span><span class="nam">float</span
+          ><span class="op">(</span><span class="nam">i</span
+          ><span class="op">)</span> <span class="key">for</span>
+          <span class="nam">i</span> <span class="key">in</span>
+          <span class="nam">emet_values</span
+          ><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t126" class="mis show_mis">
+        <span class="n"><a href="#t126">126</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">emet_values_list</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t127" class="pln">
+        <span class="n"><a href="#t127">127</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t128" class="pln">
+        <span class="n"><a href="#t128">128</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t129" class="run">
+        <span class="n"><a href="#t129">129</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t130" class="run">
+        <span class="n"><a href="#t130">130</a></span
+        ><span class="t"
+          ><span class="key">def</span>
+          <span class="nam">solution_pickle_data</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t131" class="mis show_mis">
+        <span class="n"><a href="#t131">131</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t132" class="mis show_mis">
+        <span class="n"><a href="#t132">132</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t133" class="pln">
+        <span class="n"><a href="#t133">133</a></span
+        ><span class="t">
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str">"omg/integration_tests/data/solution_0.0.pkl"</span
+          ><span class="op">)</span><span class="op">,</span>
+          <span class="str">"rb"</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t134" class="pln">
+        <span class="n"><a href="#t134">134</a></span
+        ><span class="t">
+          <span class="op">)</span> <span class="key">as</span>
+          <span class="nam">fh</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t135" class="mis show_mis">
+        <span class="n"><a href="#t135">135</a></span
+        ><span class="t">
+          <span class="nam">solution</span> <span class="op">=</span>
+          <span class="nam">pickle</span><span class="op">.</span
+          ><span class="nam">load</span><span class="op">(</span
+          ><span class="nam">fh</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t136" class="mis show_mis">
+        <span class="n"><a href="#t136">136</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">solution</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t137" class="pln">
+        <span class="n"><a href="#t137">137</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t138" class="pln">
+        <span class="n"><a href="#t138">138</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t139" class="run">
+        <span class="n"><a href="#t139">139</a></span
+        ><span class="t"
+          ><span class="op">@</span><span class="nam">pytest</span
+          ><span class="op">.</span><span class="nam">fixture</span
+          ><span class="op">(</span><span class="nam">scope</span
+          ><span class="op">=</span><span class="str">"module"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t140" class="run">
+        <span class="n"><a href="#t140">140</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">solution_TS_data</span
+          ><span class="op">(</span><span class="nam">user_params_data</span
+          ><span class="op">,</span> <span class="nam">grid_data</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t141" class="run">
+        <span class="n"><a href="#t141">141</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>
+          <span class="com"># Get the current working directory (cwd)</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t142" class="run">
+        <span class="n"><a href="#t142">142</a></span
+        ><span class="t">
+          <span class="nam">tspan</span> <span class="op">=</span>
+          <span class="nam">grid_data</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t143" class="run">
+        <span class="n"><a href="#t143">143</a></span
+        ><span class="t">
+          <span class="nam">solution_TS</span> <span class="op">=</span>
+          <span class="op">{</span><span class="op">}</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t144" class="run">
+        <span class="n"><a href="#t144">144</a></span
+        ><span class="t">
+          <span class="key">for</span> <span class="nam">t</span>
+          <span class="key">in</span> <span class="nam">tspan</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t145" class="run">
+        <span class="n"><a href="#t145">145</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t146" class="pln">
+        <span class="n"><a href="#t146">146</a></span
+        ><span class="t">
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str"
+            >f"omg/integration_tests/data/solution_fluxes_{t}.json"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t147" class="pln">
+        <span class="n"><a href="#t147">147</a></span
+        ><span class="t">
+          <span class="op">)</span> <span class="key">as</span>
+          <span class="nam">fh</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t148" class="run">
+        <span class="n"><a href="#t148">148</a></span
+        ><span class="t">
+          <span class="nam">solution_TS</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span>
+          <span class="op">=</span> <span class="nam">json</span
+          ><span class="op">.</span><span class="nam">load</span
+          ><span class="op">(</span><span class="nam">fh</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t149" class="run">
+        <span class="n"><a href="#t149">149</a></span
+        ><span class="t">
+          <span class="nam">solution_TS</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span
+          ><span class="op">[</span><span class="str">"status"</span
+          ><span class="op">]</span> <span class="op">=</span>
+          <span class="str">"optimal"</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t150" class="run">
+        <span class="n"><a href="#t150">150</a></span
+        ><span class="t">
+          <span class="nam">solution_TS</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span
+          ><span class="op">[</span><span class="nam">user_params_data</span
+          ><span class="op">[</span
+          ><span class="str">"BIOMASS_REACTION_ID"</span
+          ><span class="op">]</span><span class="op">]</span>
+          <span class="op">=</span>
+          <span class="num">0.5363612610171448</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t151" class="pln">
+        <span class="n"><a href="#t151">151</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t152" class="run">
+        <span class="n"><a href="#t152">152</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">solution_TS</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t153" class="pln">
+        <span class="n"><a href="#t153">153</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t154" class="pln">
+        <span class="n"><a href="#t154">154</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t155" class="pln">
+        <span class="n"><a href="#t155">155</a></span
+        ><span class="t"
+          ><span class="com"
+            >#
+            =============================================================================</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t156" class="pln">
+        <span class="n"><a href="#t156">156</a></span
+        ><span class="t"><span class="com"># TESTS</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t157" class="pln">
+        <span class="n"><a href="#t157">157</a></span
+        ><span class="t"
+          ><span class="com"
+            >#
+            =============================================================================</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t158" class="pln">
+        <span class="n"><a href="#t158">158</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t159" class="pln">
+        <span class="n"><a href="#t159">159</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t160" class="run">
+        <span class="n"><a href="#t160">160</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">almost_equal</span
+          ><span class="op">(</span><span class="nam">x</span
+          ><span class="op">,</span><span class="nam">y</span
+          ><span class="op">,</span><span class="nam">threshold</span
+          ><span class="op">=</span><span class="num">0.0001</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t161" class="mis show_mis">
+        <span class="n"><a href="#t161">161</a></span
+        ><span class="t">
+          <span class="key">return</span> <span class="nam">abs</span
+          ><span class="op">(</span><span class="nam">x</span
+          ><span class="op">-</span><span class="nam">y</span
+          ><span class="op">)</span> <span class="op">&lt;</span>
+          <span class="nam">threshold</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t162" class="pln">
+        <span class="n"><a href="#t162">162</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t163" class="run">
+        <span class="n"><a href="#t163">163</a></span
+        ><span class="t"
+          ><span class="key">def</span>
+          <span class="nam">test_get_flux_time_series</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t164" class="pln">
+        <span class="n"><a href="#t164">164</a></span
+        ><span class="t">
+          <span class="nam">model_data</span><span class="op">,</span>
+          <span class="nam">solution_TS_data</span><span class="op">,</span>
+          <span class="nam">user_params_data</span><span class="op">,</span>
+          <span class="nam">grid_data</span><span class="op">,</span>
+          <span class="nam">erxn2emet_data</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t165" class="pln">
+        <span class="n"><a href="#t165">165</a></span
+        ><span class="t"
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t166" class="pln">
+        <span class="n"><a href="#t166">166</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t167" class="run">
+        <span class="n"><a href="#t167">167</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t168" class="run">
+        <span class="n"><a href="#t168">168</a></span
         ><span class="t">
           <span class="nam">ext_metabolites</span> <span class="op">=</span>
           <span class="nam">user_params_data</span><span class="op">[</span
@@ -844,58 +1451,20 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t107" class="pln">
-        <span class="n"><a href="#t107">107</a></span
+      <p id="t169" class="pln">
+        <span class="n"><a href="#t169">169</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t108" class="run">
-        <span class="n"><a href="#t108">108</a></span
+      <p id="t170" class="run">
+        <span class="n"><a href="#t170">170</a></span
         ><span class="t">
-          <span class="nam">t0</span> <span class="op">=</span>
-          <span class="nam">user_params_data</span><span class="op">[</span
-          ><span class="str">"timestart"</span
-          ><span class="op">]</span>&nbsp;</span
+          <span class="nam">tspan</span> <span class="op">=</span>
+          <span class="nam">grid_data</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t109" class="run">
-        <span class="n"><a href="#t109">109</a></span
-        ><span class="t">
-          <span class="nam">tf</span> <span class="op">=</span>
-          <span class="nam">user_params_data</span><span class="op">[</span
-          ><span class="str">"timestop"</span
-          ><span class="op">]</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t110" class="run">
-        <span class="n"><a href="#t110">110</a></span
-        ><span class="t">
-          <span class="nam">points</span> <span class="op">=</span>
-          <span class="nam">user_params_data</span><span class="op">[</span
-          ><span class="str">"numtimepoints"</span
-          ><span class="op">]</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t111" class="run">
-        <span class="n"><a href="#t111">111</a></span
-        ><span class="t">
-          <span class="nam">grid</span> <span class="op">=</span>
-          <span class="nam">np</span><span class="op">.</span
-          ><span class="nam">linspace</span><span class="op">(</span
-          ><span class="nam">t0</span><span class="op">,</span>
-          <span class="nam">tf</span><span class="op">,</span>
-          <span class="nam">points</span><span class="op">,</span>
-          <span class="nam">dtype</span><span class="op">=</span
-          ><span class="str">"float64"</span><span class="op">,</span>
-          <span class="nam">retstep</span><span class="op">=</span
-          ><span class="key">True</span><span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t112" class="pln">
-        <span class="n"><a href="#t112">112</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t113" class="run">
-        <span class="n"><a href="#t113">113</a></span
+      <p id="t171" class="run">
+        <span class="n"><a href="#t171">171</a></span
         ><span class="t">
           <span class="nam">solution_TS</span><span class="op">,</span>
           <span class="nam">model_TS</span><span class="op">,</span>
@@ -906,169 +1475,916 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t114" class="pln">
-        <span class="n"><a href="#t114">114</a></span
+      <p id="t172" class="pln">
+        <span class="n"><a href="#t172">172</a></span
         ><span class="t">
-          <span class="nam">model_TS_data</span><span class="op">,</span>
+          <span class="nam">model_data</span><span class="op">,</span>
           <span class="nam">ext_metabolites</span><span class="op">,</span>
-          <span class="nam">grid</span><span class="op">,</span>
+          <span class="nam">grid_data</span><span class="op">,</span>
           <span class="nam">user_params_data</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t115" class="pln">
-        <span class="n"><a href="#t115">115</a></span
+      <p id="t173" class="pln">
+        <span class="n"><a href="#t173">173</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t116" class="pln">
-        <span class="n"><a href="#t116">116</a></span
+      <p id="t174" class="pln">
+        <span class="n"><a href="#t174">174</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t117" class="pln">
-        <span class="n"><a href="#t117">117</a></span
+      <p id="t175" class="pln">
+        <span class="n"><a href="#t175">175</a></span
         ><span class="t"> <span class="com"># Asserts</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t118" class="pln">
-        <span class="n"><a href="#t118">118</a></span
+      <p id="t176" class="pln">
+        <span class="n"><a href="#t176">176</a></span
+        ><span class="t">
+          <span class="com"># assert fluxes in solution</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t177" class="run">
+        <span class="n"><a href="#t177">177</a></span
+        ><span class="t">
+          <span class="key">for</span> <span class="nam">t</span>
+          <span class="key">in</span> <span class="nam">tspan</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t178" class="run">
+        <span class="n"><a href="#t178">178</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t179" class="pln">
+        <span class="n"><a href="#t179">179</a></span
+        ><span class="t">
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str"
+            >f"omg/integration_tests/data/solution_fluxes_{t}.json"</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t180" class="pln">
+        <span class="n"><a href="#t180">180</a></span
+        ><span class="t">
+          <span class="op">)</span> <span class="key">as</span>
+          <span class="nam">fh</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t181" class="run">
+        <span class="n"><a href="#t181">181</a></span
+        ><span class="t">
+          <span class="nam">expected_solution_fluxes</span>
+          <span class="op">=</span> <span class="nam">json</span
+          ><span class="op">.</span><span class="nam">load</span
+          ><span class="op">(</span><span class="nam">fh</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t182" class="pln">
+        <span class="n"><a href="#t182">182</a></span
+        ><span class="t"> <span class="com"># assert</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t183" class="run">
+        <span class="n"><a href="#t183">183</a></span
+        ><span class="t">
+          <span class="nam">actual_solution_fluxes</span>
+          <span class="op">=</span> <span class="nam">solution_TS</span
+          ><span class="op">[</span><span class="nam">t</span
+          ><span class="op">]</span><span class="op">.</span
+          ><span class="nam">fluxes</span><span class="op">.</span
+          ><span class="nam">to_dict</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t184" class="pln">
+        <span class="n"><a href="#t184">184</a></span
         ><span class="t">
           <span class="com"
-            ># compare fluxes from the solution and compare that</span
+            ># assert expected_solution_flux_keys ==
+            actual_solution_flux_keys</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t119" class="run">
-        <span class="n"><a href="#t119">119</a></span
+      <p id="t185" class="run">
+        <span class="n"><a href="#t185">185</a></span
         ><span class="t">
-          <span class="key">for</span> <span class="nam">i</span
-          ><span class="op">,</span> <span class="nam">sol</span>
-          <span class="key">in</span> <span class="nam">solution_TS</span
+          <span class="key">assert</span>
+          <span class="nam">expected_solution_fluxes</span>
+          <span class="op">==</span>
+          <span class="nam">actual_solution_fluxes</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t186" class="pln">
+        <span class="n"><a href="#t186">186</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t187" class="pln">
+        <span class="n"><a href="#t187">187</a></span
+        ><span class="t"> <span class="com"># assert Emets</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t188" class="run">
+        <span class="n"><a href="#t188">188</a></span
+        ><span class="t">
+          <span class="nam">index_map</span> <span class="op">=</span>
+          <span class="op">{</span><span class="nam">int</span
+          ><span class="op">(</span><span class="nam">t</span
+          ><span class="op">)</span><span class="op">:</span>
+          <span class="nam">t</span> <span class="key">for</span>
+          <span class="nam">t</span> <span class="key">in</span>
+          <span class="nam">tspan</span><span class="op">}</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t189" class="run">
+        <span class="n"><a href="#t189">189</a></span
+        ><span class="t">
+          <span class="nam">expected_Emets</span> <span class="op">=</span>
+          <span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t190" class="pln">
+        <span class="n"><a href="#t190">190</a></span
+        ><span class="t">
+          <span class="nam">pd</span><span class="op">.</span
+          ><span class="nam">read_csv</span><span class="op">(</span
+          ><span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str">f"omg/integration_tests/data/Emets.csv"</span
+          ><span class="op">)</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t191" class="pln">
+        <span class="n"><a href="#t191">191</a></span
+        ><span class="t">
+          <span class="op">.</span><span class="nam">astype</span
+          ><span class="op">(</span><span class="nam">float</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t192" class="pln">
+        <span class="n"><a href="#t192">192</a></span
+        ><span class="t">
+          <span class="op">.</span><span class="nam">rename</span
+          ><span class="op">(</span><span class="nam">index</span
+          ><span class="op">=</span><span class="nam">index_map</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t193" class="pln">
+        <span class="n"><a href="#t193">193</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t194" class="run">
+        <span class="n"><a href="#t194">194</a></span
+        ><span class="t">
+          <span class="nam">Emets</span> <span class="op">=</span>
+          <span class="nam">Emets</span><span class="op">.</span
+          ><span class="nam">astype</span><span class="op">(</span
+          ><span class="nam">float</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t195" class="run">
+        <span class="n"><a href="#t195">195</a></span
+        ><span class="t">
+          <span class="nam">assert_frame_equal</span><span class="op">(</span
+          ><span class="nam">expected_Emets</span><span class="op">,</span>
+          <span class="nam">Emets</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t196" class="pln">
+        <span class="n"><a href="#t196">196</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t197" class="pln">
+        <span class="n"><a href="#t197">197</a></span
+        ><span class="t">
+          <span class="com"># assert Erxn2Emet</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t198" class="run">
+        <span class="n"><a href="#t198">198</a></span
+        ><span class="t">
+          <span class="key">assert</span> <span class="nam">Erxn2Emet</span>
+          <span class="op">==</span>
+          <span class="nam">erxn2emet_data</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t199" class="pln">
+        <span class="n"><a href="#t199">199</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t200" class="pln">
+        <span class="n"><a href="#t200">200</a></span
+        ><span class="t"> <span class="com"># assert cell</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t201" class="pln">
+        <span class="n"><a href="#t201">201</a></span
+        ><span class="t"> <span class="com"># with open(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t202" class="pln">
+        <span class="n"><a href="#t202">202</a></span
+        ><span class="t">
+          <span class="com"
+            ># os.path.join(cwd, f'omg/integration_tests/data/cell.txt')</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t203" class="pln">
+        <span class="n"><a href="#t203">203</a></span
+        ><span class="t"> <span class="com"># ) as fh:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t204" class="pln">
+        <span class="n"><a href="#t204">204</a></span
+        ><span class="t">
+          <span class="com"
+            ># expected_cell = [float(line.strip()) for line in
+            fh.readlines()]</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t205" class="pln">
+        <span class="n"><a href="#t205">205</a></span
+        ><span class="t">
+          <span class="com"># print(expected_cell)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t206" class="pln">
+        <span class="n"><a href="#t206">206</a></span
+        ><span class="t">
+          <span class="com"># actual_cell = cell.tolist()</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t207" class="pln">
+        <span class="n"><a href="#t207">207</a></span
+        ><span class="t">
+          <span class="com"># print(actual_cell)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t208" class="pln">
+        <span class="n"><a href="#t208">208</a></span
+        ><span class="t">
+          <span class="com"># assert expected_cell == actual_cell</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t209" class="pln">
+        <span class="n"><a href="#t209">209</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t210" class="pln">
+        <span class="n"><a href="#t210">210</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t211" class="run">
+        <span class="n"><a href="#t211">211</a></span
+        ><span class="t"
+          ><span class="key">def</span>
+          <span class="nam">get_optimized_model_at_t</span
+          ><span class="op">(</span><span class="nam">model</span
+          ><span class="op">,</span> <span class="nam">erxn2emet</span
+          ><span class="op">,</span> <span class="nam">timestep</span
+          ><span class="op">,</span> <span class="nam">grid_data</span
+          ><span class="op">,</span> <span class="nam">cell</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t212" class="pln">
+        <span class="n"><a href="#t212">212</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t213" class="run">
+        <span class="n"><a href="#t213">213</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t214" class="run">
+        <span class="n"><a href="#t214">214</a></span
+        ><span class="t">
+          <span class="nam">tspan</span><span class="op">,</span>
+          <span class="nam">delt</span> <span class="op">=</span>
+          <span class="nam">grid_data</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t215" class="run">
+        <span class="n"><a href="#t215">215</a></span
+        ><span class="t">
+          <span class="nam">volume</span> <span class="op">=</span>
+          <span class="num">1.0</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t216" class="run">
+        <span class="n"><a href="#t216">216</a></span
+        ><span class="t">
+          <span class="nam">index_map</span> <span class="op">=</span>
+          <span class="op">{</span><span class="nam">int</span
+          ><span class="op">(</span><span class="nam">t</span
+          ><span class="op">)</span><span class="op">:</span>
+          <span class="nam">t</span> <span class="key">for</span>
+          <span class="nam">t</span> <span class="key">in</span>
+          <span class="nam">tspan</span><span class="op">}</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t217" class="run">
+        <span class="n"><a href="#t217">217</a></span
+        ><span class="t">
+          <span class="nam">Emets</span> <span class="op">=</span>
+          <span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t218" class="pln">
+        <span class="n"><a href="#t218">218</a></span
+        ><span class="t">
+          <span class="nam">pd</span><span class="op">.</span
+          ><span class="nam">read_csv</span><span class="op">(</span
+          ><span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str">f"omg/integration_tests/data/Emets.csv"</span
+          ><span class="op">)</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t219" class="pln">
+        <span class="n"><a href="#t219">219</a></span
+        ><span class="t">
+          <span class="op">.</span><span class="nam">astype</span
+          ><span class="op">(</span><span class="nam">float</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t220" class="pln">
+        <span class="n"><a href="#t220">220</a></span
+        ><span class="t">
+          <span class="op">.</span><span class="nam">rename</span
+          ><span class="op">(</span><span class="nam">index</span
+          ><span class="op">=</span><span class="nam">index_map</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t221" class="pln">
+        <span class="n"><a href="#t221">221</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t222" class="pln">
+        <span class="n"><a href="#t222">222</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t223" class="pln">
+        <span class="n"><a href="#t223">223</a></span
+        ><span class="t"> <span class="com"># print(cell)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t224" class="pln">
+        <span class="n"><a href="#t224">224</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t225" class="run">
+        <span class="n"><a href="#t225">225</a></span
+        ><span class="t">
+          <span class="key">for</span> <span class="nam">t</span>
+          <span class="key">in</span> <span class="nam">tspan</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t226" class="run">
+        <span class="n"><a href="#t226">226</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">model</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t227" class="run">
+        <span class="n"><a href="#t227">227</a></span
+        ><span class="t">
+          <span class="key">for</span> <span class="nam">rxn</span
+          ><span class="op">,</span> <span class="nam">met</span>
+          <span class="key">in</span> <span class="nam">erxn2emet</span
           ><span class="op">.</span><span class="nam">items</span
           ><span class="op">(</span><span class="op">)</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t120" class="run">
-        <span class="n"><a href="#t120">120</a></span
+      <p id="t228" class="pln">
+        <span class="n"><a href="#t228">228</a></span
         ><span class="t">
-          <span class="key">if</span> <span class="key">not</span>
-          <span class="nam">isinstance</span><span class="op">(</span
-          ><span class="nam">sol</span><span class="op">,</span>
-          <span class="nam">float</span><span class="op">)</span
-          ><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t121" class="run">
-        <span class="n"><a href="#t121">121</a></span
-        ><span class="t">
-          <span class="key">for</span> <span class="nam">index</span
-          ><span class="op">,</span> <span class="nam">flux</span>
-          <span class="key">in</span> <span class="nam">sol</span
-          ><span class="op">.</span><span class="nam">fluxes</span
-          ><span class="op">.</span><span class="nam">items</span
-          ><span class="op">(</span><span class="op">)</span
-          ><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t122" class="run">
-        <span class="n"><a href="#t122">122</a></span
-        ><span class="t">
-          <span class="key">if</span> <span class="op">(</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t123" class="pln">
-        <span class="n"><a href="#t123">123</a></span
-        ><span class="t">
-          <span class="str">"BIOMASS_Ec_iJO1366_WT_53p95M"</span>
-          <span class="key">in</span> <span class="nam">index</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t124" class="pln">
-        <span class="n"><a href="#t124">124</a></span
-        ><span class="t">
-          <span class="op">)</span><span class="op">:</span>
           <span class="com"
-            ># change the hardcoded the biomass reaction name</span
+            ># For each exchange reaction set lower bound such that the</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t125" class="run">
-        <span class="n"><a href="#t125">125</a></span
+      <p id="t229" class="pln">
+        <span class="n"><a href="#t229">229</a></span
         ><span class="t">
-          <span class="key">assert</span> <span class="nam">flux</span>
-          <span class="op">==</span> <span class="nam">solution_TS_data</span
-          ><span class="op">[</span><span class="nam">str</span
-          ><span class="op">(</span><span class="nam">i</span
-          ><span class="op">)</span><span class="op">]</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t126" class="pln">
-        <span class="n"><a href="#t126">126</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t127" class="pln">
-        <span class="n"><a href="#t127">127</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t128" class="pln">
-        <span class="n"><a href="#t128">128</a></span
-        ><span class="t"
-          ><span class="com"
-            ># def test_integrate_fluxes(model_TS_data, solution_TS_data,
-            grid_data, user_params_data):</span
+          <span class="com"
+            ># corresponding external metabolite concentration does not</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t129" class="pln">
-        <span class="n"><a href="#t129">129</a></span
+      <p id="t230" class="pln">
+        <span class="n"><a href="#t230">230</a></span
+        ><span class="t"> <span class="com"># become negative</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t231" class="run">
+        <span class="n"><a href="#t231">231</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">get_by_id</span><span class="op">(</span
+          ><span class="nam">rxn</span><span class="op">)</span
+          ><span class="op">.</span><span class="nam">lower_bound</span>
+          <span class="op">=</span> <span class="nam">max</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t232" class="pln">
+        <span class="n"><a href="#t232">232</a></span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">get_by_id</span><span class="op">(</span
+          ><span class="nam">rxn</span><span class="op">)</span
+          ><span class="op">.</span><span class="nam">lower_bound</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t233" class="pln">
+        <span class="n"><a href="#t233">233</a></span
+        ><span class="t">
+          <span class="op">-</span><span class="nam">Emets</span
+          ><span class="op">.</span><span class="nam">loc</span
+          ><span class="op">[</span><span class="nam">t</span
+          ><span class="op">,</span> <span class="nam">met</span
+          ><span class="op">]</span> <span class="op">*</span>
+          <span class="nam">volume</span> <span class="op">/</span>
+          <span class="nam">cell</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span>
+          <span class="op">/</span> <span class="nam">delt</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t234" class="pln">
+        <span class="n"><a href="#t234">234</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t235" class="run">
+        <span class="n"><a href="#t235">235</a></span
+        ><span class="t">
+          <span class="key">if</span> <span class="nam">t</span>
+          <span class="op">==</span> <span class="nam">timestep</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t236" class="run">
+        <span class="n"><a href="#t236">236</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">model</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t237" class="mis show_mis">
+        <span class="n"><a href="#t237">237</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="key">None</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t238" class="pln">
+        <span class="n"><a href="#t238">238</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t239" class="pln">
+        <span class="n"><a href="#t239">239</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t240" class="run">
+        <span class="n"><a href="#t240">240</a></span
         ><span class="t"
-          ><span class="com"
-            ># # # setting the objects that needs toget passed ot the called
+          ><span class="key">def</span>
+          <span class="nam">test_integrate_fluxes</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t241" class="pln">
+        <span class="n"><a href="#t241">241</a></span
+        ><span class="t">
+          <span class="nam">model_data</span><span class="op">,</span>
+          <span class="nam">solution_TS_data</span><span class="op">,</span>
+          <span class="nam">grid_data</span><span class="op">,</span>
+          <span class="nam">user_params_data</span><span class="op">,</span>
+          <span class="nam">erxn2emet_data</span><span class="op">,</span>
+          <span class="nam">cell_data</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t242" class="pln">
+        <span class="n"><a href="#t242">242</a></span
+        ><span class="t"
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t243" class="pln">
+        <span class="n"><a href="#t243">243</a></span
+        ><span class="t">
+          <span class="com"
+            ># setting the objects that needs toget passed ot the called
             function</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t130" class="pln">
-        <span class="n"><a href="#t130">130</a></span
-        ><span class="t"
-          ><span class="com"
-            ># # # export the dataframes from the notebook and write them out to
-            be imported as fixtures</span
+      <p id="t244" class="pln">
+        <span class="n"><a href="#t244">244</a></span
+        ><span class="t">
+          <span class="com"
+            ># export the dataframes from the notebook and write them out to be
+            imported</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t131" class="pln">
-        <span class="n"><a href="#t131">131</a></span
-        ><span class="t"
-          ><span class="com"
-            ># # # integrate_fluxes(solution_TS, model_TS, ext_metabolites,
-            grid, user_params)</span
-          >&nbsp;</span
+      <p id="t245" class="pln">
+        <span class="n"><a href="#t245">245</a></span
+        ><span class="t"> <span class="com"># as fixtures</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t132" class="pln">
-        <span class="n"><a href="#t132">132</a></span
+      <p id="t246" class="pln">
+        <span class="n"><a href="#t246">246</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t133" class="pln">
-        <span class="n"><a href="#t133">133</a></span
-        ><span class="t"
-          ><span class="com"
-            ># # # read model and solution objects form pickle files</span
+      <p id="t247" class="pln">
+        <span class="n"><a href="#t247">247</a></span
+        ><span class="t">
+          <span class="com"
+            ># read model and solution objects form pickle files</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t134" class="pln">
-        <span class="n"><a href="#t134">134</a></span
+      <p id="t248" class="pln">
+        <span class="n"><a href="#t248">248</a></span
+        ><span class="t">
+          <span class="com"># get optimized model after the first step</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t249" class="pln">
+        <span class="n"><a href="#t249">249</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t135" class="pln">
-        <span class="n"><a href="#t135">135</a></span
+      <p id="t250" class="run">
+        <span class="n"><a href="#t250">250</a></span
+        ><span class="t">
+          <span class="nam">cwd</span> <span class="op">=</span>
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">getcwd</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t251" class="run">
+        <span class="n"><a href="#t251">251</a></span
+        ><span class="t">
+          <span class="nam">tspan</span> <span class="op">=</span>
+          <span class="nam">grid_data</span><span class="op">[</span
+          ><span class="num">0</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t252" class="run">
+        <span class="n"><a href="#t252">252</a></span
+        ><span class="t">
+          <span class="nam">model_TS</span> <span class="op">=</span>
+          <span class="nam">pd</span><span class="op">.</span
+          ><span class="nam">Series</span><span class="op">(</span
+          ><span class="nam">index</span><span class="op">=</span
+          ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t253" class="run">
+        <span class="n"><a href="#t253">253</a></span
+        ><span class="t">
+          <span class="nam">model_TS</span><span class="op">[</span
+          ><span class="num">0.0</span><span class="op">]</span>
+          <span class="op">=</span>
+          <span class="nam">get_optimized_model_at_t</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t254" class="pln">
+        <span class="n"><a href="#t254">254</a></span
+        ><span class="t">
+          <span class="nam">model_data</span><span class="op">,</span>
+          <span class="nam">erxn2emet_data</span><span class="op">,</span>
+          <span class="num">0.0</span><span class="op">,</span>
+          <span class="nam">grid_data</span><span class="op">,</span>
+          <span class="nam">cell_data</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t255" class="pln">
+        <span class="n"><a href="#t255">255</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t256" class="pln">
+        <span class="n"><a href="#t256">256</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t257" class="run">
+        <span class="n"><a href="#t257">257</a></span
+        ><span class="t">
+          <span class="nam">cell</span><span class="op">,</span>
+          <span class="nam">Emets</span> <span class="op">=</span>
+          <span class="nam">integrate_fluxes</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t258" class="pln">
+        <span class="n"><a href="#t258">258</a></span
+        ><span class="t">
+          <span class="nam">solution_TS_data</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t259" class="pln">
+        <span class="n"><a href="#t259">259</a></span
+        ><span class="t">
+          <span class="nam">model_TS</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t260" class="pln">
+        <span class="n"><a href="#t260">260</a></span
+        ><span class="t">
+          <span class="nam">user_params_data</span><span class="op">[</span
+          ><span class="str">"ext_metabolites"</span><span class="op">]</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t261" class="pln">
+        <span class="n"><a href="#t261">261</a></span
+        ><span class="t">
+          <span class="nam">grid_data</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t262" class="pln">
+        <span class="n"><a href="#t262">262</a></span
+        ><span class="t">
+          <span class="nam">user_params_data</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t263" class="pln">
+        <span class="n"><a href="#t263">263</a></span
+        ><span class="t">
+          <span class="nam">debug</span><span class="op">=</span
+          ><span class="key">True</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t264" class="pln">
+        <span class="n"><a href="#t264">264</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t265" class="pln">
+        <span class="n"><a href="#t265">265</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t266" class="run">
+        <span class="n"><a href="#t266">266</a></span
+        ><span class="t">
+          <span class="nam">print</span><span class="op">(</span
+          ><span class="nam">cell</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t267" class="pln">
+        <span class="n"><a href="#t267">267</a></span
+        ><span class="t"> <span class="com"># Asserts</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t268" class="run">
+        <span class="n"><a href="#t268">268</a></span
+        ><span class="t">
+          <span class="nam">index_map</span> <span class="op">=</span>
+          <span class="op">{</span><span class="nam">int</span
+          ><span class="op">(</span><span class="nam">t</span
+          ><span class="op">)</span><span class="op">:</span>
+          <span class="nam">t</span> <span class="key">for</span>
+          <span class="nam">t</span> <span class="key">in</span>
+          <span class="nam">tspan</span><span class="op">}</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t269" class="run">
+        <span class="n"><a href="#t269">269</a></span
+        ><span class="t">
+          <span class="nam">expected_Emets</span> <span class="op">=</span>
+          <span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t270" class="pln">
+        <span class="n"><a href="#t270">270</a></span
+        ><span class="t">
+          <span class="nam">pd</span><span class="op">.</span
+          ><span class="nam">read_csv</span><span class="op">(</span
+          ><span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str">f"omg/integration_tests/data/Emets.csv"</span
+          ><span class="op">)</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t271" class="pln">
+        <span class="n"><a href="#t271">271</a></span
+        ><span class="t">
+          <span class="op">.</span><span class="nam">astype</span
+          ><span class="op">(</span><span class="nam">float</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t272" class="pln">
+        <span class="n"><a href="#t272">272</a></span
+        ><span class="t">
+          <span class="op">.</span><span class="nam">rename</span
+          ><span class="op">(</span><span class="nam">index</span
+          ><span class="op">=</span><span class="nam">index_map</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t273" class="pln">
+        <span class="n"><a href="#t273">273</a></span
+        ><span class="t"> <span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t274" class="run">
+        <span class="n"><a href="#t274">274</a></span
+        ><span class="t">
+          <span class="nam">Emets</span> <span class="op">=</span>
+          <span class="nam">Emets</span><span class="op">.</span
+          ><span class="nam">astype</span><span class="op">(</span
+          ><span class="nam">float</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t275" class="run">
+        <span class="n"><a href="#t275">275</a></span
+        ><span class="t">
+          <span class="nam">assert_frame_equal</span><span class="op">(</span
+          ><span class="nam">expected_Emets</span><span class="op">,</span>
+          <span class="nam">Emets</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t276" class="pln">
+        <span class="n"><a href="#t276">276</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t277" class="pln">
+        <span class="n"><a href="#t277">277</a></span
+        ><span class="t"> <span class="com"># assert cell</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t278" class="run">
+        <span class="n"><a href="#t278">278</a></span
+        ><span class="t">
+          <span class="key">with</span> <span class="nam">open</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t279" class="pln">
+        <span class="n"><a href="#t279">279</a></span
+        ><span class="t">
+          <span class="nam">os</span><span class="op">.</span
+          ><span class="nam">path</span><span class="op">.</span
+          ><span class="nam">join</span><span class="op">(</span
+          ><span class="nam">cwd</span><span class="op">,</span>
+          <span class="str">f'omg/integration_tests/data/cell_data.txt'</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t280" class="pln">
+        <span class="n"><a href="#t280">280</a></span
+        ><span class="t">
+          <span class="op">)</span> <span class="key">as</span>
+          <span class="nam">fh</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t281" class="run">
+        <span class="n"><a href="#t281">281</a></span
+        ><span class="t">
+          <span class="nam">expected_cell</span> <span class="op">=</span>
+          <span class="op">[</span><span class="nam">float</span
+          ><span class="op">(</span><span class="nam">line</span
+          ><span class="op">.</span><span class="nam">strip</span
+          ><span class="op">(</span><span class="op">)</span
+          ><span class="op">)</span> <span class="key">for</span>
+          <span class="nam">line</span> <span class="key">in</span>
+          <span class="nam">fh</span><span class="op">.</span
+          ><span class="nam">readlines</span><span class="op">(</span
+          ><span class="op">)</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t282" class="run">
+        <span class="n"><a href="#t282">282</a></span
+        ><span class="t">
+          <span class="nam">print</span><span class="op">(</span
+          ><span class="nam">expected_cell</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t283" class="run">
+        <span class="n"><a href="#t283">283</a></span
+        ><span class="t">
+          <span class="nam">actual_cell</span> <span class="op">=</span>
+          <span class="nam">cell</span><span class="op">.</span
+          ><span class="nam">tolist</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t284" class="run">
+        <span class="n"><a href="#t284">284</a></span
+        ><span class="t">
+          <span class="nam">print</span><span class="op">(</span
+          ><span class="nam">actual_cell</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t285" class="run">
+        <span class="n"><a href="#t285">285</a></span
+        ><span class="t">
+          <span class="key">from</span> <span class="nam">pytest</span>
+          <span class="key">import</span>
+          <span class="nam">approx</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t286" class="run">
+        <span class="n"><a href="#t286">286</a></span
+        ><span class="t">
+          <span class="key">assert</span> <span class="op">[</span
+          ><span class="num">0.100242</span> <span class="op">+</span>
+          <span class="num">0.200023</span><span class="op">,</span>
+          <span class="num">0.20042</span> <span class="op">+</span>
+          <span class="num">0.40000677</span><span class="op">]</span>
+          <span class="op">==</span> <span class="nam">approx</span
+          ><span class="op">(</span><span class="op">[</span
+          ><span class="num">0.3</span><span class="op">,</span>
+          <span class="num">0.6</span><span class="op">]</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t287" class="pln">
+        <span class="n"><a href="#t287">287</a></span
+        ><span class="t">
+          <span class="com"># assert expected_cell == approx(actual_cell)</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t288" class="pln">
+        <span class="n"><a href="#t288">288</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t289" class="pln">
+        <span class="n"><a href="#t289">289</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t290" class="run">
+        <span class="n"><a href="#t290">290</a></span
         ><span class="t"
-          ><span class="com"
-            ># cell, Emets = integrate_fluxes(solution_TS_data, model_TS_data,
-            user_params_data['ext_metabolites'], grid_data,
-            user_params_data)</span
+          ><span class="key">def</span> <span class="nam">test_getBEFluxes</span
+          ><span class="op">(</span><span class="nam">model_TS</span
+          ><span class="op">,</span> <span class="nam">design</span
+          ><span class="op">,</span> <span class="nam">solution_TS_data</span
+          ><span class="op">,</span> <span class="nam">grid_data</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t291" class="mis show_mis">
+        <span class="n"><a href="#t291">291</a></span
+        ><span class="t"> <span class="key">pass</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t292" class="pln">
+        <span class="n"><a href="#t292">292</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t293" class="pln">
+        <span class="n"><a href="#t293">293</a></span
+        ><span class="t">
+          <span class="com"
+            ># getBEFluxes(model_TS, design, solution_TS_data, grid_data)</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
@@ -1079,7 +2395,7 @@
           <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp;
           <a class="nav" href="https://coverage.readthedocs.io"
             >coverage.py v5.5</a
-          >, created at 2021-06-02 18:43 -0700
+          >, created at 2021-07-02 14:13 -0700
         </p>
       </div>
     </div>

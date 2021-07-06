@@ -12,6 +12,7 @@ openpyxl = "*"
 datatest = "*"
 pytest = "*"
 coverage = "*"
+deepdiff = "*"
 
 [requires]
 python_version = "3.9.4"

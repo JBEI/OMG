@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for omg/core.py: 40%</title>
+    <title>Coverage for omg/core.py: 49%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png" />
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -19,7 +19,7 @@
       <div class="content">
         <h1>
           Coverage for <b>omg/core.py</b> :
-          <span class="pc_cov">40%</span>
+          <span class="pc_cov">49%</span>
         </h1>
         <img
           id="keyboard_icon"
@@ -33,14 +33,14 @@
             class="run shortkey_r button_toggle_run"
             title="Toggle lines run"
           >
-            70 run
+            86 run
           </button>
           <button
             type="button"
             class="mis show_mis shortkey_m button_toggle_mis"
             title="Toggle lines missing"
           >
-            106 missing
+            90 missing
           </button>
           <button
             type="button"
@@ -443,39 +443,35 @@
       </p>
       <p id="t56" class="pln">
         <span class="n"><a href="#t56">56</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t57" class="pln">
-        <span class="n"><a href="#t57">57</a></span
         ><span class="t">
           <span class="com"
             >## First unpack the time steps for the grid provided</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t58" class="run">
-        <span class="n"><a href="#t58">58</a></span
+      <p id="t57" class="run">
+        <span class="n"><a href="#t57">57</a></span
         ><span class="t">
           <span class="nam">tspan</span><span class="op">,</span>
           <span class="nam">delt</span> <span class="op">=</span>
           <span class="nam">grid</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t59" class="pln">
-        <span class="n"><a href="#t59">59</a></span
+      <p id="t58" class="pln">
+        <span class="n"><a href="#t58">58</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t60" class="pln">
-        <span class="n"><a href="#t60">60</a></span
+      <p id="t59" class="pln">
+        <span class="n"><a href="#t59">59</a></span
         ><span class="t">
           <span class="com"
-            >## Create a panda series containing the cell concentation for each
+            ># Create a panda series containing the cell concentation for each
             time point</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t61" class="run">
-        <span class="n"><a href="#t61">61</a></span
+      <p id="t60" class="run">
+        <span class="n"><a href="#t60">60</a></span
         ><span class="t">
           <span class="nam">cell</span> <span class="op">=</span>
           <span class="nam">pd</span><span class="op">.</span
@@ -484,8 +480,8 @@
           ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t62" class="run">
-        <span class="n"><a href="#t62">62</a></span
+      <p id="t61" class="run">
+        <span class="n"><a href="#t61">61</a></span
         ><span class="t">
           <span class="nam">cell0</span> <span class="op">=</span>
           <span class="nam">user_params</span><span class="op">[</span
@@ -493,8 +489,8 @@
           <span class="com"># in gDW/L</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t63" class="run">
-        <span class="n"><a href="#t63">63</a></span
+      <p id="t62" class="run">
+        <span class="n"><a href="#t62">62</a></span
         ><span class="t">
           <span class="nam">t0</span> <span class="op">=</span>
           <span class="nam">user_params</span><span class="op">[</span
@@ -502,25 +498,30 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t64" class="run">
-        <span class="n"><a href="#t64">64</a></span
+      <p id="t63" class="run">
+        <span class="n"><a href="#t63">63</a></span
         ><span class="t">
           <span class="nam">cell</span><span class="op">[</span
           ><span class="nam">t0</span><span class="op">]</span>
           <span class="op">=</span> <span class="nam">cell0</span>&nbsp;</span
         ><span class="r"></span>
       </p>
+      <p id="t64" class="pln">
+        <span class="n"><a href="#t64">64</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
       <p id="t65" class="pln">
         <span class="n"><a href="#t65">65</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
+        ><span class="t">
+          <span class="com"
+            ># Create a dataframe that constains external metabolite names</span
+          >&nbsp;</span
+        ><span class="r"></span>
       </p>
       <p id="t66" class="pln">
         <span class="n"><a href="#t66">66</a></span
         ><span class="t">
-          <span class="com"
-            >## Create a dataframe that constains external metabolite names and
-            their concentrations</span
-          >&nbsp;</span
+          <span class="com"># and their concentrations</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t67" class="pln">
@@ -618,20 +619,26 @@
         <span class="n"><a href="#t77">77</a></span
         ><span class="t">
           <span class="com"
-            ># Create Dictionary mapping exchange reactions to the corresponding
-            external metabolite</span
+            ># Create Dictionary mapping exchange reactions to</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t78" class="run">
+      <p id="t78" class="pln">
         <span class="n"><a href="#t78">78</a></span
+        ><span class="t">
+          <span class="com"># the corresponding external metabolite</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t79" class="run">
+        <span class="n"><a href="#t79">79</a></span
         ><span class="t">
           <span class="nam">Erxn2Emet</span> <span class="op">=</span>
           <span class="op">{</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t79" class="pln">
-        <span class="n"><a href="#t79">79</a></span
+      <p id="t80" class="pln">
+        <span class="n"><a href="#t80">80</a></span
         ><span class="t">
           <span class="nam">r</span><span class="op">.</span
           ><span class="nam">id</span><span class="op">:</span>
@@ -641,8 +648,8 @@
           ><span class="op">.</span><span class="nam">id</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t80" class="pln">
-        <span class="n"><a href="#t80">80</a></span
+      <p id="t81" class="pln">
+        <span class="n"><a href="#t81">81</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">r</span>
           <span class="key">in</span> <span class="nam">model</span
@@ -650,8 +657,8 @@
           ><span class="nam">exchanges</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t81" class="pln">
-        <span class="n"><a href="#t81">81</a></span
+      <p id="t82" class="pln">
+        <span class="n"><a href="#t82">82</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">r</span
           ><span class="op">.</span><span class="nam">reactants</span
@@ -661,31 +668,31 @@
           <span class="nam">met_names</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t82" class="pln">
-        <span class="n"><a href="#t82">82</a></span
+      <p id="t83" class="pln">
+        <span class="n"><a href="#t83">83</a></span
         ><span class="t"> <span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t83" class="pln">
-        <span class="n"><a href="#t83">83</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
       <p id="t84" class="pln">
         <span class="n"><a href="#t84">84</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t85" class="pln">
+        <span class="n"><a href="#t85">85</a></span
         ><span class="t">
           <span class="com"
             >## Create storage for timeseries of models and solutions</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t85" class="pln">
-        <span class="n"><a href="#t85">85</a></span
+      <p id="t86" class="pln">
+        <span class="n"><a href="#t86">86</a></span
         ><span class="t">
           <span class="com"># Model time series</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t86" class="run">
-        <span class="n"><a href="#t86">86</a></span
+      <p id="t87" class="run">
+        <span class="n"><a href="#t87">87</a></span
         ><span class="t">
           <span class="nam">model_TS</span> <span class="op">=</span>
           <span class="nam">pd</span><span class="op">.</span
@@ -694,14 +701,14 @@
           ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t87" class="pln">
-        <span class="n"><a href="#t87">87</a></span
+      <p id="t88" class="pln">
+        <span class="n"><a href="#t88">88</a></span
         ><span class="t">
           <span class="com"># Solution time series</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t88" class="run">
-        <span class="n"><a href="#t88">88</a></span
+      <p id="t89" class="run">
+        <span class="n"><a href="#t89">89</a></span
         ><span class="t">
           <span class="nam">solution_TS</span> <span class="op">=</span>
           <span class="nam">pd</span><span class="op">.</span
@@ -710,63 +717,84 @@
           ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t89" class="pln">
-        <span class="n"><a href="#t89">89</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
       <p id="t90" class="pln">
         <span class="n"><a href="#t90">90</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t91" class="pln">
+        <span class="n"><a href="#t91">91</a></span
         ><span class="t">
           <span class="com"
-            >## Main for loop solving the model for each time step and adding
-            the corresponding OD and external metabolites created</span
+            >## Main for loop solving the model for each time step and
+            adding</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t91" class="run">
-        <span class="n"><a href="#t91">91</a></span
+      <p id="t92" class="pln">
+        <span class="n"><a href="#t92">92</a></span
         ><span class="t">
-          <span class="nam">volume</span> <span class="op">=</span>
-          <span class="num">1.0</span>
+          <span class="com"
+            ># the corresponding OD and external metabolites created</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t93" class="pln">
+        <span class="n"><a href="#t93">93</a></span
+        ><span class="t">
           <span class="com"
             ># volume set arbitrarily to one because the system is
             extensive</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t92" class="run">
-        <span class="n"><a href="#t92">92</a></span
-        ><span class="t">
-          <span class="key">for</span> <span class="nam">t</span>
-          <span class="key">in</span> <span class="op">[</span
-          ><span class="num">0.0</span><span class="op">,</span>
-          <span class="num">1.0</span><span class="op">,</span>
-          <span class="num">2.0</span><span class="op">]</span
-          ><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t93" class="pln">
-        <span class="n"><a href="#t93">93</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t94" class="pln">
+      <p id="t94" class="run">
         <span class="n"><a href="#t94">94</a></span
         ><span class="t">
-          <span class="com"
-            ># Adding constraints for each time point without permanent changes
-            to the model</span
-          >&nbsp;</span
+          <span class="nam">volume</span> <span class="op">=</span>
+          <span class="num">1.0</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t95" class="run">
         <span class="n"><a href="#t95">95</a></span
         ><span class="t">
+          <span class="key">for</span> <span class="nam">t</span>
+          <span class="key">in</span> <span class="nam">tspan</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t96" class="pln">
+        <span class="n"><a href="#t96">96</a></span
+        ><span class="t">
+          <span class="com"># for t in [0.0, 1.0, 2.0]:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t97" class="pln">
+        <span class="n"><a href="#t97">97</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t98" class="pln">
+        <span class="n"><a href="#t98">98</a></span
+        ><span class="t">
+          <span class="com"
+            ># Adding constraints for each time point without</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t99" class="pln">
+        <span class="n"><a href="#t99">99</a></span
+        ><span class="t">
+          <span class="com"># permanent changes to the model</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t100" class="run">
+        <span class="n"><a href="#t100">100</a></span
+        ><span class="t">
           <span class="key">with</span> <span class="nam">model</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t96" class="run">
-        <span class="n"><a href="#t96">96</a></span
+      <p id="t101" class="run">
+        <span class="n"><a href="#t101">101</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">rxn</span
           ><span class="op">,</span> <span class="nam">met</span>
@@ -776,25 +804,30 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t97" class="pln">
-        <span class="n"><a href="#t97">97</a></span
+      <p id="t102" class="pln">
+        <span class="n"><a href="#t102">102</a></span
         ><span class="t">
           <span class="com"
-            ># For each exchange reaction set lower bound such that the
-            corresponding</span
+            ># For each exchange reaction set lower bound such</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t98" class="pln">
-        <span class="n"><a href="#t98">98</a></span
+      <p id="t103" class="pln">
+        <span class="n"><a href="#t103">103</a></span
+        ><span class="t">
+          <span class="com"># that the corresponding</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t104" class="pln">
+        <span class="n"><a href="#t104">104</a></span
         ><span class="t">
           <span class="com"
             ># external metabolite concentration does not become negative</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t99" class="run">
-        <span class="n"><a href="#t99">99</a></span
+      <p id="t105" class="run">
+        <span class="n"><a href="#t105">105</a></span
         ><span class="t">
           <span class="nam">model</span><span class="op">.</span
           ><span class="nam">reactions</span><span class="op">.</span
@@ -805,8 +838,8 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t100" class="pln">
-        <span class="n"><a href="#t100">100</a></span
+      <p id="t106" class="pln">
+        <span class="n"><a href="#t106">106</a></span
         ><span class="t">
           <span class="nam">model</span><span class="op">.</span
           ><span class="nam">reactions</span><span class="op">.</span
@@ -816,8 +849,8 @@
           ><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t101" class="pln">
-        <span class="n"><a href="#t101">101</a></span
+      <p id="t107" class="pln">
+        <span class="n"><a href="#t107">107</a></span
         ><span class="t">
           <span class="op">-</span><span class="nam">Emets</span
           ><span class="op">.</span><span class="nam">loc</span
@@ -831,23 +864,23 @@
           ><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t102" class="pln">
-        <span class="n"><a href="#t102">102</a></span
+      <p id="t108" class="pln">
+        <span class="n"><a href="#t108">108</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t103" class="pln">
-        <span class="n"><a href="#t103">103</a></span
+      <p id="t109" class="pln">
+        <span class="n"><a href="#t109">109</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t104" class="pln">
-        <span class="n"><a href="#t104">104</a></span
+      <p id="t110" class="pln">
+        <span class="n"><a href="#t110">110</a></span
         ><span class="t">
           <span class="com"># Calculate fluxes</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t105" class="run">
-        <span class="n"><a href="#t105">105</a></span
+      <p id="t111" class="run">
+        <span class="n"><a href="#t111">111</a></span
         ><span class="t">
           <span class="nam">solution_t</span> <span class="op">=</span>
           <span class="nam">model</span><span class="op">.</span
@@ -855,21 +888,26 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t106" class="pln">
-        <span class="n"><a href="#t106">106</a></span
+      <p id="t112" class="pln">
+        <span class="n"><a href="#t112">112</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t107" class="pln">
-        <span class="n"><a href="#t107">107</a></span
+      <p id="t113" class="pln">
+        <span class="n"><a href="#t113">113</a></span
         ><span class="t">
           <span class="com"
-            ># Store the solution and model for each timepoint for future use
-            (e.g. MOMA)</span
+            ># Store the solution and model for each timepoint</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t108" class="run">
-        <span class="n"><a href="#t108">108</a></span
+      <p id="t114" class="pln">
+        <span class="n"><a href="#t114">114</a></span
+        ><span class="t">
+          <span class="com"># for future use (e.g. MOMA)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t115" class="run">
+        <span class="n"><a href="#t115">115</a></span
         ><span class="t">
           <span class="nam">solution_TS</span><span class="op">[</span
           ><span class="nam">t</span><span class="op">]</span>
@@ -877,8 +915,8 @@
           <span class="nam">solution_t</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t109" class="run">
-        <span class="n"><a href="#t109">109</a></span
+      <p id="t116" class="run">
+        <span class="n"><a href="#t116">116</a></span
         ><span class="t">
           <span class="nam">model_TS</span><span class="op">[</span
           ><span class="nam">t</span><span class="op">]</span>
@@ -887,54 +925,26 @@
           ><span class="op">(</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t110" class="pln">
-        <span class="n"><a href="#t110">110</a></span
+      <p id="t117" class="pln">
+        <span class="n"><a href="#t117">117</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t111" class="pln">
-        <span class="n"><a href="#t111">111</a></span
+      <p id="t118" class="pln">
+        <span class="n"><a href="#t118">118</a></span
         ><span class="t">
           <span class="com"
-            ># Calculate OD and external metabolite concentrations for next time
-            point t+delta</span
+            ># Calculate OD and external metabolite concentrations</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t112" class="run">
-        <span class="n"><a href="#t112">112</a></span
+      <p id="t119" class="pln">
+        <span class="n"><a href="#t119">119</a></span
         ><span class="t">
-          <span class="nam">cell_ret</span><span class="op">,</span>
-          <span class="nam">Emets_ret</span> <span class="op">=</span>
-          <span class="nam">advance_OD_Emets</span
-          ><span class="op">(</span>&nbsp;</span
+          <span class="com"># for next time point t+delta</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t113" class="pln">
-        <span class="n"><a href="#t113">113</a></span
-        ><span class="t">
-          <span class="nam">Erxn2Emet</span><span class="op">,</span>
-          <span class="nam">cell</span><span class="op">[</span
-          ><span class="nam">t</span><span class="op">]</span
-          ><span class="op">,</span> <span class="nam">Emets</span
-          ><span class="op">.</span><span class="nam">loc</span
-          ><span class="op">[</span><span class="nam">t</span
-          ><span class="op">]</span><span class="op">,</span>
-          <span class="nam">delt</span><span class="op">,</span>
-          <span class="nam">solution_t</span><span class="op">,</span>
-          <span class="nam">user_params</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t114" class="pln">
-        <span class="n"><a href="#t114">114</a></span
-        ><span class="t"> <span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t115" class="pln">
-        <span class="n"><a href="#t115">115</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t116" class="run">
-        <span class="n"><a href="#t116">116</a></span
+      <p id="t120" class="run">
+        <span class="n"><a href="#t120">120</a></span
         ><span class="t">
           <span class="nam">cell</span><span class="op">[</span
           ><span class="nam">t</span> <span class="op">+</span>
@@ -948,8 +958,8 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t117" class="pln">
-        <span class="n"><a href="#t117">117</a></span
+      <p id="t121" class="pln">
+        <span class="n"><a href="#t121">121</a></span
         ><span class="t">
           <span class="nam">Erxn2Emet</span><span class="op">,</span>
           <span class="nam">cell</span><span class="op">[</span
@@ -963,23 +973,23 @@
           <span class="nam">user_params</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t118" class="pln">
-        <span class="n"><a href="#t118">118</a></span
+      <p id="t122" class="pln">
+        <span class="n"><a href="#t122">122</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t119" class="pln">
-        <span class="n"><a href="#t119">119</a></span
+      <p id="t123" class="pln">
+        <span class="n"><a href="#t123">123</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t120" class="run">
-        <span class="n"><a href="#t120">120</a></span
+      <p id="t124" class="run">
+        <span class="n"><a href="#t124">124</a></span
         ><span class="t">
           <span class="nam">print</span><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t121" class="pln">
-        <span class="n"><a href="#t121">121</a></span
+      <p id="t125" class="pln">
+        <span class="n"><a href="#t125">125</a></span
         ><span class="t">
           <span class="nam">t</span><span class="op">,</span>
           <span class="nam">solution_t</span><span class="op">.</span
@@ -990,19 +1000,19 @@
           ><span class="op">]</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t122" class="pln">
-        <span class="n"><a href="#t122">122</a></span
+      <p id="t126" class="pln">
+        <span class="n"><a href="#t126">126</a></span
         ><span class="t">
           <span class="op">)</span>
           <span class="com"># Minimum output for testing</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t123" class="pln">
-        <span class="n"><a href="#t123">123</a></span
+      <p id="t127" class="pln">
+        <span class="n"><a href="#t127">127</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t124" class="run">
-        <span class="n"><a href="#t124">124</a></span
+      <p id="t128" class="run">
+        <span class="n"><a href="#t128">128</a></span
         ><span class="t">
           <span class="key">return</span> <span class="nam">solution_TS</span
           ><span class="op">,</span> <span class="nam">model_TS</span
@@ -1012,151 +1022,198 @@
           <span class="nam">Erxn2Emet</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t125" class="pln">
-        <span class="n"><a href="#t125">125</a></span
+      <p id="t129" class="pln">
+        <span class="n"><a href="#t129">129</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t126" class="pln">
-        <span class="n"><a href="#t126">126</a></span
+      <p id="t130" class="pln">
+        <span class="n"><a href="#t130">130</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t127" class="run">
-        <span class="n"><a href="#t127">127</a></span
+      <p id="t131" class="run">
+        <span class="n"><a href="#t131">131</a></span
         ><span class="t"
           ><span class="key">def</span> <span class="nam">advance_OD_Emets</span
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t128" class="pln">
-        <span class="n"><a href="#t128">128</a></span
+      <p id="t132" class="pln">
+        <span class="n"><a href="#t132">132</a></span
         ><span class="t">
-          <span class="nam">Erxn2Emet</span><span class="op">,</span>
-          <span class="nam">old_cell</span><span class="op">,</span>
-          <span class="nam">old_Emets</span><span class="op">,</span>
-          <span class="nam">delt</span><span class="op">,</span>
-          <span class="nam">solution</span><span class="op">,</span>
-          <span class="nam">user_params</span><span class="op">,</span>
-          <span class="nam">debug</span><span class="op">=</span
-          ><span class="key">False</span>&nbsp;</span
+          <span class="nam">Erxn2Emet</span
+          ><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t129" class="pln">
-        <span class="n"><a href="#t129">129</a></span
+      <p id="t133" class="pln">
+        <span class="n"><a href="#t133">133</a></span
+        ><span class="t">
+          <span class="nam">old_cell</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t134" class="pln">
+        <span class="n"><a href="#t134">134</a></span
+        ><span class="t">
+          <span class="nam">old_Emets</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t135" class="pln">
+        <span class="n"><a href="#t135">135</a></span
+        ><span class="t">
+          <span class="nam">delt</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t136" class="pln">
+        <span class="n"><a href="#t136">136</a></span
+        ><span class="t">
+          <span class="nam">solution</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t137" class="pln">
+        <span class="n"><a href="#t137">137</a></span
+        ><span class="t">
+          <span class="nam">user_params</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t138" class="pln">
+        <span class="n"><a href="#t138">138</a></span
+        ><span class="t">
+          <span class="nam">timestep</span><span class="op">=</span
+          ><span class="key">None</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t139" class="pln">
+        <span class="n"><a href="#t139">139</a></span
+        ><span class="t">
+          <span class="nam">debug</span><span class="op">=</span
+          ><span class="key">False</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t140" class="pln">
+        <span class="n"><a href="#t140">140</a></span
         ><span class="t"
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t130" class="pln">
-        <span class="n"><a href="#t130">130</a></span
+      <p id="t141" class="pln">
+        <span class="n"><a href="#t141">141</a></span
         ><span class="t"> <span class="str">"""</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t131" class="pln">
-        <span class="n"><a href="#t131">131</a></span
+      <p id="t142" class="pln">
+        <span class="n"><a href="#t142">142</a></span
         ><span class="t"
           ><span class="str">
             Get the concentration of the external metabolites over time</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t132" class="pln">
-        <span class="n"><a href="#t132">132</a></span
+      <p id="t143" class="pln">
+        <span class="n"><a href="#t143">143</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t133" class="pln">
-        <span class="n"><a href="#t133">133</a></span
+      <p id="t144" class="pln">
+        <span class="n"><a href="#t144">144</a></span
         ><span class="t"><span class="str"> :param Erxn2Emet:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t134" class="pln">
-        <span class="n"><a href="#t134">134</a></span
+      <p id="t145" class="pln">
+        <span class="n"><a href="#t145">145</a></span
         ><span class="t"><span class="str"> :param old_cell:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t135" class="pln">
-        <span class="n"><a href="#t135">135</a></span
+      <p id="t146" class="pln">
+        <span class="n"><a href="#t146">146</a></span
         ><span class="t"><span class="str"> :param old_Emets:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t136" class="pln">
-        <span class="n"><a href="#t136">136</a></span
+      <p id="t147" class="pln">
+        <span class="n"><a href="#t147">147</a></span
         ><span class="t"><span class="str"> :param delt:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t137" class="pln">
-        <span class="n"><a href="#t137">137</a></span
+      <p id="t148" class="pln">
+        <span class="n"><a href="#t148">148</a></span
         ><span class="t"><span class="str"> :param solution:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t138" class="pln">
-        <span class="n"><a href="#t138">138</a></span
+      <p id="t149" class="pln">
+        <span class="n"><a href="#t149">149</a></span
         ><span class="t"
           ><span class="str"> :param user_params:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t139" class="pln">
-        <span class="n"><a href="#t139">139</a></span
+      <p id="t150" class="pln">
+        <span class="n"><a href="#t150">150</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t140" class="pln">
-        <span class="n"><a href="#t140">140</a></span
+      <p id="t151" class="pln">
+        <span class="n"><a href="#t151">151</a></span
         ><span class="t"><span class="str"> :return</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t141" class="pln">
-        <span class="n"><a href="#t141">141</a></span
+      <p id="t152" class="pln">
+        <span class="n"><a href="#t152">152</a></span
         ><span class="t"><span class="str"> :new_cell:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t142" class="pln">
-        <span class="n"><a href="#t142">142</a></span
+      <p id="t153" class="pln">
+        <span class="n"><a href="#t153">153</a></span
         ><span class="t"><span class="str"> :new_Emets:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t143" class="pln">
-        <span class="n"><a href="#t143">143</a></span
+      <p id="t154" class="pln">
+        <span class="n"><a href="#t154">154</a></span
         ><span class="t"><span class="str"> """</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t144" class="pln">
-        <span class="n"><a href="#t144">144</a></span
+      <p id="t155" class="pln">
+        <span class="n"><a href="#t155">155</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t145" class="pln">
-        <span class="n"><a href="#t145">145</a></span
+      <p id="t156" class="pln">
+        <span class="n"><a href="#t156">156</a></span
         ><span class="t">
-          <span class="com"
-            ># Output is same as input if nothing happens in the if clause</span
+          <span class="com"># Output is same as input if nothing happens</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t146" class="run">
-        <span class="n"><a href="#t146">146</a></span
+      <p id="t157" class="pln">
+        <span class="n"><a href="#t157">157</a></span
+        ><span class="t">
+          <span class="com"
+            ># in the if solution_status == "optimal" and mu > 1e-6 clause</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t158" class="run">
+        <span class="n"><a href="#t158">158</a></span
         ><span class="t">
           <span class="nam">new_cell</span> <span class="op">=</span>
           <span class="nam">old_cell</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t147" class="run">
-        <span class="n"><a href="#t147">147</a></span
+      <p id="t159" class="run">
+        <span class="n"><a href="#t159">159</a></span
         ><span class="t">
           <span class="nam">new_Emets</span> <span class="op">=</span>
           <span class="nam">old_Emets</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t148" class="pln">
-        <span class="n"><a href="#t148">148</a></span
+      <p id="t160" class="pln">
+        <span class="n"><a href="#t160">160</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t149" class="pln">
-        <span class="n"><a href="#t149">149</a></span
+      <p id="t161" class="pln">
+        <span class="n"><a href="#t161">161</a></span
         ><span class="t">
           <span class="com"># Obtain the value of mu (growth rate)</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t150" class="run">
-        <span class="n"><a href="#t150">150</a></span
+      <p id="t162" class="run">
+        <span class="n"><a href="#t162">162</a></span
         ><span class="t">
           <span class="nam">mu</span> <span class="op">=</span>
           <span class="nam">solution</span><span class="op">[</span
@@ -1165,12 +1222,12 @@
           ><span class="op">]</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t151" class="pln">
-        <span class="n"><a href="#t151">151</a></span
+      <p id="t163" class="pln">
+        <span class="n"><a href="#t163">163</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t152" class="pln">
-        <span class="n"><a href="#t152">152</a></span
+      <p id="t164" class="pln">
+        <span class="n"><a href="#t164">164</a></span
         ><span class="t">
           <span class="com"
             ># Calculate OD and external metabolite concentrations for next
@@ -1178,24 +1235,29 @@
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t153" class="pln">
-        <span class="n"><a href="#t153">153</a></span
+      <p id="t165" class="pln">
+        <span class="n"><a href="#t165">165</a></span
         ><span class="t">
           <span class="com"
-            ># Update only if solution is optimal and mu is not zero, otherwise
-            do not update</span
+            ># Update only if solution is optimal and mu is not zero,</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t154" class="run">
-        <span class="n"><a href="#t154">154</a></span
+      <p id="t166" class="pln">
+        <span class="n"><a href="#t166">166</a></span
+        ><span class="t">
+          <span class="com"># otherwise do not update</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t167" class="run">
+        <span class="n"><a href="#t167">167</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">debug</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t155" class="run">
-        <span class="n"><a href="#t155">155</a></span
+      <p id="t168" class="run">
+        <span class="n"><a href="#t168">168</a></span
         ><span class="t">
           <span class="nam">solution_status</span> <span class="op">=</span>
           <span class="nam">solution</span><span class="op">[</span
@@ -1203,26 +1265,26 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t156" class="pln">
-        <span class="n"><a href="#t156">156</a></span
+      <p id="t169" class="pln">
+        <span class="n"><a href="#t169">169</a></span
         ><span class="t">
           <span class="key">else</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t157" class="run">
-        <span class="n"><a href="#t157">157</a></span
+      <p id="t170" class="run">
+        <span class="n"><a href="#t170">170</a></span
         ><span class="t">
           <span class="nam">solution_status</span> <span class="op">=</span>
           <span class="nam">solution</span><span class="op">.</span
           ><span class="nam">status</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t158" class="pln">
-        <span class="n"><a href="#t158">158</a></span
+      <p id="t171" class="pln">
+        <span class="n"><a href="#t171">171</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t159" class="run">
-        <span class="n"><a href="#t159">159</a></span
+      <p id="t172" class="run">
+        <span class="n"><a href="#t172">172</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">solution_status</span>
           <span class="op">==</span> <span class="str">"optimal"</span>
@@ -1231,15 +1293,15 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t160" class="pln">
-        <span class="n"><a href="#t160">160</a></span
+      <p id="t173" class="pln">
+        <span class="n"><a href="#t173">173</a></span
         ><span class="t">
           <span class="com"># Calculating next time point's OD</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t161" class="run">
-        <span class="n"><a href="#t161">161</a></span
+      <p id="t174" class="run">
+        <span class="n"><a href="#t174">174</a></span
         ><span class="t">
           <span class="nam">new_cell</span> <span class="op">=</span>
           <span class="nam">old_cell</span> <span class="op">*</span>
@@ -1249,17 +1311,22 @@
           <span class="nam">delt</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t162" class="pln">
-        <span class="n"><a href="#t162">162</a></span
+      <p id="t175" class="pln">
+        <span class="n"><a href="#t175">175</a></span
         ><span class="t">
           <span class="com"
-            ># Calculating external external metabolite concentrations for next
-            time point</span
+            ># Calculating external external metabolite concentrations</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t163" class="run">
-        <span class="n"><a href="#t163">163</a></span
+      <p id="t176" class="pln">
+        <span class="n"><a href="#t176">176</a></span
+        ><span class="t">
+          <span class="com"># for next time point</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t177" class="run">
+        <span class="n"><a href="#t177">177</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">rxn</span
           ><span class="op">,</span> <span class="nam">met</span>
@@ -1269,8 +1336,8 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t164" class="run">
-        <span class="n"><a href="#t164">164</a></span
+      <p id="t178" class="run">
+        <span class="n"><a href="#t178">178</a></span
         ><span class="t">
           <span class="nam">new_Emets</span><span class="op">[</span
           ><span class="nam">met</span><span class="op">]</span>
@@ -1278,16 +1345,16 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t165" class="pln">
-        <span class="n"><a href="#t165">165</a></span
+      <p id="t179" class="pln">
+        <span class="n"><a href="#t179">179</a></span
         ><span class="t">
           <span class="nam">old_Emets</span><span class="op">.</span
           ><span class="nam">loc</span><span class="op">[</span
           ><span class="nam">met</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t166" class="pln">
-        <span class="n"><a href="#t166">166</a></span
+      <p id="t180" class="pln">
+        <span class="n"><a href="#t180">180</a></span
         ><span class="t">
           <span class="op">-</span> <span class="nam">solution</span
           ><span class="op">[</span><span class="nam">rxn</span
@@ -1303,39 +1370,39 @@
           ><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t167" class="pln">
-        <span class="n"><a href="#t167">167</a></span
+      <p id="t181" class="pln">
+        <span class="n"><a href="#t181">181</a></span
         ><span class="t">
           <span class="num">0.0</span><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t168" class="pln">
-        <span class="n"><a href="#t168">168</a></span
+      <p id="t182" class="pln">
+        <span class="n"><a href="#t182">182</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t169" class="pln">
-        <span class="n"><a href="#t169">169</a></span
+      <p id="t183" class="pln">
+        <span class="n"><a href="#t183">183</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t170" class="run">
-        <span class="n"><a href="#t170">170</a></span
+      <p id="t184" class="run">
+        <span class="n"><a href="#t184">184</a></span
         ><span class="t">
           <span class="key">return</span> <span class="nam">new_cell</span
           ><span class="op">,</span>
           <span class="nam">new_Emets</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t171" class="pln">
-        <span class="n"><a href="#t171">171</a></span
+      <p id="t185" class="pln">
+        <span class="n"><a href="#t185">185</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t172" class="pln">
-        <span class="n"><a href="#t172">172</a></span
+      <p id="t186" class="pln">
+        <span class="n"><a href="#t186">186</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t173" class="run">
-        <span class="n"><a href="#t173">173</a></span
+      <p id="t187" class="run">
+        <span class="n"><a href="#t187">187</a></span
         ><span class="t"
           ><span class="key">def</span> <span class="nam">getBEFluxes</span
           ><span class="op">(</span><span class="nam">model_TS</span
@@ -1345,155 +1412,61 @@
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t174" class="pln">
-        <span class="n"><a href="#t174">174</a></span
+      <p id="t188" class="pln">
+        <span class="n"><a href="#t188">188</a></span
         ><span class="t"> <span class="str">"""</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t175" class="pln">
-        <span class="n"><a href="#t175">175</a></span
+      <p id="t189" class="pln">
+        <span class="n"><a href="#t189">189</a></span
         ><span class="t"
           ><span class="str">
             Get the fluxes for the bio-engineered strains</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t176" class="pln">
-        <span class="n"><a href="#t176">176</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t177" class="pln">
-        <span class="n"><a href="#t177">177</a></span
-        ><span class="t"><span class="str"> :param model_TS:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t178" class="pln">
-        <span class="n"><a href="#t178">178</a></span
-        ><span class="t"><span class="str"> :param design:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t179" class="pln">
-        <span class="n"><a href="#t179">179</a></span
-        ><span class="t"
-          ><span class="str"> :param solution_TS:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t180" class="pln">
-        <span class="n"><a href="#t180">180</a></span
-        ><span class="t"><span class="str"> :param grid:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t181" class="pln">
-        <span class="n"><a href="#t181">181</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t182" class="pln">
-        <span class="n"><a href="#t182">182</a></span
-        ><span class="t"><span class="str"> :return</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t183" class="pln">
-        <span class="n"><a href="#t183">183</a></span
-        ><span class="t"><span class="str"> :solutionsMOMA_TS</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t184" class="pln">
-        <span class="n"><a href="#t184">184</a></span
-        ><span class="t"><span class="str"> """</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t185" class="pln">
-        <span class="n"><a href="#t185">185</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t186" class="pln">
-        <span class="n"><a href="#t186">186</a></span
-        ><span class="t">
-          <span class="com">## Unpacking time points grid</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t187" class="mis show_mis">
-        <span class="n"><a href="#t187">187</a></span
-        ><span class="t">
-          <span class="nam">tspan</span><span class="op">,</span>
-          <span class="nam">delt</span> <span class="op">=</span>
-          <span class="nam">grid</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t188" class="pln">
-        <span class="n"><a href="#t188">188</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t189" class="pln">
-        <span class="n"><a href="#t189">189</a></span
-        ><span class="t">
-          <span class="com">## Parameters for flux constraints</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t190" class="mis show_mis">
+      <p id="t190" class="pln">
         <span class="n"><a href="#t190">190</a></span
-        ><span class="t">
-          <span class="nam">high</span> <span class="op">=</span>
-          <span class="num">1.1</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t191" class="mis show_mis">
+      <p id="t191" class="pln">
         <span class="n"><a href="#t191">191</a></span
-        ><span class="t">
-          <span class="nam">low</span> <span class="op">=</span>
-          <span class="num">0.50</span>&nbsp;</span
+        ><span class="t"><span class="str"> :param model_TS:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t192" class="pln">
         <span class="n"><a href="#t192">192</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
+        ><span class="t"><span class="str"> :param design:</span>&nbsp;</span
+        ><span class="r"></span>
       </p>
       <p id="t193" class="pln">
         <span class="n"><a href="#t193">193</a></span
-        ><span class="t">
-          <span class="com">## Unpack information for desired flux changes</span
-          >&nbsp;</span
+        ><span class="t"
+          ><span class="str"> :param solution_TS:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t194" class="pln">
         <span class="n"><a href="#t194">194</a></span
-        ><span class="t">
-          <span class="com"># Get names for reaction targets</span>&nbsp;</span
+        ><span class="t"><span class="str"> :param grid:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t195" class="mis show_mis">
+      <p id="t195" class="pln">
         <span class="n"><a href="#t195">195</a></span
-        ><span class="t">
-          <span class="nam">reaction_names</span> <span class="op">=</span>
-          <span class="nam">list</span><span class="op">(</span
-          ><span class="nam">design</span><span class="op">.</span
-          ><span class="nam">index</span><span class="op">[</span
-          ><span class="num">1</span><span class="op">:</span
-          ><span class="op">]</span><span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
       <p id="t196" class="pln">
         <span class="n"><a href="#t196">196</a></span
-        ><span class="t">
-          <span class="com"
-            ># Find number of target reactions and number of designs (or strains
-            changed)</span
-          >&nbsp;</span
+        ><span class="t"><span class="str"> :return</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t197" class="pln">
         <span class="n"><a href="#t197">197</a></span
-        ><span class="t">
-          <span class="com"># n_reactions = design.shape[1] - 1</span
-          >&nbsp;</span
+        ><span class="t"><span class="str"> :solutionsMOMA_TS</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t198" class="pln">
         <span class="n"><a href="#t198">198</a></span
-        ><span class="t">
-          <span class="com"># n_instances = design.shape[0] - 1</span
-          >&nbsp;</span
+        ><span class="t"><span class="str"> """</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t199" class="pln">
@@ -1503,20 +1476,15 @@
       <p id="t200" class="pln">
         <span class="n"><a href="#t200">200</a></span
         ><span class="t">
-          <span class="com"
-            >## Time series containing the flux solution obtained through
-            MOMA</span
-          >&nbsp;</span
+          <span class="com">## Unpacking time points grid</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t201" class="mis show_mis">
         <span class="n"><a href="#t201">201</a></span
         ><span class="t">
-          <span class="nam">solutionsMOMA_TS</span> <span class="op">=</span>
-          <span class="nam">pd</span><span class="op">.</span
-          ><span class="nam">Series</span><span class="op">(</span
-          ><span class="nam">index</span><span class="op">=</span
-          ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
+          <span class="nam">tspan</span><span class="op">,</span>
+          <span class="nam">delt</span> <span class="op">=</span>
+          <span class="nam">grid</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t202" class="pln">
@@ -1526,70 +1494,180 @@
       <p id="t203" class="pln">
         <span class="n"><a href="#t203">203</a></span
         ><span class="t">
-          <span class="com"
-            >## Main loop: for each strain and at each time point, find new flux
-            profile through MOMA</span
+          <span class="com">## Parameters for flux constraints</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t204" class="pln">
+      <p id="t204" class="mis show_mis">
         <span class="n"><a href="#t204">204</a></span
         ><span class="t">
-          <span class="com"># for i in range(0,n_instances):</span>&nbsp;</span
+          <span class="nam">high</span> <span class="op">=</span>
+          <span class="num">1.1</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t205" class="mis show_mis">
         <span class="n"><a href="#t205">205</a></span
+        ><span class="t">
+          <span class="nam">low</span> <span class="op">=</span>
+          <span class="num">0.50</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t206" class="pln">
+        <span class="n"><a href="#t206">206</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t207" class="pln">
+        <span class="n"><a href="#t207">207</a></span
+        ><span class="t">
+          <span class="com"># Unpack information for desired flux changes</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t208" class="pln">
+        <span class="n"><a href="#t208">208</a></span
+        ><span class="t">
+          <span class="com"># Get names for reaction targets</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t209" class="mis show_mis">
+        <span class="n"><a href="#t209">209</a></span
+        ><span class="t">
+          <span class="nam">reaction_names</span> <span class="op">=</span>
+          <span class="nam">list</span><span class="op">(</span
+          ><span class="nam">design</span><span class="op">.</span
+          ><span class="nam">index</span><span class="op">[</span
+          ><span class="num">1</span><span class="op">:</span
+          ><span class="op">]</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t210" class="pln">
+        <span class="n"><a href="#t210">210</a></span
+        ><span class="t">
+          <span class="com"
+            ># Find number of target reactions and number of designs (or strains
+            changed)</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t211" class="pln">
+        <span class="n"><a href="#t211">211</a></span
+        ><span class="t">
+          <span class="com"># n_reactions = design.shape[1] - 1</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t212" class="pln">
+        <span class="n"><a href="#t212">212</a></span
+        ><span class="t">
+          <span class="com"># n_instances = design.shape[0] - 1</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t213" class="pln">
+        <span class="n"><a href="#t213">213</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t214" class="pln">
+        <span class="n"><a href="#t214">214</a></span
+        ><span class="t">
+          <span class="com"
+            ># Time series containing the flux solution obtained through
+            MOMA</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t215" class="mis show_mis">
+        <span class="n"><a href="#t215">215</a></span
+        ><span class="t">
+          <span class="nam">solutionsMOMA_TS</span> <span class="op">=</span>
+          <span class="nam">pd</span><span class="op">.</span
+          ><span class="nam">Series</span><span class="op">(</span
+          ><span class="nam">index</span><span class="op">=</span
+          ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t216" class="pln">
+        <span class="n"><a href="#t216">216</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t217" class="pln">
+        <span class="n"><a href="#t217">217</a></span
+        ><span class="t">
+          <span class="com"
+            ># Main loop: for each strain and at each time point,</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t218" class="pln">
+        <span class="n"><a href="#t218">218</a></span
+        ><span class="t">
+          <span class="com"># find new flux profile through MOMA</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t219" class="pln">
+        <span class="n"><a href="#t219">219</a></span
+        ><span class="t">
+          <span class="com"># for i in range(0,n_instances):</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t220" class="mis show_mis">
+        <span class="n"><a href="#t220">220</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">t</span>
           <span class="key">in</span> <span class="nam">tspan</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t206" class="mis show_mis">
-        <span class="n"><a href="#t206">206</a></span
+      <p id="t221" class="mis show_mis">
+        <span class="n"><a href="#t221">221</a></span
         ><span class="t">
           <span class="nam">model</span> <span class="op">=</span>
           <span class="nam">model_TS</span><span class="op">[</span
           ><span class="nam">t</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t207" class="mis show_mis">
-        <span class="n"><a href="#t207">207</a></span
+      <p id="t222" class="pln">
+        <span class="n"><a href="#t222">222</a></span
         ><span class="t">
-          <span class="nam">sol1</span> <span class="op">=</span>
-          <span class="nam">solution_TS</span><span class="op">[</span
-          ><span class="nam">t</span><span class="op">]</span>
           <span class="com"
             ># Reference solution calculated for each time point</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t208" class="mis show_mis">
-        <span class="n"><a href="#t208">208</a></span
+      <p id="t223" class="mis show_mis">
+        <span class="n"><a href="#t223">223</a></span
+        ><span class="t">
+          <span class="nam">sol1</span> <span class="op">=</span>
+          <span class="nam">solution_TS</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t224" class="mis show_mis">
+        <span class="n"><a href="#t224">224</a></span
         ><span class="t">
           <span class="key">with</span> <span class="nam">model</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t209" class="pln">
-        <span class="n"><a href="#t209">209</a></span
+      <p id="t225" class="pln">
+        <span class="n"><a href="#t225">225</a></span
         ><span class="t">
           <span class="com"
             ># Adding the fluxed modifications for chosen reactions</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t210" class="mis show_mis">
-        <span class="n"><a href="#t210">210</a></span
+      <p id="t226" class="mis show_mis">
+        <span class="n"><a href="#t226">226</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">reaction</span>
           <span class="key">in</span> <span class="nam">reaction_names</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t211" class="mis show_mis">
-        <span class="n"><a href="#t211">211</a></span
+      <p id="t227" class="mis show_mis">
+        <span class="n"><a href="#t227">227</a></span
         ><span class="t">
           <span class="nam">flux</span> <span class="op">=</span>
           <span class="nam">sol1</span><span class="op">.</span
@@ -1598,48 +1676,48 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t212" class="mis show_mis">
-        <span class="n"><a href="#t212">212</a></span
+      <p id="t228" class="mis show_mis">
+        <span class="n"><a href="#t228">228</a></span
         ><span class="t">
           <span class="nam">lbcoeff</span> <span class="op">=</span>
           <span class="nam">low</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t213" class="mis show_mis">
-        <span class="n"><a href="#t213">213</a></span
+      <p id="t229" class="mis show_mis">
+        <span class="n"><a href="#t229">229</a></span
         ><span class="t">
           <span class="nam">ubcoeff</span> <span class="op">=</span>
           <span class="nam">high</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t214" class="mis show_mis">
-        <span class="n"><a href="#t214">214</a></span
+      <p id="t230" class="mis show_mis">
+        <span class="n"><a href="#t230">230</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">flux</span>
           <span class="op">&lt;</span> <span class="num">0</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t215" class="mis show_mis">
-        <span class="n"><a href="#t215">215</a></span
+      <p id="t231" class="mis show_mis">
+        <span class="n"><a href="#t231">231</a></span
         ><span class="t">
           <span class="nam">lbcoeff</span> <span class="op">=</span>
           <span class="nam">high</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t216" class="mis show_mis">
-        <span class="n"><a href="#t216">216</a></span
+      <p id="t232" class="mis show_mis">
+        <span class="n"><a href="#t232">232</a></span
         ><span class="t">
           <span class="nam">ubcoeff</span> <span class="op">=</span>
           <span class="nam">low</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t217" class="pln">
-        <span class="n"><a href="#t217">217</a></span
+      <p id="t233" class="pln">
+        <span class="n"><a href="#t233">233</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t218" class="mis show_mis">
-        <span class="n"><a href="#t218">218</a></span
+      <p id="t234" class="mis show_mis">
+        <span class="n"><a href="#t234">234</a></span
         ><span class="t">
           <span class="nam">reaction_constraint</span>
           <span class="op">=</span> <span class="nam">model</span
@@ -1648,8 +1726,8 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t219" class="pln">
-        <span class="n"><a href="#t219">219</a></span
+      <p id="t235" class="pln">
+        <span class="n"><a href="#t235">235</a></span
         ><span class="t">
           <span class="nam">model</span><span class="op">.</span
           ><span class="nam">reactions</span><span class="op">.</span
@@ -1659,8 +1737,8 @@
           ><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t220" class="pln">
-        <span class="n"><a href="#t220">220</a></span
+      <p id="t236" class="pln">
+        <span class="n"><a href="#t236">236</a></span
         ><span class="t">
           <span class="nam">lb</span><span class="op">=</span
           ><span class="nam">sol1</span><span class="op">.</span
@@ -1672,8 +1750,8 @@
           <span class="nam">lbcoeff</span><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t221" class="pln">
-        <span class="n"><a href="#t221">221</a></span
+      <p id="t237" class="pln">
+        <span class="n"><a href="#t237">237</a></span
         ><span class="t">
           <span class="nam">ub</span><span class="op">=</span
           ><span class="nam">sol1</span><span class="op">.</span
@@ -1685,31 +1763,17 @@
           <span class="nam">ubcoeff</span><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t222" class="pln">
-        <span class="n"><a href="#t222">222</a></span
+      <p id="t238" class="pln">
+        <span class="n"><a href="#t238">238</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t223" class="pln">
-        <span class="n"><a href="#t223">223</a></span
-        ><span class="t">
-          <span class="com"
-            ># lb =
-            model.reactions.get_by_id(reaction).lower_bound*design[reaction],</span
-          >&nbsp;</span
-        ><span class="r"></span>
+      <p id="t239" class="pln">
+        <span class="n"><a href="#t239">239</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t224" class="pln">
-        <span class="n"><a href="#t224">224</a></span
-        ><span class="t">
-          <span class="com"
-            ># ub =
-            model.reactions.get_by_id(reaction).upper_bound*design[reaction])</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t225" class="mis show_mis">
-        <span class="n"><a href="#t225">225</a></span
+      <p id="t240" class="mis show_mis">
+        <span class="n"><a href="#t240">240</a></span
         ><span class="t">
           <span class="nam">model</span><span class="op">.</span
           ><span class="nam">add_cons_vars</span><span class="op">(</span
@@ -1717,38 +1781,43 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t226" class="pln">
-        <span class="n"><a href="#t226">226</a></span
+      <p id="t241" class="pln">
+        <span class="n"><a href="#t241">241</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t227" class="pln">
-        <span class="n"><a href="#t227">227</a></span
+      <p id="t242" class="pln">
+        <span class="n"><a href="#t242">242</a></span
         ><span class="t">
           <span class="com"
-            ># Reference solution calculated for each time point in above cell
-            for wild type</span
+            ># Reference solution calculated for each time point</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t228" class="pln">
-        <span class="n"><a href="#t228">228</a></span
+      <p id="t243" class="pln">
+        <span class="n"><a href="#t243">243</a></span
+        ><span class="t">
+          <span class="com"># in above cell for wild type</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t244" class="pln">
+        <span class="n"><a href="#t244">244</a></span
         ><span class="t">
           <span class="com"># sol1 = solution_TS[t]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t229" class="pln">
-        <span class="n"><a href="#t229">229</a></span
+      <p id="t245" class="pln">
+        <span class="n"><a href="#t245">245</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t230" class="pln">
-        <span class="n"><a href="#t230">230</a></span
+      <p id="t246" class="pln">
+        <span class="n"><a href="#t246">246</a></span
         ><span class="t">
           <span class="com"># Moma solution for each time point</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t231" class="mis show_mis">
-        <span class="n"><a href="#t231">231</a></span
+      <p id="t247" class="mis show_mis">
+        <span class="n"><a href="#t247">247</a></span
         ><span class="t">
           <span class="nam">sol2</span> <span class="op">=</span>
           <span class="nam">cobra</span><span class="op">.</span
@@ -1761,123 +1830,34 @@
           ><span class="key">False</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t232" class="pln">
-        <span class="n"><a href="#t232">232</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t233" class="pln">
-        <span class="n"><a href="#t233">233</a></span
-        ><span class="t">
-          <span class="com"># saving the moma solutions across timepoints</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t234" class="mis show_mis">
-        <span class="n"><a href="#t234">234</a></span
-        ><span class="t">
-          <span class="nam">solutionsMOMA_TS</span><span class="op">[</span
-          ><span class="nam">t</span><span class="op">]</span>
-          <span class="op">=</span> <span class="nam">sol2</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t235" class="pln">
-        <span class="n"><a href="#t235">235</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t236" class="mis show_mis">
-        <span class="n"><a href="#t236">236</a></span
-        ><span class="t">
-          <span class="key">return</span>
-          <span class="nam">solutionsMOMA_TS</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t237" class="pln">
-        <span class="n"><a href="#t237">237</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t238" class="pln">
-        <span class="n"><a href="#t238">238</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t239" class="run">
-        <span class="n"><a href="#t239">239</a></span
-        ><span class="t"
-          ><span class="key">def</span> <span class="nam">integrate_fluxes</span
-          ><span class="op">(</span><span class="nam">solution_TS</span
-          ><span class="op">,</span> <span class="nam">model_TS</span
-          ><span class="op">,</span> <span class="nam">ext_metabolites</span
-          ><span class="op">,</span> <span class="nam">grid</span
-          ><span class="op">,</span> <span class="nam">user_params</span
-          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t240" class="pln">
-        <span class="n"><a href="#t240">240</a></span
-        ><span class="t"> <span class="str">"""</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t241" class="pln">
-        <span class="n"><a href="#t241">241</a></span
-        ><span class="t"
-          ><span class="str">
-            Get the concentration of the external metabolites over time</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t242" class="pln">
-        <span class="n"><a href="#t242">242</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t243" class="pln">
-        <span class="n"><a href="#t243">243</a></span
-        ><span class="t"
-          ><span class="str"> :param solution_TS:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t244" class="pln">
-        <span class="n"><a href="#t244">244</a></span
-        ><span class="t"><span class="str"> :param model_TS:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t245" class="pln">
-        <span class="n"><a href="#t245">245</a></span
-        ><span class="t"
-          ><span class="str"> :param ext_metabolites:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t246" class="pln">
-        <span class="n"><a href="#t246">246</a></span
-        ><span class="t"><span class="str"> :param grid:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t247" class="pln">
-        <span class="n"><a href="#t247">247</a></span
-        ><span class="t"
-          ><span class="str"> :param user_params:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
       <p id="t248" class="pln">
         <span class="n"><a href="#t248">248</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
       <p id="t249" class="pln">
         <span class="n"><a href="#t249">249</a></span
-        ><span class="t"><span class="str"> :return</span>&nbsp;</span
+        ><span class="t">
+          <span class="com"># saving the moma solutions across timepoints</span
+          >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t250" class="pln">
+      <p id="t250" class="mis show_mis">
         <span class="n"><a href="#t250">250</a></span
-        ><span class="t"><span class="str"> :cell:</span>&nbsp;</span
+        ><span class="t">
+          <span class="nam">solutionsMOMA_TS</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span>
+          <span class="op">=</span> <span class="nam">sol2</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t251" class="pln">
         <span class="n"><a href="#t251">251</a></span
-        ><span class="t"><span class="str"> :Emets:</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t252" class="pln">
+      <p id="t252" class="mis show_mis">
         <span class="n"><a href="#t252">252</a></span
-        ><span class="t"><span class="str"> """</span>&nbsp;</span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">solutionsMOMA_TS</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t253" class="pln">
@@ -1886,35 +1866,142 @@
       </p>
       <p id="t254" class="pln">
         <span class="n"><a href="#t254">254</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t255" class="run">
+        <span class="n"><a href="#t255">255</a></span
+        ><span class="t"
+          ><span class="key">def</span> <span class="nam">integrate_fluxes</span
+          ><span class="op">(</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t256" class="pln">
+        <span class="n"><a href="#t256">256</a></span
+        ><span class="t">
+          <span class="nam">solution_TS</span><span class="op">,</span>
+          <span class="nam">model_TS</span><span class="op">,</span>
+          <span class="nam">ext_metabolites</span><span class="op">,</span>
+          <span class="nam">grid</span><span class="op">,</span>
+          <span class="nam">user_params</span><span class="op">,</span>
+          <span class="nam">debug</span><span class="op">=</span
+          ><span class="key">False</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t257" class="pln">
+        <span class="n"><a href="#t257">257</a></span
+        ><span class="t"
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t258" class="pln">
+        <span class="n"><a href="#t258">258</a></span
+        ><span class="t"> <span class="str">"""</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t259" class="pln">
+        <span class="n"><a href="#t259">259</a></span
+        ><span class="t"
+          ><span class="str">
+            Get the concentration of the external metabolites over time</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t260" class="pln">
+        <span class="n"><a href="#t260">260</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t261" class="pln">
+        <span class="n"><a href="#t261">261</a></span
+        ><span class="t"
+          ><span class="str"> :param solution_TS:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t262" class="pln">
+        <span class="n"><a href="#t262">262</a></span
+        ><span class="t"><span class="str"> :param model_TS:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t263" class="pln">
+        <span class="n"><a href="#t263">263</a></span
+        ><span class="t"
+          ><span class="str"> :param ext_metabolites:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t264" class="pln">
+        <span class="n"><a href="#t264">264</a></span
+        ><span class="t"><span class="str"> :param grid:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t265" class="pln">
+        <span class="n"><a href="#t265">265</a></span
+        ><span class="t"
+          ><span class="str"> :param user_params:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t266" class="pln">
+        <span class="n"><a href="#t266">266</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t267" class="pln">
+        <span class="n"><a href="#t267">267</a></span
+        ><span class="t"><span class="str"> :return</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t268" class="pln">
+        <span class="n"><a href="#t268">268</a></span
+        ><span class="t"><span class="str"> :cell:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t269" class="pln">
+        <span class="n"><a href="#t269">269</a></span
+        ><span class="t"><span class="str"> :Emets:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t270" class="pln">
+        <span class="n"><a href="#t270">270</a></span
+        ><span class="t"><span class="str"> """</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t271" class="pln">
+        <span class="n"><a href="#t271">271</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t272" class="pln">
+        <span class="n"><a href="#t272">272</a></span
         ><span class="t">
           <span class="com"
             >## First unpack the time steps for the grid provided</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t255" class="mis show_mis">
-        <span class="n"><a href="#t255">255</a></span
+      <p id="t273" class="run">
+        <span class="n"><a href="#t273">273</a></span
         ><span class="t">
           <span class="nam">tspan</span><span class="op">,</span>
           <span class="nam">delt</span> <span class="op">=</span>
           <span class="nam">grid</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t256" class="pln">
-        <span class="n"><a href="#t256">256</a></span
+      <p id="t274" class="pln">
+        <span class="n"><a href="#t274">274</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t257" class="pln">
-        <span class="n"><a href="#t257">257</a></span
+      <p id="t275" class="pln">
+        <span class="n"><a href="#t275">275</a></span
         ><span class="t">
           <span class="com"
-            >## Create a panda series containing the cell concentation for each
-            time point</span
+            >## Create a panda series containing the cell concentation</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t258" class="mis show_mis">
-        <span class="n"><a href="#t258">258</a></span
+      <p id="t276" class="pln">
+        <span class="n"><a href="#t276">276</a></span
+        ><span class="t">
+          <span class="com"># for each time point</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t277" class="run">
+        <span class="n"><a href="#t277">277</a></span
         ><span class="t">
           <span class="nam">cell</span> <span class="op">=</span>
           <span class="nam">pd</span><span class="op">.</span
@@ -1923,8 +2010,8 @@
           ><span class="nam">tspan</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t259" class="mis show_mis">
-        <span class="n"><a href="#t259">259</a></span
+      <p id="t278" class="run">
+        <span class="n"><a href="#t278">278</a></span
         ><span class="t">
           <span class="nam">cell0</span> <span class="op">=</span>
           <span class="nam">user_params</span><span class="op">[</span
@@ -1932,8 +2019,8 @@
           <span class="com"># in gDW/L</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t260" class="mis show_mis">
-        <span class="n"><a href="#t260">260</a></span
+      <p id="t279" class="run">
+        <span class="n"><a href="#t279">279</a></span
         ><span class="t">
           <span class="nam">t0</span> <span class="op">=</span>
           <span class="nam">user_params</span><span class="op">[</span
@@ -1941,29 +2028,36 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t261" class="mis show_mis">
-        <span class="n"><a href="#t261">261</a></span
+      <p id="t280" class="run">
+        <span class="n"><a href="#t280">280</a></span
         ><span class="t">
           <span class="nam">cell</span><span class="op">[</span
           ><span class="nam">t0</span><span class="op">]</span>
           <span class="op">=</span> <span class="nam">cell0</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t262" class="pln">
-        <span class="n"><a href="#t262">262</a></span
+      <p id="t281" class="pln">
+        <span class="n"><a href="#t281">281</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t263" class="pln">
-        <span class="n"><a href="#t263">263</a></span
+      <p id="t282" class="pln">
+        <span class="n"><a href="#t282">282</a></span
         ><span class="t">
           <span class="com"
-            >## Create a dataframe that constains external metabolite names and
-            their concentrations (DUPLICATED CODE)</span
+            >## Create a dataframe that constains external metabolite
+            names</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t264" class="pln">
-        <span class="n"><a href="#t264">264</a></span
+      <p id="t283" class="pln">
+        <span class="n"><a href="#t283">283</a></span
+        ><span class="t">
+          <span class="com"># and their concentrations (DUPLICATED CODE)</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t284" class="pln">
+        <span class="n"><a href="#t284">284</a></span
         ><span class="t">
           <span class="com"
             ># First organize external metabolites and their initial
@@ -1971,31 +2065,31 @@
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t265" class="mis show_mis">
-        <span class="n"><a href="#t265">265</a></span
+      <p id="t285" class="run">
+        <span class="n"><a href="#t285">285</a></span
         ><span class="t">
           <span class="nam">model</span> <span class="op">=</span>
           <span class="nam">model_TS</span><span class="op">[</span
           ><span class="num">0</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t266" class="mis show_mis">
-        <span class="n"><a href="#t266">266</a></span
+      <p id="t286" class="run">
+        <span class="n"><a href="#t286">286</a></span
         ><span class="t">
           <span class="nam">met_names</span> <span class="op">=</span>
           <span class="op">[</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t267" class="mis show_mis">
-        <span class="n"><a href="#t267">267</a></span
+      <p id="t287" class="run">
+        <span class="n"><a href="#t287">287</a></span
         ><span class="t">
           <span class="nam">initial_concentrations</span>
           <span class="op">=</span> <span class="op">[</span
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t268" class="mis show_mis">
-        <span class="n"><a href="#t268">268</a></span
+      <p id="t288" class="run">
+        <span class="n"><a href="#t288">288</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">met</span
           ><span class="op">,</span> <span class="nam">init_conc</span>
@@ -2005,16 +2099,16 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t269" class="mis show_mis">
-        <span class="n"><a href="#t269">269</a></span
+      <p id="t289" class="run">
+        <span class="n"><a href="#t289">289</a></span
         ><span class="t">
           <span class="nam">met_names</span><span class="op">.</span
           ><span class="nam">append</span><span class="op">(</span
           ><span class="nam">met</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t270" class="mis show_mis">
-        <span class="n"><a href="#t270">270</a></span
+      <p id="t290" class="run">
+        <span class="n"><a href="#t290">290</a></span
         ><span class="t">
           <span class="nam">initial_concentrations</span
           ><span class="op">.</span><span class="nam">append</span
@@ -2022,16 +2116,16 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t271" class="pln">
-        <span class="n"><a href="#t271">271</a></span
+      <p id="t291" class="pln">
+        <span class="n"><a href="#t291">291</a></span
         ><span class="t">
           <span class="com"
             ># Create dataframe containing external metabolites</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t272" class="mis show_mis">
-        <span class="n"><a href="#t272">272</a></span
+      <p id="t292" class="run">
+        <span class="n"><a href="#t292">292</a></span
         ><span class="t">
           <span class="nam">Emets</span> <span class="op">=</span>
           <span class="nam">pd</span><span class="op">.</span
@@ -2043,16 +2137,16 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t273" class="pln">
-        <span class="n"><a href="#t273">273</a></span
+      <p id="t293" class="pln">
+        <span class="n"><a href="#t293">293</a></span
         ><span class="t">
           <span class="com"
             ># Add initial concentrations for external metabolites</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t274" class="mis show_mis">
-        <span class="n"><a href="#t274">274</a></span
+      <p id="t294" class="run">
+        <span class="n"><a href="#t294">294</a></span
         ><span class="t">
           <span class="nam">Emets</span><span class="op">.</span
           ><span class="nam">loc</span><span class="op">[</span
@@ -2061,24 +2155,30 @@
           <span class="nam">initial_concentrations</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t275" class="pln">
-        <span class="n"><a href="#t275">275</a></span
+      <p id="t295" class="pln">
+        <span class="n"><a href="#t295">295</a></span
         ><span class="t">
           <span class="com"
-            ># Create Dictionary mapping exchange reactions to the corresponding
-            external metabolite</span
+            ># Create Dictionary mapping exchange reactions to the</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t276" class="mis show_mis">
-        <span class="n"><a href="#t276">276</a></span
+      <p id="t296" class="pln">
+        <span class="n"><a href="#t296">296</a></span
+        ><span class="t">
+          <span class="com"># corresponding external metabolite</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t297" class="run">
+        <span class="n"><a href="#t297">297</a></span
         ><span class="t">
           <span class="nam">Erxn2Emet</span> <span class="op">=</span>
           <span class="op">{</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t277" class="pln">
-        <span class="n"><a href="#t277">277</a></span
+      <p id="t298" class="pln">
+        <span class="n"><a href="#t298">298</a></span
         ><span class="t">
           <span class="nam">r</span><span class="op">.</span
           ><span class="nam">id</span><span class="op">:</span>
@@ -2088,8 +2188,8 @@
           ><span class="op">.</span><span class="nam">id</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t278" class="pln">
-        <span class="n"><a href="#t278">278</a></span
+      <p id="t299" class="pln">
+        <span class="n"><a href="#t299">299</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">r</span>
           <span class="key">in</span> <span class="nam">model</span
@@ -2097,8 +2197,8 @@
           ><span class="nam">exchanges</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t279" class="pln">
-        <span class="n"><a href="#t279">279</a></span
+      <p id="t300" class="pln">
+        <span class="n"><a href="#t300">300</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">r</span
           ><span class="op">.</span><span class="nam">reactants</span
@@ -2108,42 +2208,51 @@
           <span class="nam">met_names</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t280" class="pln">
-        <span class="n"><a href="#t280">280</a></span
+      <p id="t301" class="pln">
+        <span class="n"><a href="#t301">301</a></span
         ><span class="t"> <span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t281" class="pln">
-        <span class="n"><a href="#t281">281</a></span
+      <p id="t302" class="pln">
+        <span class="n"><a href="#t302">302</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t282" class="pln">
-        <span class="n"><a href="#t282">282</a></span
+      <p id="t303" class="pln">
+        <span class="n"><a href="#t303">303</a></span
         ><span class="t">
           <span class="com"
             >## Main loop adding contributions for each time step</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t283" class="mis show_mis">
-        <span class="n"><a href="#t283">283</a></span
+      <p id="t304" class="run">
+        <span class="n"><a href="#t304">304</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">t</span>
           <span class="key">in</span> <span class="nam">tspan</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t284" class="pln">
-        <span class="n"><a href="#t284">284</a></span
+      <p id="t305" class="pln">
+        <span class="n"><a href="#t305">305</a></span
         ><span class="t">
           <span class="com"
-            ># Calculate OD and external metabolite concentrations for next time
-            point t+delta</span
+            ># Calculate OD and external metabolite concentrations</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t285" class="mis show_mis">
-        <span class="n"><a href="#t285">285</a></span
+      <p id="t306" class="pln">
+        <span class="n"><a href="#t306">306</a></span
+        ><span class="t">
+          <span class="com"># for next time point t+delta</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t307" class="pln">
+        <span class="n"><a href="#t307">307</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t308" class="run">
+        <span class="n"><a href="#t308">308</a></span
         ><span class="t">
           <span class="nam">cell</span><span class="op">[</span
           ><span class="nam">t</span> <span class="op">+</span>
@@ -2157,49 +2266,89 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t286" class="pln">
-        <span class="n"><a href="#t286">286</a></span
+      <p id="t309" class="pln">
+        <span class="n"><a href="#t309">309</a></span
         ><span class="t">
-          <span class="nam">Erxn2Emet</span><span class="op">,</span>
-          <span class="nam">cell</span><span class="op">[</span
-          ><span class="nam">t</span><span class="op">]</span
-          ><span class="op">,</span> <span class="nam">Emets</span
-          ><span class="op">.</span><span class="nam">loc</span
-          ><span class="op">[</span><span class="nam">t</span
-          ><span class="op">]</span><span class="op">,</span>
-          <span class="nam">delt</span><span class="op">,</span>
-          <span class="nam">solution_TS</span><span class="op">[</span
-          ><span class="nam">t</span><span class="op">]</span
-          ><span class="op">,</span>
-          <span class="nam">user_params</span>&nbsp;</span
+          <span class="nam">Erxn2Emet</span
+          ><span class="op">,</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t287" class="pln">
-        <span class="n"><a href="#t287">287</a></span
+      <p id="t310" class="pln">
+        <span class="n"><a href="#t310">310</a></span
+        ><span class="t">
+          <span class="nam">cell</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t311" class="pln">
+        <span class="n"><a href="#t311">311</a></span
+        ><span class="t">
+          <span class="nam">Emets</span><span class="op">.</span
+          ><span class="nam">loc</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t312" class="pln">
+        <span class="n"><a href="#t312">312</a></span
+        ><span class="t">
+          <span class="nam">delt</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t313" class="pln">
+        <span class="n"><a href="#t313">313</a></span
+        ><span class="t">
+          <span class="nam">solution_TS</span><span class="op">[</span
+          ><span class="nam">t</span><span class="op">]</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t314" class="pln">
+        <span class="n"><a href="#t314">314</a></span
+        ><span class="t">
+          <span class="nam">user_params</span
+          ><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t315" class="pln">
+        <span class="n"><a href="#t315">315</a></span
+        ><span class="t">
+          <span class="nam">t</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t316" class="pln">
+        <span class="n"><a href="#t316">316</a></span
+        ><span class="t">
+          <span class="nam">debug</span><span class="op">,</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t317" class="pln">
+        <span class="n"><a href="#t317">317</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t288" class="pln">
-        <span class="n"><a href="#t288">288</a></span
+      <p id="t318" class="pln">
+        <span class="n"><a href="#t318">318</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t289" class="mis show_mis">
-        <span class="n"><a href="#t289">289</a></span
+      <p id="t319" class="run">
+        <span class="n"><a href="#t319">319</a></span
         ><span class="t">
           <span class="key">return</span> <span class="nam">cell</span
           ><span class="op">,</span> <span class="nam">Emets</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t290" class="pln">
-        <span class="n"><a href="#t290">290</a></span
+      <p id="t320" class="pln">
+        <span class="n"><a href="#t320">320</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t291" class="pln">
-        <span class="n"><a href="#t291">291</a></span
+      <p id="t321" class="pln">
+        <span class="n"><a href="#t321">321</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t292" class="run">
-        <span class="n"><a href="#t292">292</a></span
+      <p id="t322" class="run">
+        <span class="n"><a href="#t322">322</a></span
         ><span class="t"
           ><span class="key">def</span>
           <span class="nam">get_optimized_solution</span
@@ -2210,13 +2359,13 @@
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t293" class="pln">
-        <span class="n"><a href="#t293">293</a></span
+      <p id="t323" class="pln">
+        <span class="n"><a href="#t323">323</a></span
         ><span class="t"> <span class="str">"""</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t294" class="pln">
-        <span class="n"><a href="#t294">294</a></span
+      <p id="t324" class="pln">
+        <span class="n"><a href="#t324">324</a></span
         ><span class="t"
           ><span class="str">
             Get the FBA solution of the model by maximizing biomass
@@ -2224,234 +2373,38 @@
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t295" class="pln">
-        <span class="n"><a href="#t295">295</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t296" class="pln">
-        <span class="n"><a href="#t296">296</a></span
-        ><span class="t"><span class="str"> :param model:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t297" class="pln">
-        <span class="n"><a href="#t297">297</a></span
-        ><span class="t"
-          ><span class="str"> :param reaction_id:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t298" class="pln">
-        <span class="n"><a href="#t298">298</a></span
-        ><span class="t"><span class="str"> :lower_bound:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t299" class="pln">
-        <span class="n"><a href="#t299">299</a></span
-        ><span class="t"><span class="str"> :upper_bound:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t300" class="pln">
-        <span class="n"><a href="#t300">300</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t301" class="pln">
-        <span class="n"><a href="#t301">301</a></span
-        ><span class="t"><span class="str"> :return solution:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t302" class="pln">
-        <span class="n"><a href="#t302">302</a></span
-        ><span class="t"><span class="str"> """</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t303" class="pln">
-        <span class="n"><a href="#t303">303</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t304" class="pln">
-        <span class="n"><a href="#t304">304</a></span
-        ><span class="t">
-          <span class="com"
-            ># fix the flux value to -15 as we have data for this
-            constraint</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t305" class="mis show_mis">
-        <span class="n"><a href="#t305">305</a></span
-        ><span class="t">
-          <span class="nam">model</span><span class="op">.</span
-          ><span class="nam">reactions</span><span class="op">.</span
-          ><span class="nam">get_by_id</span><span class="op">(</span
-          ><span class="nam">reaction_id</span><span class="op">)</span
-          ><span class="op">.</span><span class="nam">lower_bound</span>
-          <span class="op">=</span>
-          <span class="nam">lower_bound</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t306" class="mis show_mis">
-        <span class="n"><a href="#t306">306</a></span
-        ><span class="t">
-          <span class="nam">model</span><span class="op">.</span
-          ><span class="nam">reactions</span><span class="op">.</span
-          ><span class="nam">get_by_id</span><span class="op">(</span
-          ><span class="nam">reaction_id</span><span class="op">)</span
-          ><span class="op">.</span><span class="nam">upper_bound</span>
-          <span class="op">=</span>
-          <span class="nam">upper_bound</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t307" class="pln">
-        <span class="n"><a href="#t307">307</a></span
-        ><span class="t">
-          <span class="com"
-            ># print(model.reactions.get_by_id(reaction_id))</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t308" class="pln">
-        <span class="n"><a href="#t308">308</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t309" class="mis show_mis">
-        <span class="n"><a href="#t309">309</a></span
-        ><span class="t">
-          <span class="nam">print</span><span class="op">(</span
-          ><span class="str"
-            >"Displaying the reaction bounds after constraining them:"</span
-          ><span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t310" class="mis show_mis">
-        <span class="n"><a href="#t310">310</a></span
-        ><span class="t">
-          <span class="nam">print</span><span class="op">(</span
-          ><span class="nam">model</span><span class="op">.</span
-          ><span class="nam">reactions</span><span class="op">.</span
-          ><span class="nam">get_by_id</span><span class="op">(</span
-          ><span class="nam">reaction_id</span><span class="op">)</span
-          ><span class="op">.</span><span class="nam">bounds</span
-          ><span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t311" class="pln">
-        <span class="n"><a href="#t311">311</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t312" class="pln">
-        <span class="n"><a href="#t312">312</a></span
-        ><span class="t">
-          <span class="com"
-            ># optimizing the model for only the selected reaction</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t313" class="pln">
-        <span class="n"><a href="#t313">313</a></span
-        ><span class="t">
-          <span class="com"># model.slim_optimize()</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t314" class="pln">
-        <span class="n"><a href="#t314">314</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t315" class="pln">
-        <span class="n"><a href="#t315">315</a></span
-        ><span class="t">
-          <span class="com"># optimizing model</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t316" class="mis show_mis">
-        <span class="n"><a href="#t316">316</a></span
-        ><span class="t">
-          <span class="nam">solution</span> <span class="op">=</span>
-          <span class="nam">model</span><span class="op">.</span
-          ><span class="nam">optimize</span><span class="op">(</span
-          ><span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t317" class="pln">
-        <span class="n"><a href="#t317">317</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t318" class="mis show_mis">
-        <span class="n"><a href="#t318">318</a></span
-        ><span class="t">
-          <span class="key">return</span>
-          <span class="nam">solution</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t319" class="pln">
-        <span class="n"><a href="#t319">319</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t320" class="pln">
-        <span class="n"><a href="#t320">320</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
-      <p id="t321" class="run">
-        <span class="n"><a href="#t321">321</a></span
-        ><span class="t"
-          ><span class="key">def</span>
-          <span class="nam">get_proteomics_transcriptomics_data</span
-          ><span class="op">(</span><span class="nam">model</span
-          ><span class="op">,</span> <span class="nam">solution</span
-          ><span class="op">,</span> <span class="nam">noise_zero</span
-          ><span class="op">=</span><span class="key">False</span
-          ><span class="op">,</span> <span class="nam">debug</span
-          ><span class="op">=</span><span class="key">True</span
-          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t322" class="pln">
-        <span class="n"><a href="#t322">322</a></span
-        ><span class="t"> <span class="str">"""</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t323" class="pln">
-        <span class="n"><a href="#t323">323</a></span
-        ><span class="t"
-          ><span class="str"> Get transcriptomics and proteomics data</span
-          >&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t324" class="pln">
-        <span class="n"><a href="#t324">324</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
-      </p>
       <p id="t325" class="pln">
         <span class="n"><a href="#t325">325</a></span
-        ><span class="t"><span class="str"> :param model:</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
       <p id="t326" class="pln">
         <span class="n"><a href="#t326">326</a></span
-        ><span class="t"><span class="str"> :param solution:</span>&nbsp;</span
+        ><span class="t"><span class="str"> :param model:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t327" class="pln">
         <span class="n"><a href="#t327">327</a></span
         ><span class="t"
-          ><span class="str"> :param noise_zero:</span>&nbsp;</span
+          ><span class="str"> :param reaction_id:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t328" class="pln">
         <span class="n"><a href="#t328">328</a></span
-        ><span class="t">&nbsp;</span><span class="r"></span>
+        ><span class="t"><span class="str"> :lower_bound:</span>&nbsp;</span
+        ><span class="r"></span>
       </p>
       <p id="t329" class="pln">
         <span class="n"><a href="#t329">329</a></span
-        ><span class="t"><span class="str"> :return:</span>&nbsp;</span
+        ><span class="t"><span class="str"> :upper_bound:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t330" class="pln">
         <span class="n"><a href="#t330">330</a></span
-        ><span class="t"><span class="str"> :proteomics:</span>&nbsp;</span
-        ><span class="r"></span>
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
       <p id="t331" class="pln">
         <span class="n"><a href="#t331">331</a></span
-        ><span class="t"><span class="str"> :transcriptomics:</span>&nbsp;</span
+        ><span class="t"><span class="str"> :return solution:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t332" class="pln">
@@ -2467,28 +2420,41 @@
         <span class="n"><a href="#t334">334</a></span
         ><span class="t">
           <span class="com"
-            ># pre-determined linear constant (NOTE: Allow user to set this via
-            parameter)</span
+            ># fix the flux value to -15 as we have data for this
+            constraint</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t335" class="pln">
+      <p id="t335" class="mis show_mis">
         <span class="n"><a href="#t335">335</a></span
-        ><span class="t"> <span class="com"># DISCUSS!!</span>&nbsp;</span
+        ><span class="t">
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">get_by_id</span><span class="op">(</span
+          ><span class="nam">reaction_id</span><span class="op">)</span
+          ><span class="op">.</span><span class="nam">lower_bound</span>
+          <span class="op">=</span>
+          <span class="nam">lower_bound</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t336" class="mis show_mis">
         <span class="n"><a href="#t336">336</a></span
         ><span class="t">
-          <span class="nam">k</span> <span class="op">=</span>
-          <span class="num">0.8</span>&nbsp;</span
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">get_by_id</span><span class="op">(</span
+          ><span class="nam">reaction_id</span><span class="op">)</span
+          ><span class="op">.</span><span class="nam">upper_bound</span>
+          <span class="op">=</span>
+          <span class="nam">upper_bound</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t337" class="mis show_mis">
+      <p id="t337" class="pln">
         <span class="n"><a href="#t337">337</a></span
         ><span class="t">
-          <span class="nam">q</span> <span class="op">=</span>
-          <span class="num">0.06</span>&nbsp;</span
+          <span class="com"
+            ># print(model.reactions.get_by_id(reaction_id))</span
+          >&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t338" class="pln">
@@ -2498,30 +2464,217 @@
       <p id="t339" class="mis show_mis">
         <span class="n"><a href="#t339">339</a></span
         ><span class="t">
-          <span class="nam">proteomics</span> <span class="op">=</span>
-          <span class="op">{</span><span class="op">}</span>&nbsp;</span
+          <span class="nam">print</span><span class="op">(</span
+          ><span class="str"
+            >"Displaying the reaction bounds after constraining them:"</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t340" class="mis show_mis">
         <span class="n"><a href="#t340">340</a></span
         ><span class="t">
-          <span class="nam">transcriptomics</span> <span class="op">=</span>
-          <span class="op">{</span><span class="op">}</span>&nbsp;</span
+          <span class="nam">print</span><span class="op">(</span
+          ><span class="nam">model</span><span class="op">.</span
+          ><span class="nam">reactions</span><span class="op">.</span
+          ><span class="nam">get_by_id</span><span class="op">(</span
+          ><span class="nam">reaction_id</span><span class="op">)</span
+          ><span class="op">.</span><span class="nam">bounds</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
       <p id="t341" class="pln">
         <span class="n"><a href="#t341">341</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t342" class="mis show_mis">
+      <p id="t342" class="pln">
         <span class="n"><a href="#t342">342</a></span
+        ><span class="t">
+          <span class="com"
+            ># optimizing the model for only the selected reaction</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t343" class="pln">
+        <span class="n"><a href="#t343">343</a></span
+        ><span class="t">
+          <span class="com"># model.slim_optimize()</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t344" class="pln">
+        <span class="n"><a href="#t344">344</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t345" class="pln">
+        <span class="n"><a href="#t345">345</a></span
+        ><span class="t">
+          <span class="com"># optimizing model</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t346" class="mis show_mis">
+        <span class="n"><a href="#t346">346</a></span
+        ><span class="t">
+          <span class="nam">solution</span> <span class="op">=</span>
+          <span class="nam">model</span><span class="op">.</span
+          ><span class="nam">optimize</span><span class="op">(</span
+          ><span class="op">)</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t347" class="pln">
+        <span class="n"><a href="#t347">347</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t348" class="mis show_mis">
+        <span class="n"><a href="#t348">348</a></span
+        ><span class="t">
+          <span class="key">return</span>
+          <span class="nam">solution</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t349" class="pln">
+        <span class="n"><a href="#t349">349</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t350" class="pln">
+        <span class="n"><a href="#t350">350</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t351" class="run">
+        <span class="n"><a href="#t351">351</a></span
+        ><span class="t"
+          ><span class="key">def</span>
+          <span class="nam">get_proteomics_transcriptomics_data</span
+          ><span class="op">(</span><span class="nam">model</span
+          ><span class="op">,</span> <span class="nam">solution</span
+          ><span class="op">,</span> <span class="nam">noise_zero</span
+          ><span class="op">=</span><span class="key">False</span
+          ><span class="op">,</span> <span class="nam">debug</span
+          ><span class="op">=</span><span class="key">True</span
+          ><span class="op">)</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t352" class="pln">
+        <span class="n"><a href="#t352">352</a></span
+        ><span class="t"> <span class="str">"""</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t353" class="pln">
+        <span class="n"><a href="#t353">353</a></span
+        ><span class="t"
+          ><span class="str"> Get transcriptomics and proteomics data</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t354" class="pln">
+        <span class="n"><a href="#t354">354</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t355" class="pln">
+        <span class="n"><a href="#t355">355</a></span
+        ><span class="t"><span class="str"> :param model:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t356" class="pln">
+        <span class="n"><a href="#t356">356</a></span
+        ><span class="t"><span class="str"> :param solution:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t357" class="pln">
+        <span class="n"><a href="#t357">357</a></span
+        ><span class="t"
+          ><span class="str"> :param noise_zero:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t358" class="pln">
+        <span class="n"><a href="#t358">358</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t359" class="pln">
+        <span class="n"><a href="#t359">359</a></span
+        ><span class="t"><span class="str"> :return:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t360" class="pln">
+        <span class="n"><a href="#t360">360</a></span
+        ><span class="t"><span class="str"> :proteomics:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t361" class="pln">
+        <span class="n"><a href="#t361">361</a></span
+        ><span class="t"><span class="str"> :transcriptomics:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t362" class="pln">
+        <span class="n"><a href="#t362">362</a></span
+        ><span class="t"><span class="str"> """</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t363" class="pln">
+        <span class="n"><a href="#t363">363</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t364" class="pln">
+        <span class="n"><a href="#t364">364</a></span
+        ><span class="t">
+          <span class="com"># pre-determined linear constant</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t365" class="pln">
+        <span class="n"><a href="#t365">365</a></span
+        ><span class="t">
+          <span class="com"># (NOTE: Allow user to set this via parameter)</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t366" class="pln">
+        <span class="n"><a href="#t366">366</a></span
+        ><span class="t"> <span class="com"># DISCUSS!!</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t367" class="mis show_mis">
+        <span class="n"><a href="#t367">367</a></span
+        ><span class="t">
+          <span class="nam">k</span> <span class="op">=</span>
+          <span class="num">0.8</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t368" class="mis show_mis">
+        <span class="n"><a href="#t368">368</a></span
+        ><span class="t">
+          <span class="nam">q</span> <span class="op">=</span>
+          <span class="num">0.06</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t369" class="pln">
+        <span class="n"><a href="#t369">369</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t370" class="mis show_mis">
+        <span class="n"><a href="#t370">370</a></span
+        ><span class="t">
+          <span class="nam">proteomics</span> <span class="op">=</span>
+          <span class="op">{</span><span class="op">}</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t371" class="mis show_mis">
+        <span class="n"><a href="#t371">371</a></span
+        ><span class="t">
+          <span class="nam">transcriptomics</span> <span class="op">=</span>
+          <span class="op">{</span><span class="op">}</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t372" class="pln">
+        <span class="n"><a href="#t372">372</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t373" class="mis show_mis">
+        <span class="n"><a href="#t373">373</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">debug</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t343" class="mis show_mis">
-        <span class="n"><a href="#t343">343</a></span
+      <p id="t374" class="mis show_mis">
+        <span class="n"><a href="#t374">374</a></span
         ><span class="t">
           <span class="nam">rxnIDs</span> <span class="op">=</span>
           <span class="nam">solution</span><span class="op">[</span
@@ -2530,14 +2683,14 @@
           ><span class="op">(</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t344" class="pln">
-        <span class="n"><a href="#t344">344</a></span
+      <p id="t375" class="pln">
+        <span class="n"><a href="#t375">375</a></span
         ><span class="t">
           <span class="key">else</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t345" class="mis show_mis">
-        <span class="n"><a href="#t345">345</a></span
+      <p id="t376" class="mis show_mis">
+        <span class="n"><a href="#t376">376</a></span
         ><span class="t">
           <span class="nam">rxnIDs</span> <span class="op">=</span>
           <span class="nam">solution</span><span class="op">.</span
@@ -2546,20 +2699,20 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t346" class="pln">
-        <span class="n"><a href="#t346">346</a></span
+      <p id="t377" class="pln">
+        <span class="n"><a href="#t377">377</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t347" class="mis show_mis">
-        <span class="n"><a href="#t347">347</a></span
+      <p id="t378" class="mis show_mis">
+        <span class="n"><a href="#t378">378</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">rxnId</span>
           <span class="key">in</span> <span class="nam">rxnIDs</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t348" class="mis show_mis">
-        <span class="n"><a href="#t348">348</a></span
+      <p id="t379" class="mis show_mis">
+        <span class="n"><a href="#t379">379</a></span
         ><span class="t">
           <span class="nam">reaction</span> <span class="op">=</span>
           <span class="nam">model</span><span class="op">.</span
@@ -2568,8 +2721,8 @@
           ><span class="nam">rxnId</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t349" class="mis show_mis">
-        <span class="n"><a href="#t349">349</a></span
+      <p id="t380" class="mis show_mis">
+        <span class="n"><a href="#t380">380</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">gene</span>
           <span class="key">in</span> <span class="nam">list</span
@@ -2578,34 +2731,39 @@
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t350" class="pln">
-        <span class="n"><a href="#t350">350</a></span
+      <p id="t381" class="pln">
+        <span class="n"><a href="#t381">381</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t351" class="pln">
-        <span class="n"><a href="#t351">351</a></span
+      <p id="t382" class="pln">
+        <span class="n"><a href="#t382">382</a></span
         ><span class="t">
           <span class="com"
-            ># this will ignore all the reactions that does not have the
-            gene.annotation property</span
+            ># this will ignore all the reactions that does not have</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t352" class="pln">
-        <span class="n"><a href="#t352">352</a></span
+      <p id="t383" class="pln">
+        <span class="n"><a href="#t383">383</a></span
+        ><span class="t">
+          <span class="com"># the gene.annotation property</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t384" class="pln">
+        <span class="n"><a href="#t384">384</a></span
         ><span class="t"> <span class="com"># DISCUSS!!</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t353" class="mis show_mis">
-        <span class="n"><a href="#t353">353</a></span
+      <p id="t385" class="mis show_mis">
+        <span class="n"><a href="#t385">385</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">gene</span
           ><span class="op">.</span><span class="nam">annotation</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t354" class="mis show_mis">
-        <span class="n"><a href="#t354">354</a></span
+      <p id="t386" class="mis show_mis">
+        <span class="n"><a href="#t386">386</a></span
         ><span class="t">
           <span class="key">if</span> <span class="str">"uniprot"</span>
           <span class="key">not</span> <span class="key">in</span>
@@ -2614,8 +2772,8 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t355" class="mis show_mis">
-        <span class="n"><a href="#t355">355</a></span
+      <p id="t387" class="mis show_mis">
+        <span class="n"><a href="#t387">387</a></span
         ><span class="t">
           <span class="key">if</span> <span class="str">"goa"</span>
           <span class="key">in</span> <span class="nam">gene</span
@@ -2623,8 +2781,8 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t356" class="mis show_mis">
-        <span class="n"><a href="#t356">356</a></span
+      <p id="t388" class="mis show_mis">
+        <span class="n"><a href="#t388">388</a></span
         ><span class="t">
           <span class="nam">protein_id</span> <span class="op">=</span>
           <span class="nam">gene</span><span class="op">.</span
@@ -2632,25 +2790,25 @@
           ><span class="str">"goa"</span><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t357" class="pln">
-        <span class="n"><a href="#t357">357</a></span
+      <p id="t389" class="pln">
+        <span class="n"><a href="#t389">389</a></span
         ><span class="t">
           <span class="key">else</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t358" class="mis show_mis">
-        <span class="n"><a href="#t358">358</a></span
+      <p id="t390" class="mis show_mis">
+        <span class="n"><a href="#t390">390</a></span
         ><span class="t"> <span class="key">break</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t359" class="pln">
-        <span class="n"><a href="#t359">359</a></span
+      <p id="t391" class="pln">
+        <span class="n"><a href="#t391">391</a></span
         ><span class="t">
           <span class="key">else</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t360" class="mis show_mis">
-        <span class="n"><a href="#t360">360</a></span
+      <p id="t392" class="mis show_mis">
+        <span class="n"><a href="#t392">392</a></span
         ><span class="t">
           <span class="nam">protein_id</span> <span class="op">=</span>
           <span class="nam">gene</span><span class="op">.</span
@@ -2660,71 +2818,81 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t361" class="pln">
-        <span class="n"><a href="#t361">361</a></span
+      <p id="t393" class="pln">
+        <span class="n"><a href="#t393">393</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t362" class="pln">
-        <span class="n"><a href="#t362">362</a></span
+      <p id="t394" class="pln">
+        <span class="n"><a href="#t394">394</a></span
         ><span class="t">
           <span class="com"
             ># add random noise which is 5 percent of the signal</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t363" class="mis show_mis">
-        <span class="n"><a href="#t363">363</a></span
+      <p id="t395" class="mis show_mis">
+        <span class="n"><a href="#t395">395</a></span
+        ><span class="t">
+          <span class="key">if</span> <span class="nam">debug</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t396" class="mis show_mis">
+        <span class="n"><a href="#t396">396</a></span
+        ><span class="t">
+          <span class="nam">reaction_flux</span> <span class="op">=</span>
+          <span class="nam">solution</span><span class="op">[</span
+          ><span class="str">"fluxes"</span><span class="op">]</span
+          ><span class="op">[</span><span class="nam">rxnId</span
+          ><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t397" class="pln">
+        <span class="n"><a href="#t397">397</a></span
+        ><span class="t">
+          <span class="key">else</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t398" class="mis show_mis">
+        <span class="n"><a href="#t398">398</a></span
+        ><span class="t">
+          <span class="nam">reaction_flux</span> <span class="op">=</span>
+          <span class="nam">solution</span><span class="op">.</span
+          ><span class="nam">fluxes</span><span class="op">[</span
+          ><span class="nam">rxnId</span><span class="op">]</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t399" class="pln">
+        <span class="n"><a href="#t399">399</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
+      </p>
+      <p id="t400" class="mis show_mis">
+        <span class="n"><a href="#t400">400</a></span
         ><span class="t">
           <span class="nam">noise</span> <span class="op">=</span>
           <span class="num">0</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t364" class="mis show_mis">
-        <span class="n"><a href="#t364">364</a></span
+      <p id="t401" class="mis show_mis">
+        <span class="n"><a href="#t401">401</a></span
         ><span class="t">
           <span class="key">if</span> <span class="key">not</span>
           <span class="nam">noise_zero</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t365" class="mis show_mis">
-        <span class="n"><a href="#t365">365</a></span
-        ><span class="t">
-          <span class="key">if</span> <span class="nam">debug</span
-          ><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t366" class="mis show_mis">
-        <span class="n"><a href="#t366">366</a></span
+      <p id="t402" class="mis show_mis">
+        <span class="n"><a href="#t402">402</a></span
         ><span class="t">
           <span class="nam">noiseSigma</span> <span class="op">=</span>
           <span class="num">0.05</span> <span class="op">*</span>
-          <span class="nam">solution</span><span class="op">[</span
-          ><span class="str">"fluxes"</span><span class="op">]</span
-          ><span class="op">[</span><span class="nam">rxnId</span
-          ><span class="op">]</span> <span class="op">/</span>
-          <span class="nam">k</span>&nbsp;</span
+          <span class="op">(</span><span class="nam">reaction_flux</span>
+          <span class="op">/</span> <span class="nam">k</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t367" class="pln">
-        <span class="n"><a href="#t367">367</a></span
-        ><span class="t">
-          <span class="key">else</span><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t368" class="mis show_mis">
-        <span class="n"><a href="#t368">368</a></span
-        ><span class="t">
-          <span class="nam">noiseSigma</span> <span class="op">=</span>
-          <span class="num">0.05</span> <span class="op">*</span>
-          <span class="nam">solution</span><span class="op">.</span
-          ><span class="nam">fluxes</span><span class="op">[</span
-          ><span class="nam">rxnId</span><span class="op">]</span>
-          <span class="op">/</span> <span class="nam">k</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t369" class="mis show_mis">
-        <span class="n"><a href="#t369">369</a></span
+      <p id="t403" class="mis show_mis">
+        <span class="n"><a href="#t403">403</a></span
         ><span class="t">
           <span class="nam">noise</span> <span class="op">=</span>
           <span class="nam">noiseSigma</span> <span class="op">*</span>
@@ -2734,87 +2902,50 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t370" class="mis show_mis">
-        <span class="n"><a href="#t370">370</a></span
-        ><span class="t">
-          <span class="key">if</span> <span class="nam">debug</span
-          ><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
+      <p id="t404" class="pln">
+        <span class="n"><a href="#t404">404</a></span
+        ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t371" class="mis show_mis">
-        <span class="n"><a href="#t371">371</a></span
-        ><span class="t">
-          <span class="nam">proteomics</span><span class="op">[</span
-          ><span class="nam">protein_id</span><span class="op">]</span>
-          <span class="op">=</span> <span class="nam">abs</span
-          ><span class="op">(</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t372" class="pln">
-        <span class="n"><a href="#t372">372</a></span
-        ><span class="t">
-          <span class="op">(</span><span class="nam">solution</span
-          ><span class="op">[</span><span class="str">"fluxes"</span
-          ><span class="op">]</span><span class="op">[</span
-          ><span class="nam">rxnId</span><span class="op">]</span>
-          <span class="op">/</span> <span class="nam">k</span
-          ><span class="op">)</span> <span class="op">+</span>
-          <span class="nam">noise</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t373" class="pln">
-        <span class="n"><a href="#t373">373</a></span
-        ><span class="t"> <span class="op">)</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t374" class="pln">
-        <span class="n"><a href="#t374">374</a></span
-        ><span class="t">
-          <span class="key">else</span><span class="op">:</span>&nbsp;</span
-        ><span class="r"></span>
-      </p>
-      <p id="t375" class="mis show_mis">
-        <span class="n"><a href="#t375">375</a></span
+      <p id="t405" class="mis show_mis">
+        <span class="n"><a href="#t405">405</a></span
         ><span class="t">
           <span class="nam">proteomics</span><span class="op">[</span
           ><span class="nam">protein_id</span><span class="op">]</span>
           <span class="op">=</span> <span class="nam">abs</span
           ><span class="op">(</span><span class="op">(</span
-          ><span class="nam">solution</span><span class="op">.</span
-          ><span class="nam">fluxes</span><span class="op">[</span
-          ><span class="nam">rxnId</span><span class="op">]</span>
-          <span class="op">/</span> <span class="nam">k</span
-          ><span class="op">)</span> <span class="op">+</span>
-          <span class="nam">noise</span><span class="op">)</span>&nbsp;</span
+          ><span class="nam">reaction_flux</span> <span class="op">/</span>
+          <span class="nam">k</span><span class="op">)</span>
+          <span class="op">+</span> <span class="nam">noise</span
+          ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t376" class="pln">
-        <span class="n"><a href="#t376">376</a></span
+      <p id="t406" class="pln">
+        <span class="n"><a href="#t406">406</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t377" class="pln">
-        <span class="n"><a href="#t377">377</a></span
+      <p id="t407" class="pln">
+        <span class="n"><a href="#t407">407</a></span
         ><span class="t">
           <span class="com"># create transcriptomics dict</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t378" class="mis show_mis">
-        <span class="n"><a href="#t378">378</a></span
+      <p id="t408" class="mis show_mis">
+        <span class="n"><a href="#t408">408</a></span
         ><span class="t">
           <span class="nam">noise</span> <span class="op">=</span>
           <span class="num">0</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t379" class="mis show_mis">
-        <span class="n"><a href="#t379">379</a></span
+      <p id="t409" class="mis show_mis">
+        <span class="n"><a href="#t409">409</a></span
         ><span class="t">
           <span class="key">if</span> <span class="key">not</span>
           <span class="nam">noise_zero</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t380" class="mis show_mis">
-        <span class="n"><a href="#t380">380</a></span
+      <p id="t410" class="mis show_mis">
+        <span class="n"><a href="#t410">410</a></span
         ><span class="t">
           <span class="nam">noiseSigma</span> <span class="op">=</span>
           <span class="num">0.05</span> <span class="op">*</span>
@@ -2823,8 +2954,8 @@
           <span class="op">/</span> <span class="nam">q</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t381" class="mis show_mis">
-        <span class="n"><a href="#t381">381</a></span
+      <p id="t411" class="mis show_mis">
+        <span class="n"><a href="#t411">411</a></span
         ><span class="t">
           <span class="nam">noise</span> <span class="op">=</span>
           <span class="nam">noiseSigma</span> <span class="op">*</span>
@@ -2834,8 +2965,8 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t382" class="mis show_mis">
-        <span class="n"><a href="#t382">382</a></span
+      <p id="t412" class="mis show_mis">
+        <span class="n"><a href="#t412">412</a></span
         ><span class="t">
           <span class="nam">transcriptomics</span><span class="op">[</span
           ><span class="nam">gene</span><span class="op">.</span
@@ -2849,137 +2980,159 @@
           <span class="nam">noise</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t383" class="pln">
-        <span class="n"><a href="#t383">383</a></span
+      <p id="t413" class="pln">
+        <span class="n"><a href="#t413">413</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t384" class="mis show_mis">
-        <span class="n"><a href="#t384">384</a></span
+      <p id="t414" class="mis show_mis">
+        <span class="n"><a href="#t414">414</a></span
         ><span class="t">
           <span class="key">return</span> <span class="nam">proteomics</span
           ><span class="op">,</span>
           <span class="nam">transcriptomics</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t385" class="pln">
-        <span class="n"><a href="#t385">385</a></span
+      <p id="t415" class="pln">
+        <span class="n"><a href="#t415">415</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t386" class="pln">
-        <span class="n"><a href="#t386">386</a></span
+      <p id="t416" class="pln">
+        <span class="n"><a href="#t416">416</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t387" class="run">
-        <span class="n"><a href="#t387">387</a></span
+      <p id="t417" class="run">
+        <span class="n"><a href="#t417">417</a></span
         ><span class="t"
           ><span class="key">def</span>
           <span class="nam">get_metabolomics_data</span><span class="op">(</span
           ><span class="nam">model</span><span class="op">,</span>
           <span class="nam">solution</span><span class="op">,</span>
-          <span class="nam">mapping_file</span><span class="op">)</span
+          <span class="nam">mapping_file</span><span class="op">,</span>
+          <span class="nam">file_mapped</span><span class="op">=</span
+          ><span class="key">False</span><span class="op">)</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t388" class="pln">
-        <span class="n"><a href="#t388">388</a></span
+      <p id="t418" class="pln">
+        <span class="n"><a href="#t418">418</a></span
         ><span class="t"> <span class="str">"""</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t389" class="pln">
-        <span class="n"><a href="#t389">389</a></span
+      <p id="t419" class="pln">
+        <span class="n"><a href="#t419">419</a></span
         ><span class="t"
           ><span class="str"> Get metabolomics data</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t390" class="pln">
-        <span class="n"><a href="#t390">390</a></span
+      <p id="t420" class="pln">
+        <span class="n"><a href="#t420">420</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t391" class="pln">
-        <span class="n"><a href="#t391">391</a></span
+      <p id="t421" class="pln">
+        <span class="n"><a href="#t421">421</a></span
         ><span class="t"><span class="str"> :param model:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t392" class="pln">
-        <span class="n"><a href="#t392">392</a></span
+      <p id="t422" class="pln">
+        <span class="n"><a href="#t422">422</a></span
         ><span class="t"><span class="str"> :param solution:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t393" class="pln">
-        <span class="n"><a href="#t393">393</a></span
+      <p id="t423" class="pln">
+        <span class="n"><a href="#t423">423</a></span
         ><span class="t"><span class="str"> :mapping_file:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t394" class="pln">
-        <span class="n"><a href="#t394">394</a></span
+      <p id="t424" class="pln">
+        <span class="n"><a href="#t424">424</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t395" class="pln">
-        <span class="n"><a href="#t395">395</a></span
+      <p id="t425" class="pln">
+        <span class="n"><a href="#t425">425</a></span
         ><span class="t"><span class="str"> :return:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t396" class="pln">
-        <span class="n"><a href="#t396">396</a></span
+      <p id="t426" class="pln">
+        <span class="n"><a href="#t426">426</a></span
         ><span class="t"><span class="str"> :metabolomics:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t397" class="pln">
-        <span class="n"><a href="#t397">397</a></span
+      <p id="t427" class="pln">
+        <span class="n"><a href="#t427">427</a></span
         ><span class="t"
           ><span class="str"> :metabolomics_with_old_ids:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t398" class="pln">
-        <span class="n"><a href="#t398">398</a></span
+      <p id="t428" class="pln">
+        <span class="n"><a href="#t428">428</a></span
         ><span class="t"><span class="str"> """</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t399" class="pln">
-        <span class="n"><a href="#t399">399</a></span
+      <p id="t429" class="pln">
+        <span class="n"><a href="#t429">429</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t400" class="mis show_mis">
-        <span class="n"><a href="#t400">400</a></span
+      <p id="t430" class="mis show_mis">
+        <span class="n"><a href="#t430">430</a></span
         ><span class="t">
           <span class="nam">metabolomics</span> <span class="op">=</span>
           <span class="op">{</span><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t401" class="mis show_mis">
-        <span class="n"><a href="#t401">401</a></span
+      <p id="t431" class="mis show_mis">
+        <span class="n"><a href="#t431">431</a></span
         ><span class="t">
           <span class="nam">metabolomics_with_old_ids</span>
           <span class="op">=</span> <span class="op">{</span
           ><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t402" class="pln">
-        <span class="n"><a href="#t402">402</a></span
+      <p id="t432" class="pln">
+        <span class="n"><a href="#t432">432</a></span
         ><span class="t"> <span class="com"># get metabolites</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t403" class="pln">
-        <span class="n"><a href="#t403">403</a></span
+      <p id="t433" class="pln">
+        <span class="n"><a href="#t433">433</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t404" class="pln">
-        <span class="n"><a href="#t404">404</a></span
+      <p id="t434" class="pln">
+        <span class="n"><a href="#t434">434</a></span
         ><span class="t">
           <span class="com"
             ># read the inchikey to pubchem ids mapping file</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t405" class="mis show_mis">
-        <span class="n"><a href="#t405">405</a></span
+      <p id="t435" class="mis show_mis">
+        <span class="n"><a href="#t435">435</a></span
+        ><span class="t">
+          <span class="key">if</span> <span class="nam">file_mapped</span
+          ><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t436" class="mis show_mis">
+        <span class="n"><a href="#t436">436</a></span
+        ><span class="t">
+          <span class="nam">inchikey_to_cid</span> <span class="op">=</span>
+          <span class="nam">mapping_file</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t437" class="pln">
+        <span class="n"><a href="#t437">437</a></span
+        ><span class="t">
+          <span class="key">else</span><span class="op">:</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t438" class="mis show_mis">
+        <span class="n"><a href="#t438">438</a></span
         ><span class="t">
           <span class="nam">inchikey_to_cid</span> <span class="op">=</span>
           <span class="op">{</span><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t406" class="mis show_mis">
-        <span class="n"><a href="#t406">406</a></span
+      <p id="t439" class="mis show_mis">
+        <span class="n"><a href="#t439">439</a></span
         ><span class="t">
           <span class="nam">inchikey_to_cid</span> <span class="op">=</span>
           <span class="nam">read_pubchem_id_file</span><span class="op">(</span
@@ -2987,21 +3140,28 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t407" class="pln">
-        <span class="n"><a href="#t407">407</a></span
+      <p id="t440" class="pln">
+        <span class="n"><a href="#t440">440</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t408" class="pln">
-        <span class="n"><a href="#t408">408</a></span
+      <p id="t441" class="pln">
+        <span class="n"><a href="#t441">441</a></span
         ><span class="t">
           <span class="com"
-            ># create the stoichoimetry matrix fomr the model as a Dataframe and
-            convert all the values to absolute values</span
+            ># create the stoichoimetry matrix fomr the model as a Dataframe
+            and</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t409" class="mis show_mis">
-        <span class="n"><a href="#t409">409</a></span
+      <p id="t442" class="pln">
+        <span class="n"><a href="#t442">442</a></span
+        ><span class="t">
+          <span class="com"># onvert all the values to absolute values</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t443" class="mis show_mis">
+        <span class="n"><a href="#t443">443</a></span
         ><span class="t">
           <span class="nam">sm</span> <span class="op">=</span>
           <span class="nam">create_stoichiometric_matrix</span
@@ -3011,49 +3171,55 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t410" class="pln">
-        <span class="n"><a href="#t410">410</a></span
+      <p id="t444" class="pln">
+        <span class="n"><a href="#t444">444</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t411" class="pln">
-        <span class="n"><a href="#t411">411</a></span
+      <p id="t445" class="pln">
+        <span class="n"><a href="#t445">445</a></span
         ><span class="t">
           <span class="com"
             ># get all the fluxes across reactions from the solution</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t412" class="mis show_mis">
-        <span class="n"><a href="#t412">412</a></span
+      <p id="t446" class="mis show_mis">
+        <span class="n"><a href="#t446">446</a></span
         ><span class="t">
           <span class="nam">fluxes</span> <span class="op">=</span>
           <span class="nam">solution</span><span class="op">.</span
           ><span class="nam">fluxes</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t413" class="pln">
-        <span class="n"><a href="#t413">413</a></span
+      <p id="t447" class="pln">
+        <span class="n"><a href="#t447">447</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t414" class="pln">
-        <span class="n"><a href="#t414">414</a></span
+      <p id="t448" class="pln">
+        <span class="n"><a href="#t448">448</a></span
         ><span class="t">
           <span class="com"
             ># calculating the dot product of the stoichiometry matrix and the
-            fluxes to calculate the net change</span
+            fluxes</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t415" class="pln">
-        <span class="n"><a href="#t415">415</a></span
+      <p id="t449" class="pln">
+        <span class="n"><a href="#t449">449</a></span
+        ><span class="t">
+          <span class="com"># to calculate the net change</span>&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t450" class="pln">
+        <span class="n"><a href="#t450">450</a></span
         ><span class="t">
           <span class="com"
             ># in concentration of the metabolites across reactions</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t416" class="mis show_mis">
-        <span class="n"><a href="#t416">416</a></span
+      <p id="t451" class="mis show_mis">
+        <span class="n"><a href="#t451">451</a></span
         ><span class="t">
           <span class="nam">net_change_in_concentrations</span>
           <span class="op">=</span> <span class="nam">sm</span
@@ -3066,8 +3232,8 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t417" class="pln">
-        <span class="n"><a href="#t417">417</a></span
+      <p id="t452" class="pln">
+        <span class="n"><a href="#t452">452</a></span
         ><span class="t">
           <span class="com"
             ># net_change_in_concentrations =
@@ -3075,21 +3241,28 @@
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t418" class="pln">
-        <span class="n"><a href="#t418">418</a></span
+      <p id="t453" class="pln">
+        <span class="n"><a href="#t453">453</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t419" class="pln">
-        <span class="n"><a href="#t419">419</a></span
+      <p id="t454" class="pln">
+        <span class="n"><a href="#t454">454</a></span
         ><span class="t">
           <span class="com"
             ># converting all na values to zeroes and counting the total number
-            of changes that happens for each metabolite</span
+            of</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t420" class="mis show_mis">
-        <span class="n"><a href="#t420">420</a></span
+      <p id="t455" class="pln">
+        <span class="n"><a href="#t455">455</a></span
+        ><span class="t">
+          <span class="com"># changes that happens for each metabolite</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t456" class="mis show_mis">
+        <span class="n"><a href="#t456">456</a></span
         ><span class="t">
           <span class="nam">num_changes_in_metabolites</span>
           <span class="op">=</span> <span class="nam">sm</span
@@ -3104,12 +3277,12 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t421" class="pln">
-        <span class="n"><a href="#t421">421</a></span
+      <p id="t457" class="pln">
+        <span class="n"><a href="#t457">457</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t422" class="mis show_mis">
-        <span class="n"><a href="#t422">422</a></span
+      <p id="t458" class="mis show_mis">
+        <span class="n"><a href="#t458">458</a></span
         ><span class="t">
           <span class="key">for</span> <span class="nam">met_id</span
           ><span class="op">,</span> <span class="nam">conc</span>
@@ -3120,8 +3293,8 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t423" class="mis show_mis">
-        <span class="n"><a href="#t423">423</a></span
+      <p id="t459" class="mis show_mis">
+        <span class="n"><a href="#t459">459</a></span
         ><span class="t">
           <span class="nam">metabolite</span> <span class="op">=</span>
           <span class="nam">model</span><span class="op">.</span
@@ -3130,20 +3303,20 @@
           ><span class="nam">met_id</span><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t424" class="pln">
-        <span class="n"><a href="#t424">424</a></span
+      <p id="t460" class="pln">
+        <span class="n"><a href="#t460">460</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t425" class="pln">
-        <span class="n"><a href="#t425">425</a></span
+      <p id="t461" class="pln">
+        <span class="n"><a href="#t461">461</a></span
         ><span class="t">
           <span class="com"
             ># if there is an inchikey ID for the metabolite</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t426" class="mis show_mis">
-        <span class="n"><a href="#t426">426</a></span
+      <p id="t462" class="mis show_mis">
+        <span class="n"><a href="#t462">462</a></span
         ><span class="t">
           <span class="key">if</span> <span class="str">"inchi_key"</span>
           <span class="key">in</span> <span class="nam">metabolite</span
@@ -3151,15 +3324,15 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t427" class="pln">
-        <span class="n"><a href="#t427">427</a></span
+      <p id="t463" class="pln">
+        <span class="n"><a href="#t463">463</a></span
         ><span class="t">
           <span class="com"># if it is a list get the first element</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t428" class="mis show_mis">
-        <span class="n"><a href="#t428">428</a></span
+      <p id="t464" class="mis show_mis">
+        <span class="n"><a href="#t464">464</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">type</span
           ><span class="op">(</span><span class="nam">metabolite</span
@@ -3170,8 +3343,8 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t429" class="mis show_mis">
-        <span class="n"><a href="#t429">429</a></span
+      <p id="t465" class="mis show_mis">
+        <span class="n"><a href="#t465">465</a></span
         ><span class="t">
           <span class="nam">inchi_key</span> <span class="op">=</span>
           <span class="nam">metabolite</span><span class="op">.</span
@@ -3181,14 +3354,14 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t430" class="pln">
-        <span class="n"><a href="#t430">430</a></span
+      <p id="t466" class="pln">
+        <span class="n"><a href="#t466">466</a></span
         ><span class="t">
           <span class="key">else</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t431" class="mis show_mis">
-        <span class="n"><a href="#t431">431</a></span
+      <p id="t467" class="mis show_mis">
+        <span class="n"><a href="#t467">467</a></span
         ><span class="t">
           <span class="nam">inchi_key</span> <span class="op">=</span>
           <span class="nam">metabolite</span><span class="op">.</span
@@ -3197,12 +3370,12 @@
           ><span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t432" class="pln">
-        <span class="n"><a href="#t432">432</a></span
+      <p id="t468" class="pln">
+        <span class="n"><a href="#t468">468</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t433" class="mis show_mis">
-        <span class="n"><a href="#t433">433</a></span
+      <p id="t469" class="mis show_mis">
+        <span class="n"><a href="#t469">469</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">inchi_key</span>
           <span class="key">in</span> <span class="nam">inchikey_to_cid</span
@@ -3211,17 +3384,24 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t434" class="pln">
-        <span class="n"><a href="#t434">434</a></span
+      <p id="t470" class="pln">
+        <span class="n"><a href="#t470">470</a></span
         ><span class="t">
           <span class="com"
-            ># if the CID is not in the metabolomics dict keys AND the mapped
-            value is not None and the reactions flux is not 0</span
+            ># if the CID is not in the metabolomics dict keys AND the</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t435" class="mis show_mis">
-        <span class="n"><a href="#t435">435</a></span
+      <p id="t471" class="pln">
+        <span class="n"><a href="#t471">471</a></span
+        ><span class="t">
+          <span class="com"
+            ># mapped value is not None and the reactions flux is not 0</span
+          >&nbsp;</span
+        ><span class="r"></span>
+      </p>
+      <p id="t472" class="mis show_mis">
+        <span class="n"><a href="#t472">472</a></span
         ><span class="t">
           <span class="key">if</span> <span class="op">(</span
           ><span class="nam">inchikey_to_cid</span><span class="op">[</span
@@ -3233,8 +3413,8 @@
           <span class="key">and</span> <span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t436" class="pln">
-        <span class="n"><a href="#t436">436</a></span
+      <p id="t473" class="pln">
+        <span class="n"><a href="#t473">473</a></span
         ><span class="t">
           <span class="nam">inchikey_to_cid</span><span class="op">[</span
           ><span class="nam">inchi_key</span><span class="op">]</span>
@@ -3242,14 +3422,14 @@
           <span class="key">None</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t437" class="pln">
-        <span class="n"><a href="#t437">437</a></span
+      <p id="t474" class="pln">
+        <span class="n"><a href="#t474">474</a></span
         ><span class="t">
           <span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t438" class="mis show_mis">
-        <span class="n"><a href="#t438">438</a></span
+      <p id="t475" class="mis show_mis">
+        <span class="n"><a href="#t475">475</a></span
         ><span class="t">
           <span class="nam">metabolomics</span><span class="op">[</span
           ><span class="nam">inchikey_to_cid</span><span class="op">[</span
@@ -3258,13 +3438,13 @@
           <span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t439" class="pln">
-        <span class="n"><a href="#t439">439</a></span
+      <p id="t476" class="pln">
+        <span class="n"><a href="#t476">476</a></span
         ><span class="t"> <span class="nam">conc</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t440" class="pln">
-        <span class="n"><a href="#t440">440</a></span
+      <p id="t477" class="pln">
+        <span class="n"><a href="#t477">477</a></span
         ><span class="t">
           <span class="op">/</span>
           <span class="nam">num_changes_in_metabolites</span
@@ -3272,8 +3452,8 @@
           ><span class="op">[</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t441" class="pln">
-        <span class="n"><a href="#t441">441</a></span
+      <p id="t478" class="pln">
+        <span class="n"><a href="#t478">478</a></span
         ><span class="t">
           <span class="nam">num_changes_in_metabolites</span
           ><span class="op">.</span><span class="nam">index</span
@@ -3282,18 +3462,18 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t442" class="pln">
-        <span class="n"><a href="#t442">442</a></span
+      <p id="t479" class="pln">
+        <span class="n"><a href="#t479">479</a></span
         ><span class="t"> <span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t443" class="pln">
-        <span class="n"><a href="#t443">443</a></span
+      <p id="t480" class="pln">
+        <span class="n"><a href="#t480">480</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t444" class="mis show_mis">
-        <span class="n"><a href="#t444">444</a></span
+      <p id="t481" class="mis show_mis">
+        <span class="n"><a href="#t481">481</a></span
         ><span class="t">
           <span class="nam">metabolomics_with_old_ids</span
           ><span class="op">[</span><span class="nam">met_id</span
@@ -3301,13 +3481,13 @@
           <span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t445" class="pln">
-        <span class="n"><a href="#t445">445</a></span
+      <p id="t482" class="pln">
+        <span class="n"><a href="#t482">482</a></span
         ><span class="t"> <span class="nam">conc</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t446" class="pln">
-        <span class="n"><a href="#t446">446</a></span
+      <p id="t483" class="pln">
+        <span class="n"><a href="#t483">483</a></span
         ><span class="t">
           <span class="op">/</span>
           <span class="nam">num_changes_in_metabolites</span
@@ -3315,8 +3495,8 @@
           ><span class="op">[</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t447" class="pln">
-        <span class="n"><a href="#t447">447</a></span
+      <p id="t484" class="pln">
+        <span class="n"><a href="#t484">484</a></span
         ><span class="t">
           <span class="nam">num_changes_in_metabolites</span
           ><span class="op">.</span><span class="nam">index</span
@@ -3325,22 +3505,22 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t448" class="pln">
-        <span class="n"><a href="#t448">448</a></span
+      <p id="t485" class="pln">
+        <span class="n"><a href="#t485">485</a></span
         ><span class="t"> <span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t449" class="pln">
-        <span class="n"><a href="#t449">449</a></span
+      <p id="t486" class="pln">
+        <span class="n"><a href="#t486">486</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t450" class="pln">
-        <span class="n"><a href="#t450">450</a></span
+      <p id="t487" class="pln">
+        <span class="n"><a href="#t487">487</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t451" class="mis show_mis">
-        <span class="n"><a href="#t451">451</a></span
+      <p id="t488" class="mis show_mis">
+        <span class="n"><a href="#t488">488</a></span
         ><span class="t">
           <span class="key">elif</span> <span class="nam">inchikey_to_cid</span
           ><span class="op">[</span><span class="nam">inchi_key</span
@@ -3349,8 +3529,8 @@
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t452" class="mis show_mis">
-        <span class="n"><a href="#t452">452</a></span
+      <p id="t489" class="mis show_mis">
+        <span class="n"><a href="#t489">489</a></span
         ><span class="t">
           <span class="nam">metabolomics</span><span class="op">[</span
           ><span class="nam">inchikey_to_cid</span><span class="op">[</span
@@ -3359,13 +3539,13 @@
           <span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t453" class="pln">
-        <span class="n"><a href="#t453">453</a></span
+      <p id="t490" class="pln">
+        <span class="n"><a href="#t490">490</a></span
         ><span class="t"> <span class="nam">conc</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t454" class="pln">
-        <span class="n"><a href="#t454">454</a></span
+      <p id="t491" class="pln">
+        <span class="n"><a href="#t491">491</a></span
         ><span class="t">
           <span class="op">/</span>
           <span class="nam">num_changes_in_metabolites</span
@@ -3373,8 +3553,8 @@
           ><span class="op">[</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t455" class="pln">
-        <span class="n"><a href="#t455">455</a></span
+      <p id="t492" class="pln">
+        <span class="n"><a href="#t492">492</a></span
         ><span class="t">
           <span class="nam">num_changes_in_metabolites</span
           ><span class="op">.</span><span class="nam">index</span
@@ -3383,18 +3563,18 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t456" class="pln">
-        <span class="n"><a href="#t456">456</a></span
+      <p id="t493" class="pln">
+        <span class="n"><a href="#t493">493</a></span
         ><span class="t"> <span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t457" class="pln">
-        <span class="n"><a href="#t457">457</a></span
+      <p id="t494" class="pln">
+        <span class="n"><a href="#t494">494</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t458" class="mis show_mis">
-        <span class="n"><a href="#t458">458</a></span
+      <p id="t495" class="mis show_mis">
+        <span class="n"><a href="#t495">495</a></span
         ><span class="t">
           <span class="nam">metabolomics_with_old_ids</span
           ><span class="op">[</span><span class="nam">met_id</span
@@ -3402,13 +3582,13 @@
           <span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t459" class="pln">
-        <span class="n"><a href="#t459">459</a></span
+      <p id="t496" class="pln">
+        <span class="n"><a href="#t496">496</a></span
         ><span class="t"> <span class="nam">conc</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t460" class="pln">
-        <span class="n"><a href="#t460">460</a></span
+      <p id="t497" class="pln">
+        <span class="n"><a href="#t497">497</a></span
         ><span class="t">
           <span class="op">/</span>
           <span class="nam">num_changes_in_metabolites</span
@@ -3416,8 +3596,8 @@
           ><span class="op">[</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t461" class="pln">
-        <span class="n"><a href="#t461">461</a></span
+      <p id="t498" class="pln">
+        <span class="n"><a href="#t498">498</a></span
         ><span class="t">
           <span class="nam">num_changes_in_metabolites</span
           ><span class="op">.</span><span class="nam">index</span
@@ -3426,38 +3606,38 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t462" class="pln">
-        <span class="n"><a href="#t462">462</a></span
+      <p id="t499" class="pln">
+        <span class="n"><a href="#t499">499</a></span
         ><span class="t"> <span class="op">]</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t463" class="pln">
-        <span class="n"><a href="#t463">463</a></span
+      <p id="t500" class="pln">
+        <span class="n"><a href="#t500">500</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t464" class="pln">
-        <span class="n"><a href="#t464">464</a></span
+      <p id="t501" class="pln">
+        <span class="n"><a href="#t501">501</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t465" class="mis show_mis">
-        <span class="n"><a href="#t465">465</a></span
+      <p id="t502" class="mis show_mis">
+        <span class="n"><a href="#t502">502</a></span
         ><span class="t">
           <span class="key">return</span> <span class="nam">metabolomics</span
           ><span class="op">,</span>
           <span class="nam">metabolomics_with_old_ids</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t466" class="pln">
-        <span class="n"><a href="#t466">466</a></span
+      <p id="t503" class="pln">
+        <span class="n"><a href="#t503">503</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t467" class="pln">
-        <span class="n"><a href="#t467">467</a></span
+      <p id="t504" class="pln">
+        <span class="n"><a href="#t504">504</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t468" class="run">
-        <span class="n"><a href="#t468">468</a></span
+      <p id="t505" class="run">
+        <span class="n"><a href="#t505">505</a></span
         ><span class="t"
           ><span class="key">def</span> <span class="nam">get_multiomics</span
           ><span class="op">(</span><span class="nam">model</span
@@ -3468,30 +3648,30 @@
           ><span class="op">)</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t469" class="pln">
-        <span class="n"><a href="#t469">469</a></span
+      <p id="t506" class="pln">
+        <span class="n"><a href="#t506">506</a></span
         ><span class="t"> <span class="str">"""</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t470" class="pln">
-        <span class="n"><a href="#t470">470</a></span
+      <p id="t507" class="pln">
+        <span class="n"><a href="#t507">507</a></span
         ><span class="t"
           ><span class="str"> Get mulitomics data</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t471" class="pln">
-        <span class="n"><a href="#t471">471</a></span
+      <p id="t508" class="pln">
+        <span class="n"><a href="#t508">508</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t472" class="pln">
-        <span class="n"><a href="#t472">472</a></span
+      <p id="t509" class="pln">
+        <span class="n"><a href="#t509">509</a></span
         ><span class="t"
           ><span class="str"> :param model: cobra model object</span
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t473" class="pln">
-        <span class="n"><a href="#t473">473</a></span
+      <p id="t510" class="pln">
+        <span class="n"><a href="#t510">510</a></span
         ><span class="t"
           ><span class="str">
             :param solution: solution for the model optimization using
@@ -3499,84 +3679,84 @@
           >&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t474" class="pln">
-        <span class="n"><a href="#t474">474</a></span
+      <p id="t511" class="pln">
+        <span class="n"><a href="#t511">511</a></span
         ><span class="t"
           ><span class="str"> :param mapping_file:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t475" class="pln">
-        <span class="n"><a href="#t475">475</a></span
+      <p id="t512" class="pln">
+        <span class="n"><a href="#t512">512</a></span
         ><span class="t"><span class="str"> :old_ids:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t476" class="pln">
-        <span class="n"><a href="#t476">476</a></span
+      <p id="t513" class="pln">
+        <span class="n"><a href="#t513">513</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t477" class="pln">
-        <span class="n"><a href="#t477">477</a></span
+      <p id="t514" class="pln">
+        <span class="n"><a href="#t514">514</a></span
         ><span class="t"><span class="str"> :return:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t478" class="pln">
-        <span class="n"><a href="#t478">478</a></span
+      <p id="t515" class="pln">
+        <span class="n"><a href="#t515">515</a></span
         ><span class="t"><span class="str"> :proteomics:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t479" class="pln">
-        <span class="n"><a href="#t479">479</a></span
+      <p id="t516" class="pln">
+        <span class="n"><a href="#t516">516</a></span
         ><span class="t"><span class="str"> :transcriptomics:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t480" class="pln">
-        <span class="n"><a href="#t480">480</a></span
+      <p id="t517" class="pln">
+        <span class="n"><a href="#t517">517</a></span
         ><span class="t"><span class="str"> :metabolomics:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t481" class="pln">
-        <span class="n"><a href="#t481">481</a></span
+      <p id="t518" class="pln">
+        <span class="n"><a href="#t518">518</a></span
         ><span class="t"><span class="str"> """</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t482" class="pln">
-        <span class="n"><a href="#t482">482</a></span
+      <p id="t519" class="pln">
+        <span class="n"><a href="#t519">519</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t483" class="mis show_mis">
-        <span class="n"><a href="#t483">483</a></span
+      <p id="t520" class="mis show_mis">
+        <span class="n"><a href="#t520">520</a></span
         ><span class="t">
           <span class="nam">proteomics</span> <span class="op">=</span>
           <span class="op">{</span><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t484" class="mis show_mis">
-        <span class="n"><a href="#t484">484</a></span
+      <p id="t521" class="mis show_mis">
+        <span class="n"><a href="#t521">521</a></span
         ><span class="t">
           <span class="nam">transcriptomics</span> <span class="op">=</span>
           <span class="op">{</span><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t485" class="mis show_mis">
-        <span class="n"><a href="#t485">485</a></span
+      <p id="t522" class="mis show_mis">
+        <span class="n"><a href="#t522">522</a></span
         ><span class="t">
           <span class="nam">fluxomics</span> <span class="op">=</span>
           <span class="op">{</span><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t486" class="mis show_mis">
-        <span class="n"><a href="#t486">486</a></span
+      <p id="t523" class="mis show_mis">
+        <span class="n"><a href="#t523">523</a></span
         ><span class="t">
           <span class="nam">metabolomics</span> <span class="op">=</span>
           <span class="op">{</span><span class="op">}</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t487" class="pln">
-        <span class="n"><a href="#t487">487</a></span
+      <p id="t524" class="pln">
+        <span class="n"><a href="#t524">524</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t488" class="mis show_mis">
-        <span class="n"><a href="#t488">488</a></span
+      <p id="t525" class="mis show_mis">
+        <span class="n"><a href="#t525">525</a></span
         ><span class="t">
           <span class="nam">proteomics</span><span class="op">,</span>
           <span class="nam">transcriptomics</span> <span class="op">=</span>
@@ -3586,12 +3766,12 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t489" class="pln">
-        <span class="n"><a href="#t489">489</a></span
+      <p id="t526" class="pln">
+        <span class="n"><a href="#t526">526</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t490" class="mis show_mis">
-        <span class="n"><a href="#t490">490</a></span
+      <p id="t527" class="mis show_mis">
+        <span class="n"><a href="#t527">527</a></span
         ><span class="t">
           <span class="nam">metabolomics</span><span class="op">,</span>
           <span class="nam">metabolomics_with_old_ids</span>
@@ -3600,32 +3780,32 @@
           ><span class="op">(</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t491" class="pln">
-        <span class="n"><a href="#t491">491</a></span
+      <p id="t528" class="pln">
+        <span class="n"><a href="#t528">528</a></span
         ><span class="t">
           <span class="nam">model</span><span class="op">,</span>
           <span class="nam">solution</span><span class="op">,</span>
           <span class="nam">mapping_file</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t492" class="pln">
-        <span class="n"><a href="#t492">492</a></span
+      <p id="t529" class="pln">
+        <span class="n"><a href="#t529">529</a></span
         ><span class="t"> <span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t493" class="pln">
-        <span class="n"><a href="#t493">493</a></span
+      <p id="t530" class="pln">
+        <span class="n"><a href="#t530">530</a></span
         ><span class="t">&nbsp;</span><span class="r"></span>
       </p>
-      <p id="t494" class="mis show_mis">
-        <span class="n"><a href="#t494">494</a></span
+      <p id="t531" class="mis show_mis">
+        <span class="n"><a href="#t531">531</a></span
         ><span class="t">
           <span class="key">if</span> <span class="nam">old_ids</span
           ><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t495" class="mis show_mis">
-        <span class="n"><a href="#t495">495</a></span
+      <p id="t532" class="mis show_mis">
+        <span class="n"><a href="#t532">532</a></span
         ><span class="t">
           <span class="key">return</span> <span class="op">(</span
           ><span class="nam">proteomics</span><span class="op">,</span>
@@ -3635,14 +3815,14 @@
           ><span class="op">)</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t496" class="pln">
-        <span class="n"><a href="#t496">496</a></span
+      <p id="t533" class="pln">
+        <span class="n"><a href="#t533">533</a></span
         ><span class="t">
           <span class="key">else</span><span class="op">:</span>&nbsp;</span
         ><span class="r"></span>
       </p>
-      <p id="t497" class="mis show_mis">
-        <span class="n"><a href="#t497">497</a></span
+      <p id="t534" class="mis show_mis">
+        <span class="n"><a href="#t534">534</a></span
         ><span class="t">
           <span class="key">return</span> <span class="op">(</span
           ><span class="nam">proteomics</span><span class="op">,</span>
@@ -3658,7 +3838,7 @@
           <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp;
           <a class="nav" href="https://coverage.readthedocs.io"
             >coverage.py v5.5</a
-          >, created at 2021-06-02 18:43 -0700
+          >, created at 2021-07-02 14:13 -0700
         </p>
       </div>
     </div>

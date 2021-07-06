@@ -348,7 +348,7 @@ def get_optimized_solution(model, reaction_id, lower_bound, upper_bound):
     return solution
 
 
-def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug=True):
+def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=True):
     """
     Get transcriptomics and proteomics data
 
@@ -398,7 +398,7 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug
                     reaction_flux = solution.fluxes[rxnId]
 
                 noise = 0
-                if not noise_zero:
+                if add_noise:
                     noiseSigma = 0.05 * (reaction_flux / k)
                     noise = noiseSigma * np.random.randn()
 
@@ -406,7 +406,7 @@ def get_proteomics_transcriptomics_data(model, solution, noise_zero=False, debug
 
                 # create transcriptomics dict
                 noise = 0
-                if not noise_zero:
+                if add_noise:
                     noiseSigma = 0.05 * proteomics[protein_id] / q
                     noise = noiseSigma * np.random.randn()
                 transcriptomics[gene.id] = abs((proteomics[protein_id] / q) + noise)

@@ -37,9 +37,29 @@ def grid_data(user_params_data):
 def model_data():
     cwd = os.getcwd()  # Get the current working directory (cwd)
     model = cobra.io.load_json_model(
-        # os.path.join(cwd, "omg/integration_tests/data/iJO1366_MVA.json")
-        os.path.join(cwd, "omg/integration_tests/data/model_with_constraints.json")
+        os.path.join(cwd, "omg/integration_tests/data/iJO1366_MVA.json")
     )
+
+    # adding constraints
+    iso = "EX_isoprenol_e"
+    iso_cons = model.problem.Constraint(
+        model.reactions.EX_isoprenol_e.flux_expression, lb=0.20
+    )
+    model.add_cons_vars(iso_cons)
+    for_cons = model.problem.Constraint(
+        model.reactions.EX_for_e.flux_expression, lb=0.10
+    )
+    model.add_cons_vars(for_cons)
+    o2_cons = model.problem.Constraint(model.reactions.EX_o2_e.flux_expression, lb=-8.0)
+    model.add_cons_vars(o2_cons)
+
+    CC_rxn_names = ["ACCOAC", "MDH", "PTAr", "CS", "ACACT1r", "PPC", "PPCK", "PFL"]
+    for reaction in CC_rxn_names:
+        reaction_constraint = model.problem.Constraint(
+            model.reactions.get_by_id(reaction).flux_expression, lb=-1.0, ub=1.0
+        )
+        model.add_cons_vars(reaction_constraint)
+
     return model
 
 
@@ -52,11 +72,15 @@ def solution_data():
 
 
 @pytest.fixture(scope="module")
-def solution_old_data():
+def solution_fluxes_0_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/solution_old.json")) as fh:
-        solution_old = json.load(fh)
-    return solution_old
+    solution = {}
+    with open(
+        os.path.join(cwd, "omg/integration_tests/data/solution_fluxes_0.0.json")
+    ) as fh:
+        solution_fluxes = json.load(fh)
+    solution["fluxes"] = solution_fluxes
+    return solution
 
 
 @pytest.fixture(scope="module")
@@ -107,7 +131,7 @@ def solution_pickle_data():
 @pytest.fixture(scope="module")
 def proteomics_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/proteomics.json")) as fh:
+    with open(os.path.join(cwd, "omg/integration_tests/data/proteomics_0_.json")) as fh:
         proteomics = json.load(fh)
     return proteomics
 
@@ -197,81 +221,45 @@ def test_advance_OD_Emets(
     # assert_series_equal(actual_Emets, old_Emets)
 
 
-def test_getBEFLuxes(user_params_data):
-    t0 = 0.0
-    tf = 1.0
-    points = 1
-    tspan, delt = np.linspace(t0, tf, points, dtype="float64", retstep=True)
-    grid = (tspan, delt)
-
-    num_strains = 2
-
-    # designs_df = pd.read_csv(
-    #                   f'{user_params_data["designsfilepath"]}/ \
-    #                       {user_params_data["designsfile"]}',
-    #                     usecols=['Part ID', 'Name', 'Summary'])
-    # designs_df.columns = ['Part ID','Line Name','Line Description']
-
-    # reactions = designs_df['Line Description'][0].split('_')[::2]
-    # for rxn in reactions:
-    #     designs_df[rxn] = None
-
-    # for i in range(len(designs_df)):
-    #     if designs_df['Line Name'][i]=='WT':
-    #         designs_df.loc[i][reactions] = [1 for r in range(len(reactions))]
-    #     else:
-    #         values = designs_df.loc[i]['Line Description'].split('_')[1::2]
-    #         designs_df.loc[i][reactions] = [float(value) for value in values]
-
-    # designs_df = designs_df.drop(columns=['Line Description','Part ID'])
-
-    solutionsMOMA_TS = {}
-    # for i in range(num_strains):
-    #     design = designs_df[cols].loc[i]
-    #     if design['Line Name']=='WT':
-    #         solutionsMOMA_TS[i] = getBEFluxes(
-    #                                   model_TS, design, solution_TS, grid
-    #                               )
-    #     else:
-    #         solutionsMOMA_TS[i] = getBEFluxes(
-    #                                     model_TS, design, solutionHI_TS, grid
-    #                               )
-
-    # solutionsMOMA_TS[i] = getBEFluxes(model_TS, design, solution_TS, grid)
-
-    # asserts
-
-
 def test_get_proteomics_transcriptomics_data(
-    model_data, solution_pickle_data, proteomics_data, transcriptomics_data
+    model_data, solution_fluxes_0_data, proteomics_data, transcriptomics_data
 ):
 
     proteomics, transcriptomics = get_proteomics_transcriptomics_data(
-        model_data, solution_pickle_data, True, False
+        model_data, solution_fluxes_0_data, False, True
     )
 
-    #  print(proteomics['O32583'])
-    # print(proteomics['O32583'])
-    # print(proteomics['P69681'])
-    # print(proteomics_data['P69681'])
+    cwd = os.getcwd()
+    import json
 
-    print(len(proteomics.keys()))
-    print(len(proteomics_data.keys()))
+    with open(
+        os.path.join(cwd, "omg/integration_tests/data/proteomics_0_.json"), "w"
+    ) as fh:
+        json.dump(proteomics, fh)
 
-    print(len(transcriptomics.keys()))
-    print(len(transcriptomics_data.keys()))
+    # print(len(proteomics.keys()))
+    # print(len(proteomics_data.keys()))
 
+    # print(len(transcriptomics.keys()))
+    # print(len(transcriptomics_data.keys()))
+
+    from deepdiff import DeepDiff
+
+    dd = DeepDiff(proteomics, proteomics_data, ignore_order=True, math_epsilon=0.000001)
+    print(dd)
+    # dd = DeepDiff(transcriptomics, transcriptomics_data, ignore_order=True, math_epsilon=.000001)
+    # print(dd)
     # assert
-    assert True
+    # assert True
     # assert proteomics == proteomics_data
     # assert transcriptomics == transcriptomics_data
 
 
 def test_get_metabolomics_data(
-    model_data, solution_pickle_data, inchikey_to_cid_data, metabolomics_data
+    model_data, solution_0_data, inchikey_to_cid_data, metabolomics_data
 ):
     metabolomics, metabolomics_with_old_ids = get_metabolomics_data(
-        model_data, solution_pickle_data, inchikey_to_cid_data, True
+        model_data, solution_0_data, inchikey_to_cid_data, True
     )
 
     # assert
