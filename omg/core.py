@@ -349,19 +349,27 @@ def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=F
 
     # pre-determined linear constant (NOTE: Allow user to set this via parameter)
     # DISCUSS!!
+
+    # pre-determined linear constant
+    # (NOTE: Allow user to set this via parameter)
+    # DISCUSS!!
     k = 0.8
     q = 0.06
 
     proteomics = {}
     transcriptomics = {}
 
-    rxnIDs = solution["fluxes"].keys()
-    print("----> ", len(rxnIDs))
+    if debug:
+        rxnIDs = solution["fluxes"].keys()
+    else:
+        rxnIDs = solution.fluxes.keys()
+
     for rxnId in rxnIDs:
         reaction = model.reactions.get_by_id(rxnId)
         for gene in list(reaction.genes):
 
-            # this will ignore all the reactions that does not have the gene.annotation property
+            # this will ignore all the reactions that does not have
+            # the gene.annotation property
             # DISCUSS!!
             if gene.annotation:
                 if "uniprot" not in gene.annotation:
@@ -373,71 +381,27 @@ def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=F
                     protein_id = gene.annotation["uniprot"][0]
 
                 # add random noise which is 5 percent of the signal
-                #                 noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
-                #                 noise = noiseSigma*np.random.randn();
+                if debug:
+                    reaction_flux = solution["fluxes"][rxnId]
+                else:
+                    reaction_flux = solution.fluxes[rxnId]
+                # reaction_flux = solution["fluxes"][rxnId]
+
                 noise = 0
-                proteomics[protein_id] = abs((solution["fluxes"][rxnId] / k) + noise)
+                if add_noise:
+                    noiseSigma = 0.05 * (reaction_flux / k)
+                    noise = noiseSigma * np.random.randn()
+
+                proteomics[protein_id] = abs((reaction_flux / k) + noise)
 
                 # create transcriptomics dict
-                #                 noiseSigma = 0.05 * proteomics[protein_id]/q;
-                #                 noise = noiseSigma*np.random.randn();
+                noise = 0
+                if add_noise:
+                    noiseSigma = 0.05 * proteomics[protein_id] / q
+                    noise = noiseSigma * np.random.randn()
                 transcriptomics[gene.id] = abs((proteomics[protein_id] / q) + noise)
-    print(len(proteomics))
+
     return proteomics, transcriptomics
-
-    # pre-determined linear constant
-    # (NOTE: Allow user to set this via parameter)
-    # DISCUSS!!
-    # k = 0.8
-    # q = 0.06
-
-    # proteomics = {}
-    # transcriptomics = {}
-
-    # if debug:
-    #     rxnIDs = solution["fluxes"].keys()
-    # else:
-    #     rxnIDs = solution.fluxes.keys()
-
-    # print(len(rxnIDs))
-    # for rxnId in rxnIDs:
-    #     reaction = model.reactions.get_by_id(rxnId)
-    #     for gene in list(reaction.genes):
-
-    #         # this will ignore all the reactions that does not have
-    #         # the gene.annotation property
-    #         # DISCUSS!!
-    #         if gene.annotation:
-    #             if "uniprot" not in gene.annotation:
-    #                 if "goa" in gene.annotation:
-    #                     protein_id = gene.annotation["goa"]
-    #                 else:
-    #                     break
-    #             else:
-    #                 protein_id = gene.annotation["uniprot"][0]
-
-    #             # add random noise which is 5 percent of the signal
-    #             # if debug:
-    #             #     reaction_flux = solution["fluxes"][rxnId]
-    #             # else:
-    #             #     reaction_flux = solution.fluxes[rxnId]
-    #             reaction_flux = solution["fluxes"][rxnId]
-
-    #             noise = 0
-    #             # if add_noise:
-    #             #     noiseSigma = 0.05 * (reaction_flux / k)
-    #             #     noise = noiseSigma * np.random.randn()
-
-    #             proteomics[protein_id] = abs((reaction_flux / k) + noise)
-
-    #             # create transcriptomics dict
-    #             noise = 0
-    #             # if add_noise:
-    #             #     noiseSigma = 0.05 * proteomics[protein_id] / q
-    #             #     noise = noiseSigma * np.random.randn()
-    #             transcriptomics[gene.id] = abs((proteomics[protein_id] / q) + noise)
-    # print(len(proteomics))
-    # return proteomics, transcriptomics
 
 
 def get_metabolomics_data(

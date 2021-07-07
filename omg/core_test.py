@@ -152,7 +152,7 @@ def proteomics_data():
 def transcriptomics_data():
     cwd = os.getcwd()
     with open(
-        os.path.join(cwd, "omg/integration_tests/data/transcriptomics.json")
+        os.path.join(cwd, "omg/integration_tests/data/transcriptomics_0.json")
     ) as fh:
         transcriptomics = json.load(fh)
     return transcriptomics
@@ -161,9 +161,7 @@ def transcriptomics_data():
 @pytest.fixture(scope="module")
 def metabolomics_data():
     cwd = os.getcwd()
-    with open(
-        os.path.join(cwd, "omg/integration_tests/data/metabolomics.json")
-    ) as fh:
+    with open(os.path.join(cwd, "omg/integration_tests/data/metabolomics.json")) as fh:
         metabolomics = json.load(fh)
     return metabolomics
 
@@ -2894,11 +2892,18 @@ def test_get_proteomics_transcriptomics_data(
     # ) as fh:
     #     json.dump(proteomics, fh)
 
-    print(len(proteomics.keys()))
+    # cwd = os.getcwd()
+    # with open(
+    #     os.path.join(cwd, "omg/integration_tests/data/transcriptomics_0.json"), "w"
+    # ) as fh:
+    #     json.dump(transcriptomics, fh)
+
+    # print(len(proteomics.keys()))
     # print(len(proteomics_data.keys()))
 
-    # print(len(transcriptomics.keys()))
-    # print(len(transcriptomics_data.keys()))
+    print("Transcriptomics: ")
+    print(len(transcriptomics.keys()))
+    print(len(transcriptomics_data.keys()))
 
     # from deepdiff import DeepDiff
 
@@ -2909,7 +2914,7 @@ def test_get_proteomics_transcriptomics_data(
     # assert
     # assert True
     # assert proteomics == proteomics_data
-    # assert transcriptomics == transcriptomics_data
+    assert transcriptomics == transcriptomics_data
 
 
 def test_get_metabolomics_data(
