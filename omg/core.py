@@ -347,8 +347,7 @@ def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=F
     :transcriptomics:
     """
 
-    # pre-determined linear constant
-    # (NOTE: Allow user to set this via parameter)
+    # pre-determined linear constant (NOTE: Allow user to set this via parameter)
     # DISCUSS!!
     k = 0.8
     q = 0.06
@@ -356,18 +355,13 @@ def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=F
     proteomics = {}
     transcriptomics = {}
 
-    if debug:
-        rxnIDs = solution["fluxes"].keys()
-    else:
-        rxnIDs = solution.fluxes.keys()
-
-    print(len(rxnIDs))
+    rxnIDs = solution["fluxes"].keys()
+    print("----> ", len(rxnIDs))
     for rxnId in rxnIDs:
         reaction = model.reactions.get_by_id(rxnId)
         for gene in list(reaction.genes):
 
-            # this will ignore all the reactions that does not have
-            # the gene.annotation property
+            # this will ignore all the reactions that does not have the gene.annotation property
             # DISCUSS!!
             if gene.annotation:
                 if "uniprot" not in gene.annotation:
@@ -379,30 +373,76 @@ def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=F
                     protein_id = gene.annotation["uniprot"][0]
 
                 # add random noise which is 5 percent of the signal
-                # if debug:
-                #     reaction_flux = solution["fluxes"][rxnId]
-                # else:
-                #     reaction_flux = solution.fluxes[rxnId]
-                reaction_flux = solution["fluxes"][rxnId]
-
+                #                 noiseSigma = 0.05 * solution.fluxes[rxnId]/k;
+                #                 noise = noiseSigma*np.random.randn();
                 noise = 0
-                # if add_noise:
-                #     noiseSigma = 0.05 * (reaction_flux / k)
-                #     noise = noiseSigma * np.random.randn()
-
-                proteomics[protein_id] = abs((reaction_flux / k) + noise)
+                proteomics[protein_id] = abs((solution["fluxes"][rxnId] / k) + noise)
 
                 # create transcriptomics dict
-                noise = 0
-                # if add_noise:
-                #     noiseSigma = 0.05 * proteomics[protein_id] / q
-                #     noise = noiseSigma * np.random.randn()
+                #                 noiseSigma = 0.05 * proteomics[protein_id]/q;
+                #                 noise = noiseSigma*np.random.randn();
                 transcriptomics[gene.id] = abs((proteomics[protein_id] / q) + noise)
     print(len(proteomics))
     return proteomics, transcriptomics
 
+    # pre-determined linear constant
+    # (NOTE: Allow user to set this via parameter)
+    # DISCUSS!!
+    # k = 0.8
+    # q = 0.06
 
-def get_metabolomics_data(model, solution, mapping_file, file_mapped=False):
+    # proteomics = {}
+    # transcriptomics = {}
+
+    # if debug:
+    #     rxnIDs = solution["fluxes"].keys()
+    # else:
+    #     rxnIDs = solution.fluxes.keys()
+
+    # print(len(rxnIDs))
+    # for rxnId in rxnIDs:
+    #     reaction = model.reactions.get_by_id(rxnId)
+    #     for gene in list(reaction.genes):
+
+    #         # this will ignore all the reactions that does not have
+    #         # the gene.annotation property
+    #         # DISCUSS!!
+    #         if gene.annotation:
+    #             if "uniprot" not in gene.annotation:
+    #                 if "goa" in gene.annotation:
+    #                     protein_id = gene.annotation["goa"]
+    #                 else:
+    #                     break
+    #             else:
+    #                 protein_id = gene.annotation["uniprot"][0]
+
+    #             # add random noise which is 5 percent of the signal
+    #             # if debug:
+    #             #     reaction_flux = solution["fluxes"][rxnId]
+    #             # else:
+    #             #     reaction_flux = solution.fluxes[rxnId]
+    #             reaction_flux = solution["fluxes"][rxnId]
+
+    #             noise = 0
+    #             # if add_noise:
+    #             #     noiseSigma = 0.05 * (reaction_flux / k)
+    #             #     noise = noiseSigma * np.random.randn()
+
+    #             proteomics[protein_id] = abs((reaction_flux / k) + noise)
+
+    #             # create transcriptomics dict
+    #             noise = 0
+    #             # if add_noise:
+    #             #     noiseSigma = 0.05 * proteomics[protein_id] / q
+    #             #     noise = noiseSigma * np.random.randn()
+    #             transcriptomics[gene.id] = abs((proteomics[protein_id] / q) + noise)
+    # print(len(proteomics))
+    # return proteomics, transcriptomics
+
+
+def get_metabolomics_data(
+    model, solution, mapping_file, file_mapped=False, debug=False
+):
     """
     Get metabolomics data
 
@@ -426,12 +466,15 @@ def get_metabolomics_data(model, solution, mapping_file, file_mapped=False):
         inchikey_to_cid = {}
         inchikey_to_cid = read_pubchem_id_file(mapping_file)
 
-    # create the stoichoimetry matrix fomr the model as a Dataframe and
-    # onvert all the values to absolute values
+    # create the stoichoimetry matrix from the model as a Dataframe and
+    # convert all the values to absolute values
     sm = create_stoichiometric_matrix(model, array_type="DataFrame")
 
     # get all the fluxes across reactions from the solution
-    fluxes = solution.fluxes
+    if debug:
+        fluxes = pd.Series(solution["fluxes"])
+    else:
+        fluxes = solution.fluxes
 
     # calculating the dot product of the stoichiometry matrix and the fluxes
     # to calculate the net change
