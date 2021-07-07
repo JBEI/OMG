@@ -70,8 +70,8 @@ def get_inchikey_to_cid_data():
 def get_experiment_description_file():
 
     return [
-        "Line Name, Line Description, Part ID, Media, Shaking Speed, Starting OD, \
-            Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n",
+        "Line Name, Line Description, Part ID, Media, Shaking Speed, "
+        "Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n",
         "WT, Wild type E. coli, ABFPUB_000310, M9, 1, 0.1, 50, 200, 30, 1\n",
     ]
 
@@ -94,7 +94,8 @@ def test_write_experiment_description_file(get_experiment_description_file):
 
     with open(f"{output_file_path}/EDD_experiment_description_file.csv") as fh:
         lines = fh.readlines()
-        assert lines == get_experiment_description_file
+
+    assert lines == get_experiment_description_file
 
 
 def test_write_OD_data(cell_data, user_params_data):

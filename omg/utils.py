@@ -42,8 +42,8 @@ def write_experiment_description_file(output_file_path, line_name="WT", label=""
     try:
         with open(experiment_description_file_name, "w") as fh:
             fh.write(
-                "Line Name, Line Description, Part ID, Media, Shaking Speed, \
-                    Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n"
+                "Line Name, Line Description, Part ID, Media, Shaking Speed, "
+                "Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n"
             )
             if line_name == "WT":
                 line_descr = "Wild type E. coli"

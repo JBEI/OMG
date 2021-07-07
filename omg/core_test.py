@@ -257,24 +257,22 @@ def test_get_proteomics_transcriptomics_data(
         model_data, solution_fluxes_0_data, False, True
     )
 
-    cwd = os.getcwd()
-    import json
+    # cwd = os.getcwd()
+    # with open(
+    #     os.path.join(cwd, "omg/integration_tests/data/proteomics_0_.json"), "w"
+    # ) as fh:
+    #     json.dump(proteomics, fh)
 
-    with open(
-        os.path.join(cwd, "omg/integration_tests/data/proteomics_0_.json"), "w"
-    ) as fh:
-        json.dump(proteomics, fh)
-
-    # print(len(proteomics.keys()))
+    print(len(proteomics.keys()))
     # print(len(proteomics_data.keys()))
 
     # print(len(transcriptomics.keys()))
     # print(len(transcriptomics_data.keys()))
 
-    from deepdiff import DeepDiff
+    # from deepdiff import DeepDiff
 
-    dd = DeepDiff(proteomics, proteomics_data, ignore_order=True, math_epsilon=0.000001)
-    print(dd)
+    # dd = DeepDiff(proteomics, proteomics_data, ignore_order=True, math_epsilon=0.000001)
+    # print(dd)
     # dd = DeepDiff(transcriptomics, transcriptomics_data, ignore_order=True, math_epsilon=.000001)
     # print(dd)
     # assert
@@ -284,7 +282,7 @@ def test_get_proteomics_transcriptomics_data(
 
 
 def test_get_metabolomics_data(
-    model_data, solution_0_data, inchikey_to_cid_data, metabolomics_data
+    model_data, solution_fluxes_0_data, inchikey_to_cid_data, metabolomics_data
 ):
     # metabolomics, metabolomics_with_old_ids = get_metabolomics_data(
     #     model_data, solution_0_data, inchikey_to_cid_data, True

@@ -197,14 +197,10 @@ def test_get_flux_time_series(
     assert Erxn2Emet == erxn2emet_data
 
     # assert cell
-    # with open(
-    #       os.path.join(cwd, f'omg/integration_tests/data/cell.txt')
-    # ) as fh:
-    #     expected_cell = [float(line.strip()) for line in fh.readlines()]
-    # print(expected_cell)
-    # actual_cell = cell.tolist()
-    # print(actual_cell)
-    # assert expected_cell == actual_cell
+    with open(os.path.join(cwd, "omg/integration_tests/data/cell.txt")) as fh:
+        expected_cell = [float(line.strip()) for line in fh.readlines()]
+    actual_cell = cell.tolist()
+    assert expected_cell == actual_cell
 
 
 def test_getBEFluxes(model_data, grid_data, user_params_data):
