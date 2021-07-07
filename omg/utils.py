@@ -42,7 +42,8 @@ def write_experiment_description_file(output_file_path, line_name="WT", label=""
     try:
         with open(experiment_description_file_name, "w") as fh:
             fh.write(
-                f"Line Name, Line Description, Part ID, Media, Shaking Speed, Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n"
+                "Line Name, Line Description, Part ID, Media, Shaking Speed, \
+                    Starting OD, Culture Volume, Flask Volume, Growth Temperature, Replicate Count\n"
             )
             if line_name == "WT":
                 line_descr = "Wild type E. coli"
@@ -74,10 +75,11 @@ def write_in_al_format(time_series_omics_data, omics_type, user_params, label=""
                 dataframe = pd.DataFrame.from_dict(
                     omics_dict, orient="index", columns=[f"{omics_type}_value"]
                 )
-                for index, series in dataframe.iteritems():
-                    for id, value in series.iteritems():
+                for _index, series in dataframe.items():
+                    for id, value in series.items():
                         ofh.write(f"{id},{value}\n")
-    except:
+    except Exception as ex:
+        print(ex)
         print("Error in writing in Arrowland format")
 
 
@@ -106,13 +108,13 @@ def write_in_edd_format(
     # open a file to write omics data for each type and for all timepoints and constraints
     try:
         with open(omics_file_name, "w") as fh:
-            fh.write(f"Line Name,Measurement Type,Time,Value,Units\n")
+            fh.write("Line Name,Measurement Type,Time,Value,Units\n")
             for timepoint, omics_dict in time_series_omics_data.items():
                 dataframe = pd.DataFrame.from_dict(
                     omics_dict, orient="index", columns=[f"{omics_type}_value"]
                 )
-                for index, series in dataframe.iteritems():
-                    for id, value in series.iteritems():
+                for _index, series in dataframe.items():
+                    for id, value in series.items():
                         fh.write(
                             f"{line_name},{id},{timepoint},{value},{unit_dict[omics_type]}\n"
                         )
@@ -157,7 +159,7 @@ def write_OD_data(cell, output_file_path, line_name="WT", label=""):
     # write experiment description file
     try:
         with open(OD_data_file, "w") as fh:
-            fh.write(f"Line Name,Measurement Type,Time,Value,Units\n")
+            fh.write("Line Name,Measurement Type,Time,Value,Units\n")
             for index, value in cell.items():
                 fh.write(f"{line_name},Optical Density,{index},{value},n/a\n")
 
@@ -171,9 +173,7 @@ def write_training_data_with_isopentenol(df, filename, output_file_path):
     df.to_csv(filename, header=True, index=False)
 
 
-def write_external_metabolite(
-    substrates, output_file_path, output_metabolites, line_name="WT", label=""
-):
+def write_external_metabolite(substrates, output_file_path, line_name="WT", label=""):
     # create the filename
     external_metabolites: str = f"{output_file_path}/EDD_external_metabolites{label}.csv"
     if not os.path.isdir(output_file_path):
@@ -188,6 +188,7 @@ def write_external_metabolite(
     lactate = substrates.loc[:, "lac__D_e"]
     ethanol = substrates.loc[:, "etoh_e"]
 
+    # NOTE: Add the CID for Ammonium in the output_metabolites
     output_metabolites = {
         "5793": glucose,
         "12988": isopentenol,
@@ -201,7 +202,7 @@ def write_external_metabolite(
     try:
         with open(external_metabolites, "w") as fh:
             # Top header
-            fh.write(f"Line Name,Measurement Type,Time,Value,Units\n")
+            fh.write("Line Name,Measurement Type,Time,Value,Units\n")
             # Metabolite lines
             for cid in output_metabolites:
                 met = output_metabolites[cid]
