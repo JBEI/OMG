@@ -162,7 +162,7 @@ def transcriptomics_data():
 def metabolomics_data():
     cwd = os.getcwd()
     with open(
-        os.path.join(cwd, "omg/integration_tests/data/metabolomics_0.json")
+        os.path.join(cwd, "omg/integration_tests/data/metabolomics.json")
     ) as fh:
         metabolomics = json.load(fh)
     return metabolomics
