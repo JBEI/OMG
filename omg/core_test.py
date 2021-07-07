@@ -1,4 +1,3 @@
-import copy
 import json
 import os
 import pickle
@@ -7,6 +6,7 @@ import cobra
 import numpy as np
 import pandas as pd
 import pytest
+from pandas.testing import assert_frame_equal, assert_series_equal
 
 from .core import advance_OD_Emets, get_proteomics_transcriptomics_data
 
@@ -112,7 +112,7 @@ def erxn2emet_data():
 def met_names_data():
     cwd = os.getcwd()
     with open(os.path.join(cwd, "omg/integration_tests/data/met_names.csv")) as fh:
-        met_names = fh.readlines()[0].split(",")
+        met_names = fh.readlines()[0].strip().split(",")
         met_names_list = [i for i in met_names]
     return met_names_list
 
@@ -196,13 +196,6 @@ def test_advance_OD_Emets(
     old_Emets.loc[t0] = init_met_conc_data
     delt = grid_data[1]
 
-    # making copies of old_cell and old_Emets
-    actual_cell = copy.deepcopy(old_cell)
-    actual_Emets = copy.deepcopy(old_Emets)
-
-    print(actual_cell)
-    print(actual_Emets)
-
     # calling advance_OD_Emets with debug option
     old_cell[t0 + delt], old_Emets.loc[t0 + delt] = advance_OD_Emets(
         erxn2emet_data,
@@ -211,23 +204,49 @@ def test_advance_OD_Emets(
         delt,
         solution_old_data,
         user_params_data,
-        True,
+        debug=True,
     )
 
-    print("-----------------------")
-    print(old_cell)
-    print(old_Emets)
+    # Assert here
+    # expected values
+    expected_Emets = pd.DataFrame(index=tspan, columns=met_names_data)
+    expected_Emets.loc[t0] = [
+        22.070668648116943,
+        18.618338547831804,
+        69.44715329892733,
+        1.9982098787230178,
+        1.9999384270961587,
+        21.88161457062599,
+        103.7,
+        27.249963056257695,
+        0.0026466270376611185,
+        0.027404985374640336,
+        0.0013233135188305593,
+        0.10253814350326079,
+        0.0,
+    ]
+    expected_Emets.loc[t0 + delt] = [
+        22.070668648116943,
+        18.618338547831804,
+        69.44715329892733,
+        1.9982098787230178,
+        1.9999384270961587,
+        21.88161457062599,
+        103.7,
+        27.249963056257695,
+        0.0026466270376611185,
+        0.027404985374640336,
+        0.0013233135188305593,
+        0.10253814350326079,
+        0.0,
+    ]
 
-    # # assert here
-    actual_Emets.loc[t0 + delt] = pd.Series(emet_values_data, index=met_names_data)
-    actual_cell[t0 + delt] = old_cell[t0 + delt]
+    expected_cell = pd.Series(index=tspan)
+    expected_cell[t0] = 0.010000
+    expected_cell[t0 + delt] = 0.017098
 
-    assert True
-    # print("-----------------------")
-    # print(actual_cell)
-    # print(old_cell)
-    # assert_series_equal(actual_cell, old_cell)
-    # assert_series_equal(actual_Emets, old_Emets)
+    assert_series_equal(expected_cell, old_cell, check_less_precise=6)
+    assert_frame_equal(expected_Emets, old_Emets)
 
 
 def test_get_proteomics_transcriptomics_data(
@@ -264,12 +283,12 @@ def test_get_proteomics_transcriptomics_data(
     # assert transcriptomics == transcriptomics_data
 
 
-# def test_get_metabolomics_data(
-#     model_data, solution_0_data, inchikey_to_cid_data, metabolomics_data
-# ):
-#     # metabolomics, metabolomics_with_old_ids = get_metabolomics_data(
-#     #     model_data, solution_0_data, inchikey_to_cid_data, True
-#     # )
-#     pass
-#     # assert
-#     assert True
+def test_get_metabolomics_data(
+    model_data, solution_0_data, inchikey_to_cid_data, metabolomics_data
+):
+    # metabolomics, metabolomics_with_old_ids = get_metabolomics_data(
+    #     model_data, solution_0_data, inchikey_to_cid_data, True
+    # )
+    pass
+    # assert
+    assert True

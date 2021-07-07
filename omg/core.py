@@ -14,27 +14,14 @@ __status__ = "Alpha"
 __date__ = "Dec 2019"
 __version__ = "0.1.1"
 
-
-import collections as col
-import os
-import random
-import re
-import statistics
-import sys
-import urllib.parse
-import urllib.request
-import warnings
-from enum import Enum
-from shutil import copyfile
-from typing import Any, Counter, Dict, List, NewType, OrderedDict
+# from typing import Any, Counter, Dict, List, NewType, OrderedDict
 
 import cobra
 import numpy as np
 import pandas as pd
-from cobra.exceptions import Infeasible, OptimizationError
 from cobra.util.array import create_stoichiometric_matrix
 
-from .utils import *
+from .utils import read_pubchem_id_file
 
 
 def get_flux_time_series(model, ext_metabolites, grid, user_params):
@@ -53,7 +40,7 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
     :Emets:
     :Erxn2Emet:
     """
-    ## First unpack the time steps for the grid provided
+    # First unpack the time steps for the grid provided
     tspan, delt = grid
 
     # Create a panda series containing the cell concentation for each time point
@@ -82,18 +69,19 @@ def get_flux_time_series(model, ext_metabolites, grid, user_params):
         if r.reactants[0].id in met_names
     }
 
-    ## Create storage for timeseries of models and solutions
+    # Create storage for timeseries of models and solutions
     # Model time series
     model_TS = pd.Series(index=tspan)
     # Solution time series
     solution_TS = pd.Series(index=tspan)
 
-    ## Main for loop solving the model for each time step and adding
+    # Main for loop solving the model for each time step and adding
     # the corresponding OD and external metabolites created
     # volume set arbitrarily to one because the system is extensive
     volume = 1.0
-    for t in tspan:
-        # for t in [0.0, 1.0, 2.0]:
+    # or t in tspan:
+    for t in [0.0, 1.0, 2.0]:
+        print(Emets)
 
         # Adding constraints for each time point without
         # permanent changes to the model
@@ -174,6 +162,7 @@ def advance_OD_Emets(
         new_cell = old_cell * np.exp(mu * delt)
         # Calculating external external metabolite concentrations
         # for next time point
+        print()
         for rxn, met in Erxn2Emet.items():
             new_Emets[met] = max(
                 old_Emets.loc[met]
@@ -197,10 +186,10 @@ def getBEFluxes(model_TS, design, solution_TS, grid):
     :solutionsMOMA_TS
     """
 
-    ## Unpacking time points grid
+    # Unpacking time points grid
     tspan, delt = grid
 
-    ## Parameters for flux constraints
+    # Parameters for flux constraints
     high = 1.1
     low = 0.50
 
@@ -269,17 +258,17 @@ def integrate_fluxes(
     :Emets:
     """
 
-    ## First unpack the time steps for the grid provided
+    # First unpack the time steps for the grid provided
     tspan, delt = grid
 
-    ## Create a panda series containing the cell concentation
+    # Create a panda series containing the cell concentation
     # for each time point
     cell = pd.Series(index=tspan)
     cell0 = user_params["initial_OD"]  # in gDW/L
     t0 = user_params["timestart"]
     cell[t0] = cell0
 
-    ## Create a dataframe that constains external metabolite names
+    # Create a dataframe that constains external metabolite names
     # and their concentrations (DUPLICATED CODE)
     # First organize external metabolites and their initial concentrations
     model = model_TS[0]
@@ -300,7 +289,7 @@ def integrate_fluxes(
         if r.reactants[0].id in met_names
     }
 
-    ## Main loop adding contributions for each time step
+    # Main loop adding contributions for each time step
     for t in tspan:
         # Calculate OD and external metabolite concentrations
         # for next time point t+delta
@@ -519,7 +508,6 @@ def get_multiomics(model, solution, mapping_file, old_ids=False):
 
     proteomics = {}
     transcriptomics = {}
-    fluxomics = {}
     metabolomics = {}
 
     proteomics, transcriptomics = get_proteomics_transcriptomics_data(model, solution)
