@@ -2,7 +2,6 @@
 .vscode
 .DS_Store
 venv
-Pipfile.lock
 .ipynb_checkpoints/
 *.tgz
 __pycache__/
