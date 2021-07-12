@@ -375,8 +375,8 @@ def get_proteomics_transcriptomics_data(model, solution, add_noise=True, debug=F
                 if "uniprot" not in gene.annotation:
                     if "goa" in gene.annotation:
                         protein_id = gene.annotation["goa"]
-                    else:
-                        break
+                    # else:
+                    #     break
                 else:
                     protein_id = gene.annotation["uniprot"][0]
 

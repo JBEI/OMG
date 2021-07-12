@@ -23,7 +23,7 @@ from .core import (
 def user_params_data():
     cwd = os.getcwd()
 
-    with open(os.path.join(cwd, "omg/integration_tests/data/user_params.json")) as fh:
+    with open(os.path.join(cwd, "data/tests/user_params.json")) as fh:
         user_param_dict = json.load(fh)
     return user_param_dict
 
@@ -41,9 +41,7 @@ def grid_data(user_params_data):
 @pytest.fixture(scope="module")
 def model_data():
     cwd = os.getcwd()  # Get the current working directory (cwd)
-    model = cobra.io.load_json_model(
-        os.path.join(cwd, "omg/integration_tests/data/iJO1366_MVA.json")
-    )
+    model = cobra.io.load_json_model(os.path.join(cwd, "data/tests/iJO1366_MVA.json"))
 
     # adding constraints
     iso_cons = model.problem.Constraint(
@@ -70,7 +68,7 @@ def model_data():
 @pytest.fixture(scope="module")
 def solution_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/solution_old.json")) as fh:
+    with open(os.path.join(cwd, "data/tests/solution_old.json")) as fh:
         solution = json.load(fh)
     return solution
 
@@ -78,7 +76,7 @@ def solution_data():
 @pytest.fixture(scope="module")
 def solution_old_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/solution_old.json")) as fh:
+    with open(os.path.join(cwd, "data/tests/solution_old.json")) as fh:
         solution_old = json.load(fh)
     return solution_old
 
@@ -87,9 +85,7 @@ def solution_old_data():
 def solution_fluxes_0_data():
     cwd = os.getcwd()
     solution = {}
-    with open(
-        os.path.join(cwd, "omg/integration_tests/data/solution_fluxes_0.0.json")
-    ) as fh:
+    with open(os.path.join(cwd, "data/tests/solution_fluxes_0.0.json")) as fh:
         solution_fluxes = json.load(fh)
     solution["fluxes"] = solution_fluxes
     return solution
@@ -98,7 +94,7 @@ def solution_fluxes_0_data():
 @pytest.fixture(scope="module")
 def init_met_conc_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/init_met_conc.csv")) as fh:
+    with open(os.path.join(cwd, "data/tests/init_met_conc.csv")) as fh:
         conc = fh.readlines()[0].split(",")
         conc_list = [float(i) for i in conc]
     return conc_list
@@ -107,7 +103,7 @@ def init_met_conc_data():
 @pytest.fixture(scope="module")
 def erxn2emet_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/erxn2emet.json")) as fh:
+    with open(os.path.join(cwd, "data/tests/erxn2emet.json")) as fh:
         Erxn2Emet_dict = json.load(fh)
     return Erxn2Emet_dict
 
@@ -115,7 +111,7 @@ def erxn2emet_data():
 @pytest.fixture(scope="module")
 def met_names_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/met_names.csv")) as fh:
+    with open(os.path.join(cwd, "data/tests/met_names.csv")) as fh:
         met_names = fh.readlines()[0].strip().split(",")
         met_names_list = [i for i in met_names]
     return met_names_list
@@ -124,7 +120,7 @@ def met_names_data():
 @pytest.fixture(scope="module")
 def emet_values_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/emet_values.csv")) as fh:
+    with open(os.path.join(cwd, "data/tests/emet_values.csv")) as fh:
         emet_values = fh.readlines()[0].split(",")
         emet_values_list = [float(i) for i in emet_values]
     return emet_values_list
@@ -133,9 +129,7 @@ def emet_values_data():
 @pytest.fixture(scope="module")
 def solution_pickle_data():
     cwd = os.getcwd()
-    with open(
-        os.path.join(cwd, "omg/integration_tests/data/solution_0.0.pkl"), "rb"
-    ) as fh:
+    with open(os.path.join(cwd, "data/tests/solution_0.0.pkl"), "rb") as fh:
         solution = pickle.load(fh)
     return solution
 
@@ -143,7 +137,7 @@ def solution_pickle_data():
 @pytest.fixture(scope="module")
 def proteomics_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/proteomics_0_.json")) as fh:
+    with open(os.path.join(cwd, "data/tests/proteomics_0_.json")) as fh:
         proteomics = json.load(fh)
     return proteomics
 
@@ -151,9 +145,7 @@ def proteomics_data():
 @pytest.fixture(scope="module")
 def transcriptomics_data():
     cwd = os.getcwd()
-    with open(
-        os.path.join(cwd, "omg/integration_tests/data/transcriptomics_0.json")
-    ) as fh:
+    with open(os.path.join(cwd, "data/tests/transcriptomics_0.json")) as fh:
         transcriptomics = json.load(fh)
     return transcriptomics
 
@@ -161,7 +153,7 @@ def transcriptomics_data():
 @pytest.fixture(scope="module")
 def metabolomics_data():
     cwd = os.getcwd()
-    with open(os.path.join(cwd, "omg/integration_tests/data/metabolomics.json")) as fh:
+    with open(os.path.join(cwd, "data/tests/metabolomics.json")) as fh:
         metabolomics = json.load(fh)
     return metabolomics
 
@@ -169,9 +161,7 @@ def metabolomics_data():
 @pytest.fixture(scope="module")
 def inchikey_to_cid_data():
     cwd = os.getcwd()
-    with open(
-        os.path.join(cwd, "omg/integration_tests/data/inchikey_to_cid.json")
-    ) as fh:
+    with open(os.path.join(cwd, "data/tests/inchikey_to_cid.json")) as fh:
         inchikey_to_cid = json.load(fh)
     return inchikey_to_cid
 
@@ -261,43 +251,14 @@ def test_get_proteomics_transcriptomics_data(
         model_data, solution_fluxes_0_data, False, True
     )
 
-    # cwd = os.getcwd()
-    # with open(
-    #     os.path.join(cwd, "omg/integration_tests/data/proteomics_0_.json"), "w"
-    # ) as fh:
-    #     json.dump(proteomics, fh)
-
-    # cwd = os.getcwd()
-    # with open(
-    #     os.path.join(cwd, "omg/integration_tests/data/transcriptomics_0.json"), "w"
-    # ) as fh:
-    #     json.dump(transcriptomics, fh)
-
-    print(len(proteomics.keys()))
-    print(len(proteomics_data.keys()))
-
-    print("Transcriptomics: ")
-    print(len(transcriptomics.keys()))
-    print(len(transcriptomics_data.keys()))
-
-    # from deepdiff import DeepDiff
-
-    # dd = DeepDiff(proteomics, proteomics_data, ignore_order=True, math_epsilon=0.000001)
-    # print(dd)
-    # dd = DeepDiff(transcriptomics, transcriptomics_data, ignore_order=True, math_epsilon=.000001)
-    # print(dd)
-    # assert
-    # assert True
-    # assert proteomics == proteomics_data
-    # assert transcriptomics == transcriptomics_data
+    assert proteomics == proteomics_data
+    assert transcriptomics == transcriptomics_data
 
 
 def test_get_metabolomics_data(
     model_data, solution_fluxes_0_data, inchikey_to_cid_data, metabolomics_data
 ):
 
-    cwd = os.getcwd()
-    mapping_file = os.path.join(cwd, "omg/integration_tests/data/.json")
     metabolomics, metabolomics_with_old_ids = get_metabolomics_data(
         model_data,
         solution_fluxes_0_data,
@@ -307,4 +268,4 @@ def test_get_metabolomics_data(
     )
 
     # assert
-    metabolomics_data == metabolomics
+    assert metabolomics_data == metabolomics
